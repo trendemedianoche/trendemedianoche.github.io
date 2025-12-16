@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&display=swap');
 
+/* RESET */
 * {
   box-sizing: border-box;
 }
@@ -11,7 +12,10 @@ body {
   color: #fff;
 }
 
-/* HEADER */
+/* =======================
+   HEADER
+======================= */
+
 .main-header {
   position: fixed;
   top: 0;
@@ -49,6 +53,10 @@ body {
 }
 
 /* NAV */
+.nav {
+  display: flex;
+}
+
 .nav a {
   color: #fff;
   text-decoration: none;
@@ -78,7 +86,10 @@ body {
   background: #fff;
 }
 
-/* GALERÍA */
+/* =======================
+   GALERÍA
+======================= */
+
 .gallery-section {
   padding-top: 100px;
 }
@@ -86,7 +97,7 @@ body {
 .gallery-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  height: 420px;
+  height: min(60vh, 520px);
 }
 
 .gallery-grid img {
@@ -94,7 +105,7 @@ body {
   height: 100%;
   object-fit: cover;
   filter: grayscale(100%);
-  transition: 0.4s;
+  transition: 0.4s ease;
 }
 
 .gallery-grid img:hover {
@@ -102,101 +113,43 @@ body {
   transform: scale(1.05);
 }
 
-/* ABOUT */
+/* =======================
+   ABOUT
+======================= */
+
 .about-section {
-  padding: 100px 20px;
+  padding: 2rem 1.5rem;
+  position: relative;
+}
+
+.about-section::after {
+  content: "";
+  display: block;
+  width: 120px;
+  height: 2px;
+  background: #222;
+  margin: 100px auto 0;
 }
 
 .about-container {
-  max-width: 900px;
+  max-width: 1100px;
   margin: auto;
 }
 
 .about-container p {
   font-size: 18px;
-  line-height: 1.8;
-  color: #ddd;
-  margin-bottom: 25px;
+  line-height: 1.85;
+  color: #d6d6d6;
+  margin-bottom: 28px;
 }
 
-/* FOOTER */
-.footer {
-  padding: 50px 20px;
-  text-align: center;
-}
-
-.footer-socials {
-  display: flex;
-  justify-content: center;
-  gap: 25px;
-  margin-bottom: 20px;
-}
-
-.footer-socials img {
-  width: 28px;
-  transition: 0.3s;
-}
-
-.footer-socials img:hover {
-  transform: scale(1.2);
-}
-
-.footer p {
-  font-size: 14px;
-  color: #777;
-}
-
-/* RESPONSIVE */
-@media (max-width: 900px) {
-  .gallery-grid {
-    grid-template-columns: repeat(2, 1fr);
-    height: 500px;
-  }
-}
-
-@media (max-width: 768px) {
-
-  /* Mostrar hamburguesa */
-  .hamburger {
-    display: flex;
-  }
-
-  /* Ocultar menú normal */
-  .nav {
-    position: absolute;
-    top: 100px;
-    left: 0;
-    width: 100%;
-    background: #000;
-    flex-direction: column;
-    align-items: center;
-    display: none;
-    padding: 30px 0;
-  }
-
-  .nav a {
-    margin: 20px 0;
-    font-size: 18px;
-  }
-
-  .nav.active {
-    display: flex;
-  }
-
-  /* Galería */
-  .gallery-grid {
-    grid-template-columns: repeat(2, 1fr);
-    height: auto;
-  }
-
-  .gallery-grid img {
-    height: 260px;
-  }
-}
+/* =======================
+   MÚSICA
+======================= */
 
 .music-section {
-  padding: 4rem 1.5rem;
-  max-width: 900px;
+  padding: 1rem 1.5rem;
+  max-width: 1100px;
   margin: auto;
 }
 
@@ -226,25 +179,15 @@ body {
   color: #f1c40f;
 }
 
-/* Destacado */
 .music-card.featured {
   border: 2px solid #f1c40f;
   background: linear-gradient(145deg, #111, #1a1a1a);
 }
 
-/* Audio full width */
 audio {
   width: 100%;
   margin-top: 1rem;
 }
-
-/* Responsive */
-@media (max-width: 600px) {
-  .music-section {
-    padding: 3rem 1rem;
-  }
-}
-
 
 /* =======================
    FOOTER
@@ -256,7 +199,7 @@ audio {
   border-top: 1px solid #222;
 }
 
-/* Logo banda (invertido) */
+/* Logo */
 .footer-logo {
   text-align: center;
   margin-bottom: 3rem;
@@ -274,9 +217,9 @@ audio {
   transform: scale(1.05);
 }
 
-/* Columns */
+/* Grid columnas */
 .footer-columns {
-  max-width: 1100px;
+  max-width: 1300px;
   margin: auto;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -284,7 +227,7 @@ audio {
   margin-bottom: 3rem;
 }
 
-/* Text blocks */
+/* Bloques */
 .footer-block h3 {
   font-size: 1.2rem;
   margin-bottom: 1rem;
@@ -299,7 +242,6 @@ audio {
   margin-bottom: 0.8rem;
 }
 
-/* Links */
 .footer-text a {
   color: #fff;
   text-decoration: none;
@@ -309,7 +251,7 @@ audio {
   color: #f1c40f;
 }
 
-/* Contact rows */
+/* Contacto */
 .contact-row {
   display: flex;
   align-items: center;
@@ -320,7 +262,7 @@ audio {
   width: 22px;
 }
 
-/* Social icons */
+/* Redes */
 .footer-socials {
   display: flex;
   gap: 1.2rem;
@@ -338,8 +280,8 @@ audio {
 /* Aportes */
 .footer-block.highlight {
   background: #111;
-  padding: 1.5rem;
-  border-radius: 12px;
+  padding: 1rem;
+  border-radius: 9px;
   border: 1px solid #222;
 }
 
@@ -356,27 +298,79 @@ audio {
   opacity: 0.6;
 }
 
-/* Responsive */
-@media (max-width: 600px) {
-  .footer {
-    padding: 3rem 1.5rem 2rem;
+/* =======================
+   RESPONSIVE
+======================= */
+
+@media (max-width: 1100px) {
+  .gallery-grid {
+    grid-template-columns: repeat(2, 1fr);
+    height: 500px;
+  }
+}
+
+@media (max-width: 768px) {
+
+  .hamburger {
+    display: flex;
   }
 
-  .footer-logo img {
-    width: 120px;
+  .nav {
+    position: absolute;
+    top: 100px;
+    left: 0;
+    width: 100%;
+    background: #000;
+    flex-direction: column;
+    align-items: center;
+    display: none;
+    padding: 30px 0;
+  }
+
+  .nav a {
+    margin: 20px 0;
+    font-size: 18px;
+  }
+
+  .nav.active {
+    display: flex;
+  }
+
+  .gallery-grid {
+    grid-template-columns: repeat(2, 1fr);
+    height: auto;
+  }
+
+  .gallery-grid img {
+    height: 220px;
   }
 
   .footer-socials {
     justify-content: center;
   }
+
+  .footer-block.contact {
+    text-align: center;
+  }
+
+  .footer-block.contact .contact-row {
+    justify-content: center;
+  }
 }
 
-/* Centrar columna de contacto */
-.footer-block.contact {
-  text-align: center;
-}
+/* Desktop: redes sociales a la derecha */
+@media (min-width: 768px) {
 
-/* Centrar filas de contacto */
-.footer-block.contact .contact-row {
-  justify-content: center;
+  .footer-columns {
+    align-items: start;
+  }
+
+  .footer-block.contact:last-of-type {
+    justify-self: end;
+    text-align: right;
+  }
+
+  .footer-block.contact:last-of-type .footer-socials {
+    justify-content: flex-end;
+  }
 }
