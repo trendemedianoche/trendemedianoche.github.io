@@ -132,17 +132,15 @@
 <!-- FOOTER -->
 <footer id="contact" class="footer">
 
- 
-
+  <!-- GRID SUPERIOR -->
   <div class="footer-columns">
-    <!-- LOGO BANDA -->
-  <div class="footer-logo">
-    <a href="#top">
-      <img src="./tren_de_medianoche/logo_2.png" alt="Tren de Medianoche">
-    </a>
-  </div>
 
-    <!-- IDENTIDAD -->
+    <!-- LOGO (COLUMNA 1) -->
+    <div class="footer-block footer-logo-column">
+      <img src="./tren_de_medianoche/logo_2.png" alt="Tren de Medianoche">
+    </div>
+
+    <!-- IDENTIDAD (COLUMNA 2) -->
     <div class="footer-block footer-text">
       <h3>Tren de Medianoche</h3>
       <p>
@@ -152,59 +150,66 @@
       </p>
     </div>
 
-    <!-- CONTACTO -->
-    <div class="footer-block footer-text contact">
-  <h3>Contacto</h3>
+    <!-- CONTACTO (COLUMNA 3) -->
+    <div class="footer-block footer-text">
+      <h3>Contacto</h3>
 
-  <div class="contact-list">
-    <div class="contact-row">
-      <img src="./tren_de_medianoche/whatsapp.png" alt="WhatsApp">
-      <a href="https://wa.me/56963223241" target="_blank">
-        +56 9 6322 3241
-      </a>
+      <div class="contact-row">
+        <img src="./tren_de_medianoche/whatsapp.png" alt="WhatsApp">
+        <a href="https://wa.me/56963223241" target="_blank">
+          +56 9 6322 3241
+        </a>
+      </div>
+
+      <div class="contact-row">
+        ✉️
+        <a href="mailto:bandatrendemedianoche@gmail.com">
+          bandatrendemedianoche@gmail.com
+        </a>
+      </div>
     </div>
 
-    <div class="contact-row">
-      ✉️
-      <a href="mailto:bandatrendemedianoche@gmail.com">
-        bandatrendemedianoche@gmail.com
-      </a>
-    </div>
-  </div>
-</div>
-
-    <!-- REDES -->
-    <div class="footer-block footer-text contact">
+    <!-- REDES (COLUMNA 4) -->
+    <div class="footer-block footer-text">
       <h3>Redes Sociales</h3>
 
       <div class="footer-socials">
         <a href="https://www.instagram.com/trendemedianoche_oficial/" target="_blank">
           <img src="./tren_de_medianoche/instagram-new.png" alt="Instagram">
         </a>
-
         <a href="https://www.facebook.com/bandaTDMN" target="_blank">
           <img src="./tren_de_medianoche/facebook-new.png" alt="Facebook">
         </a>
-
         <a href="https://youtube.com/@trendemedianochechile4904" target="_blank">
           <img src="./tren_de_medianoche/youtube.png" alt="YouTube">
         </a>
       </div>
     </div>
 
-    <!-- APORTES -->
-    <div class="footer-block footer-text highlight">
+  </div>
+
+  <!-- BLOQUE APORTES (ABAJO Y MÁS GRANDE) -->
+  <div class="footer-donation">
+
+    <div class="donation-card">
       <h3>Apoya el proyecto</h3>
-      <p>
+
+      <p class="donation-intro">
         Si quieres apoyar nuestro trabajo y futuras producciones,
-        puedes hacerlo mediante transferencia:
+        puedes hacerlo mediante transferencia bancaria:
       </p>
-      <p class="donation">
-        Banco: <strong>XXXX</strong><br>
-        Cuenta: <strong>XXXXXXXX</strong><br>
-        Nombre: <strong>Tren de Medianoche</strong><br>
-        Asunto: <strong>Aporte</strong>
-      </p>
+
+      <div class="donation-grid">
+        <div><span>Banco</span><strong>XXXX</strong></div>
+        <div><span>Cuenta</span><strong>XXXXXXXX</strong></div>
+        <div><span>Nombre</span><strong>Tren de Medianoche</strong></div>
+        <div><span>Asunto</span><strong>Aporte</strong></div>
+      </div>
+
+      <button class="copy-button" onclick="copyTransferData()">
+        <img src="./tren_de_medianoche/copy.png" alt="Copiar">
+        Copiar datos de transferencia
+      </button>
     </div>
 
   </div>
@@ -214,6 +219,7 @@
   </p>
 
 </footer>
+
 
 
 
@@ -234,6 +240,34 @@
     });
   });
 </script>
+
+<script>
+function copyTransferData() {
+   const transferData = `
+      Cuenta Corriente
+      Banco Scotiabank
+      000974470276
+      Manuel Mercado Alvarez
+      Rut: 18169100-K
+      manuel.mercado@usach.cl
+   `;
+   
+   if (navigator.clipboard) {
+      navigator.clipboard.writeText(transferData)
+         .then(() => {
+            alert('Datos de transferencia copiados');
+         })
+         .catch(err => {
+            console.error('Error copying to clipboard: ', err);
+            alert('Error al copiar los datos. Ver consola para detalles.');
+         });
+   } else {
+      console.warn('Clipboard API is not supported.');
+      alert('No se pudo acceder al portapapeles. El navegador no es compatible con esta función.');
+   }
+}
+</script>
+
 
 </body>
 </html>
