@@ -10,78 +10,134 @@
 
 <body>
 
-<header class="main-header">
-  <div class="logo-white"></div>
+  <!-- HEADER -->
+  <header class="main-header">
+    <div class="logo-white"></div>
 
-  <nav class="nav" id="nav-menu">
-    <a href="#media">Galería</a>
-    <a href="#music">Música</a>
-    <a href="#contact">Contacto</a>
-  </nav>
+    <button class="hamburger" onclick="toggleMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
 
-  <button class="hamburger" id="hamburger" aria-label="Menú">
-    <span></span>
-    <span></span>
-    <span></span>
-  </button>
-</header>
+    <nav class="nav" id="nav">
+      <a href="#media">Galería</a>
+      <a href="#about">Reseña</a>
+      <a href="#music">Música</a>
+      <a href="#contact">Contacto</a>
+    </nav>
+  </header>
 
-<section id="media" class="gallery-section">
-  <div class="gallery-grid">
-    <img src="./tren_de_medianoche/323288311_553218996680854_8275761172948079720_n.jpg" alt="">
-    <img src="./tren_de_medianoche/277157904_944018592979258_5253242053734153907_n.jpeg" alt="">
-    <img src="./tren_de_medianoche/348441768_550723740593684_8018548674131979303_n.jpg" alt="">
-    <img src="./tren_de_medianoche/469315191_1594349671198843_2030748612920409032_n.jpg" alt="">
+  <!-- GALERÍA -->
+  <section id="media" class="gallery-section">
+    <div class="gallery-grid">
+      <img src="./tren_de_medianoche/323288311_553218996680854_8275761172948079720_n.jpg">
+      <img src="./tren_de_medianoche/277157904_944018592979258_5253242053734153907_n.jpeg">
+      <img src="./tren_de_medianoche/348441768_550723740593684_8018548674131979303_n.jpg">
+      <img src="./tren_de_medianoche/469315191_1594349671198843_2030748612920409032_n.jpg">
+    </div>
+  </section>
+
+  <!-- RESEÑA -->
+ <section id="about" class="about-section">
+  <div class="about-container">
+
+    <p>
+      <strong>Tren de Medianoche</strong> nace durante el año 2017 como un proyecto musical enfocado en la composición original
+      y la improvisación, utilizando principalmente instrumentos electroacústicos y una estética sonora ligada al blues y
+      sus raíces.
+    </p>
+
+    <p>
+      Sus letras, escritas en español, están inspiradas en sentimientos y emociones que conectan al ser humano con su entorno
+      social y la vida cotidiana, abordando historias cercanas, experiencias personales y paisajes urbanos.
+    </p>
+
+    <div class="members">
+      <p>
+        La banda está conformada por:<br><br>
+        <strong>Manuel Mercado</strong> — Guitarra y Voz<br>
+        <strong>Ricardo Mizraji</strong> — Armónica, Teclado y Coros<br>
+        <strong>José Antil</strong> — Guitarra, Armónica y Coros
+      </p>
+    </div>
+
+    <p>
+      Durante agosto de 2017, la banda realiza su debut junto a destacados músicos de la escena en un festival en conmemoración
+      del Día Internacional del Blues, marcando el inicio de su camino dentro del circuito nacional.
+    </p>
+
+    <p>
+      A lo largo de los años, <strong>Tren de Medianoche</strong> ha participado en diversos eventos, festivales y bares,
+      consolidándose como una banda activa dentro del circuito en vivo. Tras el periodo de emergencia sanitaria,
+      el grupo retoma con fuerza las presentaciones, logrando mayor visibilidad y reconocimiento dentro del
+      ámbito del blues nacional.
+    </p>
+
+    <p>
+      Su trabajo ha sido incorporado en distintas listas de reproducción del género, ampliando su alcance y posicionando
+      su propuesta dentro de la escena independiente.
+    </p>
+
+    <p>
+      En 2018 graban su primer EP <em>“Arriba de la Locomotora”</em> en AudioCustom Estudio bajo la producción de Cristian Olivares.
+      Ese mismo año lanzan el single navideño <em>“Santa Se Llevó a Mi Chica”</em>.
+    </p>
+
+    <p>
+      Durante 2021 registran su segundo EP <em>“Desde la Otra Ruta”</em>, producido por Johnny Espina, junto al single navideño
+      <em>“Mi Mejor Regalo”</em>, grabado en Estudio Sol con la participación del saxofonista Nehemías Muñoz.
+    </p>
+
+    <p>
+      A fines de 2022 presentan el primer adelanto de su álbum debut <em>“Mi padrino es un bohemio”</em>, seguido en abril de 2023
+      por el single <em>“Aullando a la Luna”</em>, que cuenta con la colaboración de César Díaz Bilbao en batería.
+    </p>
+
   </div>
 </section>
 
-<section id="music" class="music-section">
-  <h2>Último Lanzamiento</h2>
-  <audio controls>
-    <source src="./tren_de_medianoche/sientes_como.mp3" type="audio/mpeg">
-  </audio>
-</section>
 
-<footer class="footer" id="contact">
-  <div class="footer-socials">
-    <a href="https://www.instagram.com/trendemedianoche_oficial/" target="_blank" rel="noopener">
-      <img src="./tren_de_medianoche/instagram-new.png" alt="Instagram">
-    </a>
-    <a href="https://open.spotify.com/intl-es/artist/2ZRyGZfKgNjNKbry4Aqv7J" target="_blank" rel="noopener">
-      <img src="./tren_de_medianoche/spotify.png" alt="Spotify">
-    </a>
-    <a href="https://www.facebook.com/bandaTDMN" target="_blank" rel="noopener">
-      <img src="./tren_de_medianoche/facebook-new.png" alt="Facebook">
-    </a>
-    <a href="https://youtube.com/@trendemedianochechile4904" target="_blank" rel="noopener">
-      <img src="./tren_de_medianoche/youtube.png" alt="YouTube">
-    </a>
-    <a href="https://wa.me/56963223241" target="_blank" rel="noopener">
-      <img src="./tren_de_medianoche/whatsapp.png" alt="WhatsApp">
-    </a>
-    <a href="mailto:bandatrendemedianoche@gmail.com">
-      <img src="./tren_de_medianoche/email.png" alt="Email">
-    </a>
-  </div>
+  <!-- MÚSICA -->
+  <section id="music" class="music-section">
+    <h2>Último Lanzamiento</h2>
+    <audio controls>
+      <source src="./tren_de_medianoche/sientes_como.mp3">
+    </audio>
+  </section>
 
-  <p>© Tren de Medianoche</p>
-</footer>
+  <!-- FOOTER -->
+  <footer id="contact" class="footer">
+    <div class="footer-socials">
+      <a href="https://www.instagram.com/trendemedianoche_oficial/" target="_blank">
+        <img src="./tren_de_medianoche/instagram-new.png">
+      </a>
+      <a href="https://open.spotify.com/intl-es/artist/2ZRyGZfKgNjNKbry4Aqv7J" target="_blank">
+        <img src="./tren_de_medianoche/spotify.png">
+      </a>
+      <a href="https://www.facebook.com/bandaTDMN" target="_blank">
+        <img src="./tren_de_medianoche/facebook-new.png">
+      </a>
+      <a href="https://youtube.com/@trendemedianochechile4904" target="_blank">
+        <img src="./tren_de_medianoche/youtube.png">
+      </a>
+      <a href="https://wa.me/56963223241" target="_blank">
+        <img src="./tren_de_medianoche/whatsapp.png">
+      </a>
+      <a href="mailto:bandatrendemedianoche@gmail.com">
+        <img src="./tren_de_medianoche/email.png">
+      </a>
+    </div>
 
-<script>
-  const hamburger = document.getElementById('hamburger');
-  const navMenu = document.getElementById('nav-menu');
+    <p>© Tren de Medianoche</p>
+  </footer>
 
-  hamburger.addEventListener('click', () => {
-    navMenu.classList.toggle('active');
-  });
-
-  // Cierra el menú al hacer click en un link (mobile)
-  document.querySelectorAll('.nav a').forEach(link => {
-    link.addEventListener('click', () => {
-      navMenu.classList.remove('active');
-    });
-  });
-</script>
+  <!-- SCRIPT -->
+  <script>
+    function toggleMenu() {
+      document.getElementById('nav').classList.toggle('active');
+    }
+  </script>
 
 </body>
 </html>
