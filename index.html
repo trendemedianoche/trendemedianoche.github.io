@@ -101,25 +101,32 @@
 
 
 <!-- MÚSICA -->
-<!--<section id="music" class="music-section">
-  <h2>Último Lanzamiento</h2>
-  <audio controls>
-    <source src="./tren_de_medianoche/sientes_como.mp3">
-  </audio>
-</section>-->
-
 <section id="music" class="music-section">
-  <h2>Escúchanos</h2>
-  <iframe
-    style="border-radius:12px"
-    src="https://open.spotify.com/embed/artist/2ZRyGZfKgNjNKbry4Aqv7J?theme=0"
-    width="100%"
-    height="352"
-    frameborder="0"
-    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-    loading="lazy">
-  </iframe>
-</section>
+  <h2 class="section-title">Música</h2>
+  <!-- ÚLTIMO LANZAMIENTO -->
+  <div class="music-card featured">
+    <h3>Último Lanzamiento</h3>
+    <p class="song-title">Sientes Cómo</p>
+    <audio controls>
+      <source src="./tren_de_medianoche/sientes_como.mp3" type="audio/mpeg">
+      Tu navegador no soporta audio.
+    </audio>
+  </div>
+
+  <!-- SPOTIFY -->
+  <div class="music-card">
+    <h3>Seguir escuchándonos en Spotify</h3>
+
+    <iframe
+      src="https://open.spotify.com/embed/artist/2ZRyGZfKgNjNKbry4Aqv7J?theme=0"
+      width="100%"
+      height="352"
+      frameborder="0"
+      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+      loading="lazy">
+    </iframe>
+  </div>
+
 </section>
 
 <!-- FOOTER -->
