@@ -1,0 +1,158 @@
+/* =================================================
+   FIX GALERÍA – EVITA TEXTO SOBRE IMÁGENES
+================================================= */
+
+/* TABLET Y MENOR */
+@media (max-width: 1100px) {
+
+  .gallery-section {
+    padding-top: 100px; /* respeta el header fijo */
+  }
+
+  .gallery-grid {
+    height: auto !important;   /* 🔑 elimina altura fija */
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .gallery-grid img {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1 / 1;       /* mantiene proporción */
+    object-fit: cover;
+  }
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+
+  .gallery-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .gallery-grid img {
+    aspect-ratio: 1 / 1;
+  }
+}
+
+/* MOBILE PEQUEÑO */
+@media (max-width: 480px) {
+
+  .gallery-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .gallery-grid img {
+    aspect-ratio: 4 / 3;
+  }
+}
+
+/* =================================================
+   FOOTER – MOBILE STACK FIX
+================================================= */
+
+@media (max-width: 768px) {
+
+  /* FUERZA EL FOOTER A COLUMNA */
+  .footer-columns {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 2rem;
+    text-align: center;
+  }
+
+  /* TODAS LAS COLUMNAS BAJAN */
+  .footer-logo-column,
+  .footer-block {
+    width: 100%;
+    justify-self: center;
+  }
+
+  /* LOGO */
+  .footer-logo-column {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+  }
+
+  /* CONTACTO */
+  .footer-block.contact {
+    text-align: center;
+  }
+
+  .contact-row {
+    justify-content: center;
+  }
+
+  /* REDES */
+  .footer-socials {
+    justify-content: center;
+    margin-top: 0.5rem;
+  }
+
+  /* APORTE */
+  .footer-donation {
+    margin-top: 2.5rem;
+    padding: 0 1rem;
+  }
+
+  .donation-card {
+    max-width: 100%;
+  }
+
+  .donation-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
+/* =================================================
+   FIX MENU HAMBURGUESA – MOBILE
+================================================= */
+
+@media (max-width: 768px) {
+
+  /* HEADER SIEMPRE VISIBLE */
+  .main-header {
+    z-index: 9999;
+    position: fixed;
+  }
+
+  /* HAMBURGUESA VISIBLE */
+  .hamburger {
+    display: flex !important;
+    z-index: 10000;
+  }
+
+  /* NAV OCULTO POR DEFECTO */
+  .nav {
+    display: none;
+    position: absolute;
+    top: 100px;
+    left: 0;
+    width: 100%;
+    background: #000;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 0;
+    z-index: 9998;
+  }
+
+  /* NAV ACTIVO */
+  .nav.active {
+    display: flex !important;
+  }
+
+}
+
+
+
+/* =================================================
+   FIX FLUJO GENERAL (ANTI-SOLAPE)
+================================================= */
+
+.gallery-section,
+.about-section,
+.music-section {
+  position: relative;
+  z-index: 1;
+}

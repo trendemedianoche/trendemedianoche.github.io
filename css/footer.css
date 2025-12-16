@@ -1,0 +1,158 @@
+/* =======================
+   FOOTER
+======================= */
+
+.footer {
+  background: #000;
+  border-top: 1px solid #222;
+  padding: 4rem 2rem 2rem;
+}
+
+/* GRID SUPERIOR */
+.footer-columns {
+  max-width: 1200px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2.5rem;
+  align-items: start;
+}
+
+/* LOGO */
+.footer-logo-column {
+  text-align: center;
+}
+
+.footer-logo-column img {
+  width: 140px;
+  filter: invert(1);
+}
+
+/* BLOQUES */
+.footer-block h3 {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.footer-text a {
+  color: #fff;  /* Color blanco */
+  text-decoration: none;  /* Quita el subrayado */
+}
+
+.footer-text a:hover {
+  color: #f1c40f;  /* Cambia el color a dorado cuando pasa el ratón */
+}
+
+/* CONTACTO */
+.contact-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.6rem;
+}
+
+.contact-row img {
+  width: 20px;
+}
+
+/* REDES */
+.footer-socials {
+  display: flex;
+  gap: 1rem;
+}
+
+.footer-socials img {
+  width: 30px;
+  transition: transform 0.3s ease;
+}
+
+.footer-socials a:hover img {
+  transform: scale(1.15);
+}
+
+/* =======================
+   DONACIÓN
+======================= */
+
+.footer-donation {
+  max-width: 1200px;
+  margin: 3rem auto 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.donation-card {
+  max-width: 460px;
+  width: 100%;
+  background: #111;
+  border: 1px solid #222;
+  border-radius: 14px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+}
+
+.donation-intro {
+  color: #ccc;
+  margin-bottom: 1.5rem;
+}
+
+.donation-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.donation-grid div {
+  background: #000;
+  border: 1px solid #222;
+  border-radius: 8px;
+  padding: 0.7rem;
+}
+
+.donation-grid span {
+  font-size: 0.7rem;
+  color: #777;
+  display: block;
+  text-transform: uppercase;
+}
+
+.donation-grid strong {
+  font-size: 0.95rem;
+}
+
+/* BOTÓN COPIAR */
+.copy-button {
+  width: 100%;
+  background: #000;
+  border: 1px solid #333;
+  color: #fff;
+  padding: 0.8rem;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.6rem;
+  transition: all 0.25s ease;
+}
+
+.copy-button img {
+  width: 16px;
+  filter: invert(1);
+}
+
+.copy-button:hover {
+  border-color: #f1c40f;
+  color: #f1c40f;
+}
+
+/* COPY */
+.footer-copy {
+  text-align: center;
+  font-size: 0.85rem;
+  opacity: 0.6;
+  margin-top: 2rem;
+}
