@@ -27,8 +27,8 @@ body {
 
 /* LOGO BLANCO */
 .logo-white {
-  width: 80px; /* Aumenta el ancho */
-  height: 100px; /* Aumenta la altura */
+  width: 70px; /* Aumenta el ancho */
+  height: 90px; /* Aumenta la altura */
   background: url('./tren_de_medianoche/logo_2.png') no-repeat center;
   background-size: contain;
   filter: invert(1); /* Mantiene el logo blanco */
@@ -100,7 +100,7 @@ body {
   }
 }
 
-@media (max-width: 500px) {
+@media (max-width: 480px) {
   .gallery-grid {
     grid-template-columns: 1fr;
   }
@@ -136,7 +136,7 @@ body {
 
 .footer-socials a:hover img {
   transform: scale(1.2);
-  filter: invert(1) brightness(1.5);
+  filter: invert(0) brightness(1.5);
 }
 
 .footer p {
