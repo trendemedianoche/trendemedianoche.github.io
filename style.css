@@ -246,41 +246,88 @@ audio {
 }
 
 
-
-
-
+/* =======================
+   FOOTER
+======================= */
 
 .footer {
-  padding: 4rem 1.5rem 2rem;
+  padding: 4rem 2rem 2rem;
   background: #000;
-  text-align: center;
+  border-top: 1px solid #222;
 }
 
-.footer-columns {
-  display: flex;
-  justify-content: center;
-  gap: 4rem;
-  flex-wrap: wrap;
+/* Logo banda (invertido) */
+.footer-logo {
+  text-align: center;
   margin-bottom: 3rem;
 }
 
-.footer-block {
-  min-width: 220px;
+.footer-logo img {
+  width: 150px;
+  max-width: 70%;
+  filter: invert(1);
+  opacity: 0.95;
+  transition: transform 0.3s ease;
 }
 
-.footer-title {
-  margin-bottom: 1.5rem;
-  font-size: 1.4rem;
+.footer-logo img:hover {
+  transform: scale(1.05);
 }
 
+/* Columns */
+.footer-columns {
+  max-width: 1100px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 3rem;
+  margin-bottom: 3rem;
+}
+
+/* Text blocks */
+.footer-block h3 {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.footer-text p {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: #ccc;
+  margin-bottom: 0.8rem;
+}
+
+/* Links */
+.footer-text a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.footer-text a:hover {
+  color: #f1c40f;
+}
+
+/* Contact rows */
+.contact-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.contact-row img {
+  width: 22px;
+}
+
+/* Social icons */
 .footer-socials {
   display: flex;
-  gap: 1.5rem;
-  justify-content: center;
+  gap: 1.2rem;
 }
 
 .footer-socials img {
-  width: 36px;
+  width: 32px;
   transition: transform 0.3s ease;
 }
 
@@ -288,31 +335,38 @@ audio {
   transform: scale(1.15);
 }
 
-/* Contacto */
-.footer-contact {
-  display: flex;
-  gap: 1.5rem;
-  justify-content: center;
+/* Aportes */
+.footer-block.highlight {
+  background: #111;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid #222;
 }
 
-.contact-item {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  color: #fff;
-  text-decoration: none;
-  font-size: 1rem;
-}
-
-.contact-item img {
-  width: 28px;
-}
-
-.contact-item:hover {
-  color: #f1c40f;
-}
-
-.footer-copy {
+.donation {
   font-size: 0.9rem;
-  opacity: 0.7;
+  line-height: 1.6;
+  color: #eee;
+}
+
+/* Copy */
+.footer-copy {
+  text-align: center;
+  font-size: 0.85rem;
+  opacity: 0.6;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .footer {
+    padding: 3rem 1.5rem 2rem;
+  }
+
+  .footer-logo img {
+    width: 120px;
+  }
+
+  .footer-socials {
+    justify-content: center;
+  }
 }
