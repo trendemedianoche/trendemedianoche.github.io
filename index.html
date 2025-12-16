@@ -10,57 +10,55 @@
 
 <body>
 
-  <!-- HEADER -->
-  <header class="main-header">
-    <div class="logo-white"></div>
-    <nav class="nav">
-      <a href="#media">Galería</a>
-      <a href="#music">Música</a>
-      <a href="#contact">Contacto</a>
-    </nav>
-  </header>
+<header class="main-header">
+  <div class="logo-white"></div>
 
-  <!-- GALERÍA FULL -->
-  <section id="media" class="gallery-section">
-    <div class="gallery-grid">
-      <img src="./tren_de_medianoche/323288311_553218996680854_8275761172948079720_n.jpg">
-      <img src="./tren_de_medianoche/277157904_944018592979258_5253242053734153907_n.jpeg">
-      <img src="./tren_de_medianoche/348441768_550723740593684_8018548674131979303_n.jpg">
-      <img src="./tren_de_medianoche/469315191_1594349671198843_2030748612920409032_n.jpg">
-    </div>
-  </section>
+  <nav class="nav" id="nav-menu">
+    <a href="#media">Galería</a>
+    <a href="#music">Música</a>
+    <a href="#contact">Contacto</a>
+  </nav>
 
-  <!-- MÚSICA -->
-  <section id="music" class="music-section">
-    <h2>Último Lanzamiento</h2>
-    <audio controls>
-      <source src="./tren_de_medianoche/sientes_como.mp3">
-    </audio>
-  </section>
+  <button class="hamburger" id="hamburger" aria-label="Menú">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+</header>
 
-  <!-- FOOTER -->
-  <footer class="footer">
+<section id="media" class="gallery-section">
+  <div class="gallery-grid">
+    <img src="./tren_de_medianoche/323288311_553218996680854_8275761172948079720_n.jpg" alt="">
+    <img src="./tren_de_medianoche/277157904_944018592979258_5253242053734153907_n.jpeg" alt="">
+    <img src="./tren_de_medianoche/348441768_550723740593684_8018548674131979303_n.jpg" alt="">
+    <img src="./tren_de_medianoche/469315191_1594349671198843_2030748612920409032_n.jpg" alt="">
+  </div>
+</section>
+
+<section id="music" class="music-section">
+  <h2>Último Lanzamiento</h2>
+  <audio controls>
+    <source src="./tren_de_medianoche/sientes_como.mp3" type="audio/mpeg">
+  </audio>
+</section>
+
+<footer class="footer" id="contact">
   <div class="footer-socials">
     <a href="https://www.instagram.com/trendemedianoche_oficial/" target="_blank" rel="noopener">
       <img src="./tren_de_medianoche/instagram-new.png" alt="Instagram">
     </a>
-
     <a href="https://open.spotify.com/intl-es/artist/2ZRyGZfKgNjNKbry4Aqv7J" target="_blank" rel="noopener">
       <img src="./tren_de_medianoche/spotify.png" alt="Spotify">
     </a>
-
     <a href="https://www.facebook.com/bandaTDMN" target="_blank" rel="noopener">
       <img src="./tren_de_medianoche/facebook-new.png" alt="Facebook">
     </a>
-
     <a href="https://youtube.com/@trendemedianochechile4904" target="_blank" rel="noopener">
       <img src="./tren_de_medianoche/youtube.png" alt="YouTube">
     </a>
-
     <a href="https://wa.me/56963223241" target="_blank" rel="noopener">
       <img src="./tren_de_medianoche/whatsapp.png" alt="WhatsApp">
     </a>
-
     <a href="mailto:bandatrendemedianoche@gmail.com">
       <img src="./tren_de_medianoche/email.png" alt="Email">
     </a>
@@ -69,6 +67,21 @@
   <p>© Tren de Medianoche</p>
 </footer>
 
+<script>
+  const hamburger = document.getElementById('hamburger');
+  const navMenu = document.getElementById('nav-menu');
+
+  hamburger.addEventListener('click', () => {
+    navMenu.classList.toggle('active');
+  });
+
+  // Cierra el menú al hacer click en un link (mobile)
+  document.querySelectorAll('.nav a').forEach(link => {
+    link.addEventListener('click', () => {
+      navMenu.classList.remove('active');
+    });
+  });
+</script>
 
 </body>
 </html>
