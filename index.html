@@ -131,33 +131,67 @@
 
 <!-- FOOTER -->
 <footer id="contact" class="footer">
-  <div class="footer-socials">
-    <a href="https://www.instagram.com/trendemedianoche_oficial/" target="_blank">
-      <img src="./tren_de_medianoche/instagram-new.png">
-    </a>
-    <a href="https://open.spotify.com/intl-es/artist/2ZRyGZfKgNjNKbry4Aqv7J" target="_blank">
-      <img src="./tren_de_medianoche/spotify.png">
-    </a>
-    <a href="https://www.facebook.com/bandaTDMN" target="_blank">
-      <img src="./tren_de_medianoche/facebook-new.png">
-    </a>
-    <a href="https://youtube.com/@trendemedianochechile4904" target="_blank">
-      <img src="./tren_de_medianoche/youtube.png">
-    </a>
-    <a href="https://wa.me/56963223241" target="_blank">
-      <img src="./tren_de_medianoche/whatsapp.png">
-    </a>
+
+  <div class="footer-columns">
+
+    <!-- REDES SOCIALES -->
+    <div class="footer-block">
+      <h2 class="footer-title">Síguenos en</h2>
+      <div class="footer-socials">
+        <a href="https://www.instagram.com/trendemedianoche_oficial/" target="_blank">
+          <img src="./tren_de_medianoche/instagram-new.png" alt="Instagram">
+        </a>
+
+        <a href="https://www.facebook.com/bandaTDMN" target="_blank">
+          <img src="./tren_de_medianoche/facebook-new.png" alt="Facebook">
+        </a>
+
+        <a href="https://youtube.com/@trendemedianochechile4904" target="_blank">
+          <img src="./tren_de_medianoche/youtube.png" alt="YouTube">
+        </a>
+      </div>
+    </div>
+
+    <!-- CONTACTO -->
+    <div class="footer-block">
+      <h2 class="footer-title">Contáctanos</h2>
+      <div class="footer-contact">
+
+         <a href="mailto:bandatrendemedianoche@gmail.com" class="contact-item">
+          ✉️ 
+        </a>
+        
+         <a href="https://wa.me/56963223241" target="_blank" class="contact-item">
+          <img src="./tren_de_medianoche/whatsapp.png" alt="WhatsApp">
+        </a>
+
+
+      </div>
+    </div>
+
   </div>
-  <p>© Tren de Medianoche</p>
+
+  <p class="footer-copy">© Tren de Medianoche</p>
 </footer>
+
 
 <script>
   const hamburger = document.getElementById("hamburger");
   const nav = document.getElementById("nav");
+  const navLinks = nav.querySelectorAll("a");
 
+  // Abrir / cerrar menú con hamburguesa
   hamburger.addEventListener("click", () => {
     nav.classList.toggle("active");
   });
+
+  // Cerrar menú al hacer click en cualquier sección
+  navLinks.forEach(link => {
+    link.addEventListener("click", () => {
+      nav.classList.remove("active");
+    });
+  });
 </script>
+
 </body>
 </html>
