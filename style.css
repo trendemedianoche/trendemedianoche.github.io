@@ -370,3 +370,13 @@ audio {
     justify-content: center;
   }
 }
+
+/* Centrar columna de contacto */
+.footer-block.contact {
+  text-align: center;
+}
+
+/* Centrar filas de contacto */
+.footer-block.contact .contact-row {
+  justify-content: center;
+}
