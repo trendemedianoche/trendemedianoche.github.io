@@ -175,20 +175,6 @@
         <span class="news-date">Agosto 2025</span>
       </article>
 
-      <!-- FORMULARIO -->
-      <div class="side-card news-form">
-        <h3>Recibe nuestras noticias</h3>
-
-        <form id="formulario">
-          <input type="text"  id="nombre" placeholder="Nombre" required>
-          <input type="email"  id="email" placeholder="Correo electrónico" required>
-          <textarea placeholder="Mensaje (opcional)"></textarea>
-          <button type="submit">Enviar</button>
-        </form>
-
-        <script src="./app.js"></script>
-      </div>
-
     </div>
 
     <!-- COLUMNA DERECHA (FIJA EN DESKTOP) -->
@@ -285,6 +271,31 @@
   </p>
 
 </footer>
+<!-- 🔽 AQUÍ VA EL CHATBOT 🔽 -->
+
+  <!-- BOTÓN CHAT -->
+  <div id="chat-button">💬</div>
+
+  <!-- POPUP CHAT -->
+  <div id="chat-popup" class="hidden">
+    <div class="chat-header">
+      <span>Escríbenos</span>
+      <button id="chat-close">×</button>
+    </div>
+
+    <div class="chat-body">
+      <form id="chat-form">
+        <input type="text" id="nombre" placeholder="Tu nombre" required />
+        <input type="email" id="email" placeholder="Tu email" required />
+        <textarea id="mensaje" placeholder="Escribe tu mensaje..." required></textarea>
+        <button type="submit">Enviar</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- JS -->
+  <script src="app.js"></script>
+
 
 
 
@@ -350,7 +361,6 @@ function copyTransferData() {
     newsBar.style.display = "none";
   });
 </script>
-
 
 
 </body>

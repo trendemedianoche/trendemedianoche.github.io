@@ -1,21 +1,32 @@
-document.getElementById("formulario").addEventListener("submit", function (e) {
+const chatButton = document.getElementById("chat-button");
+const chatPopup = document.getElementById("chat-popup");
+const chatClose = document.getElementById("chat-close");
+
+chatButton.addEventListener("click", () => {
+  chatPopup.classList.toggle("hidden");
+});
+
+chatClose.addEventListener("click", () => {
+  chatPopup.classList.add("hidden");
+});
+
+// Envío del formulario
+document.getElementById("chat-form").addEventListener("submit", e => {
   e.preventDefault();
 
   const data = {
-    nombre: document.getElementById("nombre").value,
-    email: document.getElementById("email").value,
+    nombre: nombre.value,
+    email: email.value,
+    mensaje: mensaje.value,
     fecha: new Date().toISOString()
   };
 
-  // Obtener datos previos
-  const registros = JSON.parse(localStorage.getItem("formularios")) || [];
+  // Guardar local (opcional)
+  const mensajes = JSON.parse(localStorage.getItem("mensajes")) || [];
+  mensajes.push(data);
+  localStorage.setItem("mensajes", JSON.stringify(mensajes));
 
-  // Agregar nuevo
-  registros.push(data);
-
-  // Guardar como JSON
-  localStorage.setItem("formularios", JSON.stringify(registros));
-
-  alert("Datos guardados localmente");
-  this.reset();
+  alert("Mensaje enviado");
+  e.target.reset();
+  chatPopup.classList.add("hidden");
 });

@@ -11,3 +11,88 @@ body {
   background: #000;
   color: #fff;
 }
+
+
+/* BOTÓN FLOTANTE */
+#chat-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 55px;
+  height: 55px;
+  background: #111;
+  color: #fff;
+  font-size: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  z-index: 1000;
+}
+
+/* POPUP */
+#chat-popup {
+  position: fixed;
+  bottom: 90px;
+  right: 20px;
+  width: 320px;
+  background: #1c1c1c;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+  z-index: 1000;
+  overflow: hidden;
+}
+
+/* OCULTO */
+.hidden {
+  display: none;
+}
+
+/* HEADER */
+.chat-header {
+  background: #000;
+  color: #fff;
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chat-header button {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+/* BODY */
+.chat-body {
+  padding: 12px;
+}
+
+#chat-form input,
+#chat-form textarea {
+  width: 100%;
+  margin-bottom: 8px;
+  padding: 8px;
+  border-radius: 6px;
+  border: none;
+}
+
+#chat-form textarea {
+  resize: none;
+  height: 80px;
+}
+
+#chat-form button {
+  width: 100%;
+  padding: 8px;
+  background: #444;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
