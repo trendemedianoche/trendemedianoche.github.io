@@ -118,8 +118,6 @@
 
 }
 
-
-
 /* =================================================
    FIX FLUJO GENERAL (ANTI-SOLAPE)
 ================================================= */
@@ -131,3 +129,35 @@
   z-index: 1;
 }
 
+/* =================================================
+   FIX APOYO – MOBILE
+================================================= */
+
+@media (max-width: 900px) {
+
+  .news-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .support-aside {
+    position: static;
+  }
+}
+
+/* ===============================
+   NEWS BAR RESPONSIVE
+================================ */
+@media (max-width: 768px) {
+
+  .news-content {
+    padding: 0.5rem 1rem;
+  }
+
+  .news-items {
+    animation-duration: 28s;
+  }
+
+  .news-label {
+    font-size: 0.75rem;
+  }
+}

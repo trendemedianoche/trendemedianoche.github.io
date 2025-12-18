@@ -10,8 +10,11 @@
   <link rel="stylesheet" href="css/gallery.css">
   <link rel="stylesheet" href="css/about.css">
   <link rel="stylesheet" href="css/music.css">
+  <link rel="stylesheet" href="css/news.css">
   <link rel="stylesheet" href="css/responsive.css">
+
   <link rel="stylesheet" href="css/footer.css">
+
 </head>
 
 <body>
@@ -33,9 +36,25 @@
     <a href="#media">Galería</a>
     <a href="#about">Historia</a>
     <a href="#music">Música</a>
+    <a href="#news">Noticias</a>
     <a href="#contact">Contacto</a>
   </nav>
 </header>
+
+<div class="news-bar">
+  <div class="news-label">NOVEDADES:</div>
+
+  <div class="news-marquee">
+    <div class="news-track">
+      <span>🔥 Último lanzamiento: <strong>Sientes Cómo</strong></span>
+      <span class="separator">|</span>
+      <span>📅 Próximamente: nuevas fechas en vivo</span>
+    </div>
+  </div>
+</div>
+
+
+
 
 <!-- GALERÍA -->
 <section id="media" class="gallery-section">
@@ -135,6 +154,72 @@
 
 </section>
 
+<!-- NOTICIAS & COMUNIDAD -->
+<section id="side-card news" class="news-section">
+
+  <h2 class="section-title">Noticias & Comunidad</h2>
+
+  <div class="news-layout">
+
+    <!-- COLUMNA IZQUIERDA -->
+    <div class="news-content">
+
+      <article class="side-card news-item">
+        <h3>Nueva fecha en vivo</h3>
+        <p>Este viernes estaremos tocando en un evento especial de blues en Santiago.</p>
+        <span class="news-date">Septiembre 2025</span>
+      </article>
+
+      <article class="side-card news-item">
+        <h3>Nuevo material en camino</h3>
+        <p>Estamos terminando la grabación de nuevas canciones para lo que será nuestro próximo lanzamiento.</p>
+        <span class="news-date">Agosto 2025</span>
+      </article>
+
+      <!-- FORMULARIO -->
+      <div class="side-card news-form">
+        <h3>Recibe nuestras noticias</h3>
+
+        <form>
+          <input type="text" placeholder="Nombre" required>
+          <input type="email" placeholder="Correo electrónico" required>
+          <textarea placeholder="Mensaje (opcional)"></textarea>
+          <button type="submit">Enviar</button>
+        </form>
+      </div>
+
+    </div>
+
+    <!-- COLUMNA DERECHA (FIJA EN DESKTOP) -->
+    <aside class="support-aside">
+
+      <div class="side-card donation-card">
+        <h3>Apoya el proyecto</h3>
+
+        <p class="donation-intro">
+          Si quieres apoyar nuestro trabajo y futuras producciones,
+          puedes hacerlo mediante transferencia bancaria:
+        </p>
+
+        <div class="donation-grid">
+          <div><span>Banco</span><strong>XXXX</strong></div>
+          <div><span>Cuenta</span><strong>XXXXXXXX</strong></div>
+          <div><span>Nombre</span><strong>Tren de Medianoche</strong></div>
+          <div><span>Asunto</span><strong>Aporte</strong></div>
+        </div>
+
+        <button class="copy-button" onclick="copyTransferData()">
+          <img src="./tren_de_medianoche/copy.png" alt="Copiar">
+          Copiar datos
+        </button>
+      </div>
+
+    </aside>
+
+  </div>
+</section>
+
+
 <!-- FOOTER -->
 <footer id="contact" class="footer">
 
@@ -190,32 +275,6 @@
           <img src="./tren_de_medianoche/youtube.png" alt="YouTube">
         </a>
       </div>
-    </div>
-
-  </div>
-
-  <!-- BLOQUE APORTES (ABAJO Y MÁS GRANDE) -->
-  <div class="footer-donation">
-
-    <div class="donation-card">
-      <h3>Apoya el proyecto</h3>
-
-      <p class="donation-intro">
-        Si quieres apoyar nuestro trabajo y futuras producciones,
-        puedes hacerlo mediante transferencia bancaria:
-      </p>
-
-      <div class="donation-grid">
-        <div><span>Banco</span><strong>XXXX</strong></div>
-        <div><span>Cuenta</span><strong>XXXXXXXX</strong></div>
-        <div><span>Nombre</span><strong>Tren de Medianoche</strong></div>
-        <div><span>Asunto</span><strong>Aporte</strong></div>
-      </div>
-
-      <button class="copy-button" onclick="copyTransferData()">
-        <img src="./tren_de_medianoche/copy.png" alt="Copiar">
-        Copiar datos de transferencia
-      </button>
     </div>
 
   </div>
@@ -281,6 +340,16 @@ function copyTransferData() {
    }
 }
 </script>
+
+<script>
+  const newsClose = document.getElementById("newsClose");
+  const newsBar = document.getElementById("newsBar");
+
+  newsClose.addEventListener("click", () => {
+    newsBar.style.display = "none";
+  });
+</script>
+
 
 
 </body>
