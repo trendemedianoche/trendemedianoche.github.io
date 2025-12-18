@@ -11,8 +11,6 @@ body {
   background: #000;
   color: #fff;
 }
-
-
 /* BOTÓN FLOTANTE */
 #chat-button {
   position: fixed;
@@ -20,16 +18,22 @@ body {
   right: 20px;
   width: 55px;
   height: 55px;
-  background: #111;
-  color: #fff;
+  background: #1c1c1c;
+  color: #f5f5f5;
   font-size: 26px;
   border-radius: 50%;
+  border: 1px solid #333;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.6);
   z-index: 1000;
+  transition: background 0.15s ease, box-shadow 0.15s ease;
+}
+
+#chat-button:hover {
+  background: #222;
 }
 
 /* POPUP */
@@ -40,7 +44,8 @@ body {
   width: 320px;
   background: #1c1c1c;
   border-radius: 12px;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+  border: 1px solid #333;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.75);
   z-index: 1000;
   overflow: hidden;
 }
@@ -52,20 +57,26 @@ body {
 
 /* HEADER */
 .chat-header {
-  background: #000;
-  color: #fff;
+  background: #111;
+  color: #f5f5f5;
   padding: 12px;
+  font-weight: 600;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border-bottom: 1px solid #333;
 }
 
 .chat-header button {
   background: none;
   border: none;
-  color: #fff;
+  color: #aaa;
   font-size: 22px;
   cursor: pointer;
+}
+
+.chat-header button:hover {
+  color: #fff;
 }
 
 /* BODY */
@@ -73,26 +84,51 @@ body {
   padding: 12px;
 }
 
+/* INPUTS — AMARILLO SUTIL SOLO AQUÍ */
 #chat-form input,
 #chat-form textarea {
   width: 100%;
-  margin-bottom: 8px;
-  padding: 8px;
+  margin-bottom: 10px;
+  padding: 9px;
   border-radius: 6px;
-  border: none;
+  border: 1px solid #444;
+  background: #2a2a2a;
+  color: #fff;
+  font-size: 14px;
+  transition: border-color 0.15s ease;
 }
 
+#chat-form input::placeholder,
+#chat-form textarea::placeholder {
+  color: #999;
+}
+
+/* FOCO SUAVE */
+#chat-form input:focus,
+#chat-form textarea:focus {
+  outline: none;
+  border-color: #ffd400;
+}
+
+/* TEXTAREA */
 #chat-form textarea {
   resize: none;
   height: 80px;
 }
 
+/* BOTÓN ENVIAR — SIN AMARILLO */
 #chat-form button {
   width: 100%;
-  padding: 8px;
-  background: #444;
-  color: #fff;
-  border: none;
+  padding: 9px;
+  background: #333;
+  color: #f5f5f5;
+  border: 1px solid #444;
   border-radius: 6px;
+  font-weight: 600;
   cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+#chat-form button:hover {
+  background: #444;
 }
