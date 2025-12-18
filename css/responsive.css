@@ -1,51 +1,25 @@
 /* =================================================
-   FIX GALERÍA – EVITA TEXTO SOBRE IMÁGENES
+   GALERÍA – RESPONSIVE 2 COLUMNAS (TABLET + MOBILE)
 ================================================= */
 
-/* TABLET Y MENOR */
 @media (max-width: 1100px) {
 
-  .gallery-section {
-    padding-top: 100px; /* respeta el header fijo */
-  }
-
   .gallery-grid {
-    height: auto !important;   /* 🔑 elimina altura fija */
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0;
+    height: auto;
   }
 
   .gallery-grid img {
     width: 100%;
-    height: 100%;
-    aspect-ratio: 1 / 1;       /* mantiene proporción */
+    height: 220px;
     object-fit: cover;
+    display: block;
   }
 }
 
-/* MOBILE */
-@media (max-width: 768px) {
 
-  .gallery-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .gallery-grid img {
-    aspect-ratio: 1 / 1;
-  }
-}
-
-/* MOBILE PEQUEÑO */
-@media (max-width: 480px) {
-
-  .gallery-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .gallery-grid img {
-    aspect-ratio: 4 / 3;
-  }
-}
 
 /* =================================================
    FOOTER – MOBILE STACK FIX
@@ -156,3 +130,4 @@
   position: relative;
   z-index: 1;
 }
+

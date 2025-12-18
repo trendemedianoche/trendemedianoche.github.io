@@ -64,3 +64,9 @@
   height: 3px;
   background: #fff;
 }
+
+/* FIX OFFSET PARA SECCIONES CON HEADER FIJO */
+section,
+footer {
+  scroll-margin-top: 100px; /* header (100px) + margen */
+}

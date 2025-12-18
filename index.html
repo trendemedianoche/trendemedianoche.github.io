@@ -234,15 +234,23 @@
   const nav = document.getElementById("nav");
   const navLinks = nav.querySelectorAll("a");
 
-  // Abrir / cerrar menú con hamburguesa
-  hamburger.addEventListener("click", () => {
-    nav.classList.toggle("active");
+  // Toggle menú al hacer click en hamburguesa
+  hamburger.addEventListener('click', (e) => {
+    e.stopPropagation();
+    nav.classList.toggle('active');
   });
 
-  // Cerrar menú al hacer click en cualquier sección
-  navLinks.forEach(link => {
-    link.addEventListener("click", () => {
-      nav.classList.remove("active");
+  // Cerrar menú al hacer click fuera
+  document.addEventListener('click', (e) => {
+    if (!nav.contains(e.target) && !hamburger.contains(e.target)) {
+      nav.classList.remove('active');
+    }
+  });
+
+  // Cerrar menú al hacer click en un link
+  nav.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      nav.classList.remove('active');
     });
   });
 </script>
