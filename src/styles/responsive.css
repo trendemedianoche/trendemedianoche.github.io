@@ -1,0 +1,175 @@
+/* =================================================
+   GALERÍA – RESPONSIVE 2 COLUMNAS (TABLET + MOBILE)
+================================================= */
+
+@media (max-width: 1100px) {
+
+  .gallery-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0;
+    height: auto;
+  }
+
+  .gallery-grid img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    display: block;
+  }
+}
+
+
+
+/* =================================================
+   FOOTER – MOBILE STACK FIX
+================================================= */
+
+@media (max-width: 768px) {
+
+  /* FUERZA EL FOOTER A COLUMNA */
+  .footer-columns {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 2rem;
+    text-align: center;
+  }
+
+  /* TODAS LAS COLUMNAS BAJAN */
+  .footer-logo-column,
+  .footer-block {
+    width: 100%;
+    justify-self: center;
+  }
+
+  /* LOGO */
+  .footer-logo-column {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+  }
+
+  /* CONTACTO */
+  .footer-block.contact {
+    text-align: center;
+  }
+
+  .contact-row {
+    justify-content: center;
+  }
+
+  /* REDES */
+  .footer-socials {
+    justify-content: center;
+    margin-top: 0.5rem;
+  }
+
+  /* APORTE */
+  .footer-donation {
+    margin-top: 2.5rem;
+    padding: 0 1rem;
+  }
+
+  .donation-card {
+    max-width: 100%;
+  }
+
+  .donation-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
+/* =================================================
+   FIX MENU HAMBURGUESA – MOBILE
+================================================= */
+
+@media (max-width: 768px) {
+
+  /* HEADER SIEMPRE VISIBLE */
+  .main-header {
+    z-index: 9999;
+    position: fixed;
+  }
+
+  /* HAMBURGUESA VISIBLE */
+  .hamburger {
+    display: flex !important;
+    z-index: 10000;
+  }
+
+  /* NAV OCULTO POR DEFECTO */
+  .nav {
+    display: none;
+    position: absolute;
+    top: 106px;
+    left: 0;
+    width: 100%;
+    background: #000;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 0;
+    z-index: 9998;
+  }
+
+  /* NAV ACTIVO */
+  .nav.active {
+    display: flex !important;
+  }
+
+}
+
+/* =================================================
+   FIX FLUJO GENERAL (ANTI-SOLAPE)
+================================================= */
+
+.gallery-section,
+.about-section,
+.music-section {
+  position: relative;
+  z-index: 1;
+}
+
+/* 📱 Responsive */
+@media (max-width: 768px) {
+  .music-card {
+    padding: 1.5rem;
+  }
+
+  .song-title {
+    font-size: 1.4rem;
+  }
+}
+
+/* =================================================
+   FIX APOYO – MOBILE
+================================================= */
+
+@media (max-width: 900px) {
+
+  .news-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .support-aside {
+    position: static;
+    padding: 1rem 1rem;
+  }
+}
+
+/* ===============================
+   NEWS BAR RESPONSIVE
+================================ */
+@media (max-width: 768px) {
+
+  .news-content {
+    padding: 0.5rem 1rem;
+  }
+
+  .news-items {
+    animation-duration: 28s;
+  }
+
+  .news-label {
+    font-size: 0.75rem;
+  }
+}

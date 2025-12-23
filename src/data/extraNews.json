@@ -1,0 +1,16 @@
+{
+  "label": "NOVEDADES:",
+  "items": [
+    {
+      "icon": "🔥",
+      "text": "Último lanzamiento:",
+      "highlight": "Sientes Cómo"
+    },
+    {
+      "icon": "📅",
+      "text": "Próximamente:",
+      "highlight": "nuevas fechas en vivo"
+    }
+  ],
+  "separator": "|"
+}

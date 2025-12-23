@@ -1,0 +1,14 @@
+{
+  "news": [
+    {
+      "title": "Nueva fecha en vivo",
+      "content": "Este viernes estaremos tocando en un evento especial de blues en Santiago.",
+      "date": "Septiembre 2025"
+    },
+    {
+      "title": "Nuevo material en camino",
+      "content": "Estamos terminando la grabación de nuevas canciones para lo que será nuestro próximo lanzamiento.",
+      "date": "Agosto 2025"
+    }
+  ]
+}
