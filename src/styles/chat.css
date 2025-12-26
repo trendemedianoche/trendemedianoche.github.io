@@ -1,24 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&display=swap');
-
-/* RESET */
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  font-family: 'Oswald', sans-serif;
-  background: #000;
-  color: #fff;
-}
-
+/* ============================= */
 /* BOTÓN FLOTANTE */
+/* ============================= */
 #chat-button {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  width: 55px;
-  height: 55px;
+  width: 56px;
+  height: 56px;
   background: #1c1c1c;
   color: #f5f5f5;
   font-size: 26px;
@@ -28,38 +16,39 @@ body {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.6);
+  box-shadow: 0 6px 18px rgba(0,0,0,.7);
   z-index: 1000;
+  transition: background .15s ease, transform .1s ease;
 }
 
 #chat-button:hover {
   background: #222;
+  transform: scale(1.05);
 }
 
+/* ============================= */
 /* POPUP */
+/* ============================= */
 #chat-popup {
   position: fixed;
   bottom: 90px;
   right: 20px;
   width: 320px;
   background: #1c1c1c;
-  border-radius: 12px;
+  border-radius: 14px;
   border: 1px solid #333;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.75);
+  box-shadow: 0 15px 40px rgba(0,0,0,.85);
   z-index: 1000;
   overflow: hidden;
 }
 
-/* OCULTO */
-.hidden {
-  display: none;
-}
-
+/* ============================= */
 /* HEADER */
+/* ============================= */
 .chat-header {
   background: #111;
   color: #f5f5f5;
-  padding: 12px;
+  padding: 12px 14px;
   font-weight: 600;
   display: flex;
   justify-content: space-between;
@@ -73,63 +62,73 @@ body {
   color: #aaa;
   font-size: 22px;
   cursor: pointer;
+  line-height: 1;
 }
 
 .chat-header button:hover {
   color: #fff;
 }
 
+/* ============================= */
 /* BODY */
+/* ============================= */
 .chat-body {
-  padding: 12px;
+  padding: 14px;
 }
 
+/* ============================= */
 /* INPUTS */
-#chat-form input,
-#chat-form textarea {
+/* ============================= */
+.chat-body input,
+.chat-body textarea {
   width: 100%;
   margin-bottom: 10px;
-  padding: 9px;
-  border-radius: 6px;
+  padding: 9px 10px;
+  border-radius: 8px;
   border: 1px solid #444;
   background: #2a2a2a;
   color: #fff;
   font-size: 14px;
 }
 
-#chat-form input::placeholder,
-#chat-form textarea::placeholder {
+.chat-body input::placeholder,
+.chat-body textarea::placeholder {
   color: #999;
 }
 
-#chat-form textarea {
+.chat-body textarea {
   resize: none;
   height: 80px;
 }
 
-/* BOTÓN ENVIAR — ÚNICO ELEMENTO AMARILLO */
-#chat-form button {
+/* ============================= */
+/* BOTÓN ENVIAR */
+/* ============================= */
+.chat-body button {
   width: 100%;
   padding: 10px;
   background: #ffd400;
   color: #1c1c1c;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   font-weight: 700;
   cursor: pointer;
-  transition: background 0.15s ease, transform 0.1s ease;
+  transition: background .15s ease, transform .1s ease;
 }
 
-#chat-form button:hover {
+.chat-body button:hover {
   background: #ffea00;
 }
 
-#chat-form button:active {
-  transform: scale(0.98);
+.chat-body button:active {
+  transform: scale(0.97);
 }
 
+/* ============================= */
+/* TIPOGRAFÍA SEGURA */
+/* ============================= */
 #chat-popup,
 #chat-popup * {
   font-family: inherit;
+  box-sizing: border-box;
 }
-

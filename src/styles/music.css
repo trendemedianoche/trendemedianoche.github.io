@@ -1,0 +1,123 @@
+.music-section {
+  padding: 1rem 1.5rem;
+  max-width: 1100px;
+  margin: auto;
+}
+
+.section-title {
+  text-align: center;
+  margin-bottom: 3rem;
+  font-size: 2.2rem;
+}
+
+.music-card {
+  background: #111;
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 3rem;
+  box-shadow: 0 0 30px rgba(0,0,0,.4);
+}
+
+.music-card.featured {
+  border: 2px solid #f1c40f;
+}
+
+.song-title {
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: #f1c40f;
+}
+
+audio {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.badge {
+  display: inline-block;
+  font-size: .75rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #000;
+  background: #f5c400;
+  padding: .3rem .7rem;
+  border-radius: 999px;
+  margin-bottom: .5rem;
+}
+
+.song-title {
+  font-size: 1.8rem;
+  color: #f5c400;
+  margin: .5rem 0 0;
+}
+
+/* 🎵 Spotify */
+.spotify-card iframe {
+  border-radius: 12px;
+  border: none;
+  margin-top: 1rem;
+}
+
+.music-section.alt-design {
+  max-width: 1200px;
+  margin: auto;
+  padding: 5rem 1.5rem;
+}
+
+/* 🎧 RELEASE SPOTLIGHT */
+.release-spotlight {
+  position: relative;
+  padding: 3rem 2.5rem;
+  margin-bottom: 4rem;
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at top left, rgba(245,196,0,.15), transparent 40%),
+    linear-gradient(180deg, #0e0e0e, #050505);
+  box-shadow: 0 30px 80px rgba(0,0,0,.7);
+  overflow: hidden;
+}
+
+.release-spotlight::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 28px;
+  border: 1px solid rgba(245,196,0,.35);
+  pointer-events: none;
+}
+
+.release-meta {
+  max-width: 600px;
+}
+
+.release-label {
+  display: inline-block;
+  font-size: .7rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #f5c400;
+  margin-bottom: .8rem;
+}
+
+.release-title {
+  font-size: 2.6rem;
+  color: #fff;
+  margin: 0;
+}
+
+.release-subtitle {
+  color: #aaa;
+  margin-top: .4rem;
+}
+/* 🎶 PLAYER */
+.release-player {
+  margin-top: 2.2rem;
+}
+
+.release-player audio {
+  width: 100%;
+  border-radius: 999px;
+  padding: .6rem;
+  background: rgba(255,255,255,.08);
+  backdrop-filter: blur(8px);
+}

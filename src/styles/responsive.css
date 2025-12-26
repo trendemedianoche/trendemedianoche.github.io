@@ -129,6 +129,17 @@
   z-index: 1;
 }
 
+/* 📱 Responsive */
+@media (max-width: 768px) {
+  .music-card {
+    padding: 1.5rem;
+  }
+
+  .song-title {
+    font-size: 1.4rem;
+  }
+}
+
 /* =================================================
    FIX APOYO – MOBILE
 ================================================= */
