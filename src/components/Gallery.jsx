@@ -1,33 +1,25 @@
-import img1 from '../assets/323288311_553218996680854_8275761172948079720_n.jpg';
-import img2 from '../assets/277157904_944018592979258_5253242053734153907_n.jpeg';
-import img3 from '../assets/348441768_550723740593684_8018548674131979303_n.jpg';
-import img4 from '../assets/469315191_1594349671198843_2030748612920409032_n.jpg';
+import { useEffect, useState } from 'react';
+import { getGalleryImages } from '../services/galleryService';
 
 export default function Gallery() {
+  const [images, setImages] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getGalleryImages()
+      .then(setImages)
+      .finally(() => setLoading(false));
+  }, []);
+
   return (
     <section id="media" className="gallery-section">
+      {loading && <p className="loading">Cargando galería…</p>}
+
       <div className="gallery-grid">
-        <img src={img1} alt="Tren de Medianoche en vivo" loading="lazy" />
-        <img src={img2} alt="Presentación en escenario" loading="lazy" />
-        <img src={img3} alt="Ensayo de la banda" loading="lazy" />
-        <img src={img4} alt="Sesión fotográfica" loading="lazy" />
-      </div>
-    </section>
-  );
-}
-
-
-/*
-import galleryData from '../data/gallery.json';
-
-export default function Gallery() {
-  return (
-    <section id="media" className="gallery-section">
-      <div className="gallery-grid">
-        {galleryData.images.map((img, i) => (
+        {images.map(img => (
           <img
-            key={i}
-            src={`${img.src}`}
+            key={img.id}
+            src={img.url}
             alt={img.alt}
             loading="lazy"
           />
@@ -36,5 +28,3 @@ export default function Gallery() {
     </section>
   );
 }
-*/
-//import img1 from '../assets/323288311_553218996680854_8275761172948079720_n.jpg';
