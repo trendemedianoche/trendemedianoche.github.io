@@ -173,3 +173,88 @@
     font-size: 0.75rem;
   }
 }
+
+/* =========================
+   📱 MUSIC – RESPONSIVE
+========================= */
+
+/* Tablets y pantallas medianas */
+@media (max-width: 900px) {
+  .release-cover {
+    width: 120px;
+  }
+
+  .release-cover img {
+    max-height: 120px;
+  }
+
+  .release-title {
+    font-size: 1.5rem;
+  }
+}
+
+/* Mobile */
+@media (max-width: 680px) {
+  .release-spotlight {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .release-cover {
+    width: 110px;
+    margin: 0 auto;
+  }
+
+  .release-cover img {
+    max-height: 110px;
+  }
+
+  .release-content {
+    align-items: center;
+  }
+}
+
+/* Mobile pequeño */
+@media (max-width: 420px) {
+  .release-cover {
+    width: 105px;
+  }
+
+  .release-cover img {
+    max-height: 105px;
+  }
+
+  .release-title {
+    font-size: 1.3rem;
+  }
+
+  .release-subtitle {
+    font-size: 0.85rem;
+  }
+}
+
+/* =========================
+   📱 TABLET – 768px
+========================= */
+@media (max-width: 820px) {
+  .release-spotlight {
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .release-cover {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .release-cover img {
+    width: 120px;
+    height: auto;
+  }
+
+  .release-content {
+    text-align: left;
+  }
+}

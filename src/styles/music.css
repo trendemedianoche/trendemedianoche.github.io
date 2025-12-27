@@ -121,3 +121,32 @@ audio {
   background: rgba(255,255,255,.08);
   backdrop-filter: blur(8px);
 }
+
+.release-spotlight {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 1.5rem;
+  background: #111;
+  padding: 1.5rem;
+  border-radius: 16px;
+  margin-bottom: 2.5rem;
+  align-items: center;
+}
+
+.release-cover img {
+  width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 0 25px rgba(0,0,0,.6);
+}
+
+.release-content audio {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+  .release-spotlight {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+}
