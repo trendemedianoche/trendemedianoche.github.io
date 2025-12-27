@@ -1,20 +1,29 @@
-import extraNews from '../data/extraNews.json';
+import { useEffect, useState } from 'react';
+import { getExtraNewsItems } from '../services/extraNewsService';
 
 export default function ExtraNewsBar() {
+  const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    getExtraNewsItems().then(setItems);
+  }, []);
+
+  if (!items.length) return null;
+
   return (
     <div className="news-bar">
-      <div className="news-label">{extraNews.label}</div>
+      <div className="news-label">NOVEDADES:</div>
 
       <div className="news-marquee">
         <div className="news-track">
-          {extraNews.items.map((item, i) => (
-            <span key={i} className="news-item-bar">
-              {item.icon} {item.text}{' '}
-              <strong>{item.highlight}</strong>
-              {i < extraNews.items.length - 1 && (
-                <span className="separator">
-                  {' '}{extraNews.separator}{' '}
-                </span>
+          {items.map((item, i) => (
+            <span key={item.id}>
+              {item.icon}{' '}
+              <span
+                dangerouslySetInnerHTML={{ __html: item.content }}
+              />
+              {i < items.length - 1 && (
+                <span className="separator"> | </span>
               )}
             </span>
           ))}

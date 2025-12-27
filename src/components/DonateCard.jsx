@@ -1,7 +1,26 @@
-import donateData from '../data/donate.json';
-import { copyTransferData } from '/utils/clipboard.js';
+import { useEffect, useState } from 'react';
+import { getTransferData } from '../services/donationService';
 
 export default function DonateCard() {
+  const [fields, setFields] = useState([]);
+
+  useEffect(() => {
+    getTransferData().then(setFields);
+  }, []);
+
+  const copyData = () => {
+    const text = fields
+      .map(f => `${f.field_key}: ${f.field_value}`)
+      .join('\n');
+
+    navigator.clipboard.writeText(text)
+      .then(() => alert('Datos de transferencia copiados'));
+  };
+
+  const visibleFields = fields.filter(f => f.visible);
+
+  if (!fields.length) return null;
+
   return (
     <div className="side-card donation-card">
       <h3>Apoya el proyecto</h3>
@@ -12,28 +31,15 @@ export default function DonateCard() {
       </p>
 
       <div className="donation-grid">
-        <div>
-          <span>Banco</span>
-          <strong>{donateData.bank}</strong>
-        </div>
-        <div>
-          <span>Cuenta</span>
-          <strong>{donateData.accountNumber}</strong>
-        </div>
-        <div>
-          <span>Nombre</span>
-          <strong>{donateData.name}</strong>
-        </div>
-        <div>
-          <span>Asunto</span>
-          <strong>Aporte</strong>
-        </div>
+        {visibleFields.map(field => (
+          <div key={field.id}>
+            <span>{field.field_key}</span>
+            <strong>{field.field_value}</strong>
+          </div>
+        ))}
       </div>
 
-      <button
-        className="copy-button"
-        onClick={() => copyTransferData(donateData)}
-      >
+      <button className="copy-button" onClick={copyData}>
         📋 Copiar datos
       </button>
     </div>
