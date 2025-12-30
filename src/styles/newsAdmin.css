@@ -1,0 +1,106 @@
+.news-admin {
+  max-width: 1100px;
+  margin: auto;
+  color: #f5f5f5;
+}
+
+.news-admin .admin-header {
+  margin-bottom: 1.8rem;
+}
+
+.news-admin-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.6rem;
+}
+
+/* CARD */
+.news-card {
+  background: #111;
+  border-radius: 16px;
+  padding: 1.4rem;
+  box-shadow: 0 0 30px rgba(0,0,0,.4);
+}
+
+.news-card h3 {
+  margin-bottom: 1rem;
+}
+
+/* FORM */
+.news-form label {
+  display: flex;
+  flex-direction: column;
+  gap: .4rem;
+  margin-bottom: 1rem;
+  font-size: .85rem;
+  color: #aaa;
+}
+
+.news-form input,
+.news-form textarea {
+  background: #1c1c1c;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: .6rem .8rem;
+  color: #fff;
+}
+
+.news-form textarea {
+  resize: vertical;
+}
+
+.news-form-actions {
+  display: flex;
+  gap: .6rem;
+}
+
+/* LIST */
+.news-admin-list {
+  display: flex;
+  flex-direction: column;
+  gap: .6rem;
+}
+
+.news-item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #1c1c1c;
+  padding: .6rem .8rem;
+  border-radius: 10px;
+}
+
+.news-item-info span {
+  font-size: .75rem;
+  color: #aaa;
+}
+
+.news-item-actions button {
+  background: transparent;
+  border: none;
+  color: #ddd;
+  font-size: 1.1rem;
+  cursor: pointer;
+  margin-left: .4rem;
+}
+
+.news-item-actions button:hover {
+  color: #f5c400;
+}
+
+.news-item-actions button:last-child:hover {
+  color: #ff5c5c;
+}
+
+.empty {
+  color: #777;
+  font-size: .85rem;
+  margin-top: .5rem;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .news-admin-layout {
+    grid-template-columns: 1fr;
+  }
+}

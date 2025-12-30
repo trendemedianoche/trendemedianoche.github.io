@@ -1,10 +1,12 @@
-import React from 'react';
+import { useState } from 'react';
 import PhotoAdmin from './PhotoAdmin';
+import AdminHeader from './AdminHeader';
+import NewsAdmin from './NewsAdmin';
+import '../styles/AdminPanel.css';
 
-// Placeholder para módulos futuros
 function SettingsEditor() {
   return (
-    <div>
+    <div className="admin-module">
       <h2>Editar textos y valores</h2>
       <p>Aquí puedes agregar tu formulario para editar textos del sitio.</p>
     </div>
@@ -13,7 +15,7 @@ function SettingsEditor() {
 
 function SectionManager() {
   return (
-    <div>
+    <div className="admin-module">
       <h2>Gestión de secciones</h2>
       <p>Aquí puedes agregar tu módulo para administrar secciones dinámicas.</p>
     </div>
@@ -21,16 +23,19 @@ function SectionManager() {
 }
 
 export default function AdminPanel() {
-  console.log('AdminPanel cargado'); // Para depuración
+  const [activeTab, setActiveTab] = useState('photos');
+
   return (
-    <div style={{ padding: '2rem' }}>
-      <h1>Panel de Administración</h1>
+    <div className="admin-layout">
+      <AdminHeader activeTab={activeTab} setActiveTab={setActiveTab} />
 
-      <SettingsEditor />
-
-      <PhotoAdmin />
-
-      <SectionManager />
+      {/* OFFSET HEADER */}
+      <main className="admin-content">
+        {activeTab === 'photos' && <PhotoAdmin />}
+        {activeTab === 'settings' && <SettingsEditor />}
+        {activeTab === 'sections' && <SectionManager />}
+        {activeTab === 'news' && <NewsAdmin />}
+      </main>
     </div>
   );
 }

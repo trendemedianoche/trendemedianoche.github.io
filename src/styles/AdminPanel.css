@@ -1,0 +1,96 @@
+.admin-layout {
+  min-height: 100vh;
+  background: #0b0b0b;
+  color: #f5f5f5;
+}
+
+/* HEADER */
+.admin-topbar {
+  background: #111;
+  border-bottom: 1px solid #222;
+  padding: 1.2rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.admin-topbar h1 {
+  font-size: 1.6rem;
+}
+
+.admin-topbar span {
+  color: #f5c400;
+  font-size: 0.9rem;
+}
+
+/* TABS */
+.admin-tabs {
+  display: flex;
+  gap: .5rem;
+  padding: .6rem 2rem;
+  border-bottom: 1px solid #222;
+  background: #0e0e0e;
+}
+
+.admin-tabs button {
+  background: transparent;
+  border: none;
+  color: #bbb;
+  padding: .6rem 1.2rem;
+  cursor: pointer;
+  border-radius: 999px;
+  font-size: 0.95rem;
+}
+
+.admin-tabs button:hover {
+  background: #1a1a1a;
+}
+
+.admin-tabs button.active {
+  background: #f5c400;
+  color: #111;
+  font-weight: 600;
+}
+
+/* CONTENT */
+.admin-content {
+  padding: 2rem;
+}
+
+.admin-module h2 {
+  margin-bottom: .6rem;
+}
+
+.admin-module p {
+  color: #aaa;
+}
+
+
+/* ADMIN HEADER */
+.admin-header .nav a,
+.admin-header .nav button {
+  background: none;
+  border: none;
+  color: #fff;
+  margin-left: 30px;
+  font-size: 15px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.admin-header .nav button:hover {
+  color: #ff0000;
+}
+
+.admin-header .nav button.active {
+  color: #f5c400;
+  font-weight: 600;
+}
+
+/* CONTENT OFFSET */
+.admin-content {
+  padding-top: 110px; /* header fijo */
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
