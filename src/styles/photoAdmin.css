@@ -1,90 +1,272 @@
 .photo-admin {
-  margin-top: 2rem;
-  font-family: Arial, sans-serif;
+  max-width: 1200px;
+  margin: auto;
+  padding: 2.5rem 1.5rem;
+  color: #f5f5f5;
 }
 
-.photo-admin h2,
-.photo-admin h3 {
-  color: #333;
-  margin-bottom: 1rem;
+.admin-header {
+  margin-bottom: 2rem;
 }
 
-.photo-admin .upload-section {
+.admin-header h2 {
+  font-size: 2rem;
+}
+
+.admin-header p {
+  color: #aaa;
+  margin-top: .3rem;
+}
+
+/* UPLOAD */
+.upload-panel {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.upload-box {
+  background: #1c1c1c;
+  border: 1px dashed #444;
+  padding: .8rem 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #ccc;
+}
+
+.upload-box:hover {
+  background: #222;
+}
+
+.primary-btn {
+  background: #f5c400;
+  color: #111;
+  padding: .8rem 1.4rem;
+  border-radius: 999px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+}
+
+.primary-btn:hover {
+  background: #ffda33;
+}
+
+/* GRID */
+.photo-admin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 1.6rem;
+}
+
+/* CARD */
+.photo-card {
+  background: #111;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 0 30px rgba(0,0,0,.4);
+  transition: transform .2s ease;
+}
+
+.photo-card:hover {
+  transform: translateY(-4px);
+}
+
+.photo-card.inactive {
+  opacity: .45;
+}
+
+/* IMAGE */
+.photo-preview {
+  position: relative;
+}
+
+.photo-preview img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+.badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #333;
+  color: #f5c400;
+  padding: .3rem .6rem;
+  font-size: .7rem;
+  border-radius: 999px;
+}
+
+/* INFO */
+.photo-info {
+  padding: .8rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.photo-info strong {
+  max-width: 140px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ACTIONS */
+.photo-actions {
+  display: flex;
+  gap: .3rem;
+  padding: .7rem;
+  border-top: 1px solid #222;
+}
+
+.photo-actions button {
+  flex: 1;
+  background: #1c1c1c;
+  color: #ddd;
+  border: none;
+  border-radius: 6px;
+  padding: .4rem 0;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.photo-actions button:first-child {
+  margin-right: .2rem;
+}
+
+.photo-actions button:hover {
+  background: #222;
+}
+
+.photo-actions .toggle {
+  color: #f5c400;
+}
+
+.photo-actions .danger {
+  color: #ff5c5c;
+}
+
+/* MESSAGE */
+.message {
+  margin: 1rem 0;
+  color: #f5c400;
+}
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+  .photo-actions {
+    flex-wrap: wrap;
+  }
+}
+/* =========================
+   LOADING OVERLAY
+========================= */
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading-box {
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 24px 32px;
+  text-align: center;
+  color: #fff;
+  box-shadow: 0 10px 40px rgba(0,0,0,.6);
+}
+
+.loading-box p {
+  margin-top: 12px;
+  font-size: 0.95rem;
+  color: #ccc;
+}
+
+/* Spinner */
+.spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid #333;
+  border-top: 3px solid #f5c400;
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+  margin: auto;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.loading-box {
+  background: #111;
+  padding: 24px 32px;
+  border-radius: 12px;
+  color: #fff;
+  text-align: center;
+}
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #444;
+  border-top-color: #fff;
+  border-radius: 50%;
+  display: inline-block;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.img {
+  width: 30px;
+  background: transparent;
+  filter:invert(1);
+}
+
+
+.file-hint {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 1rem;
-}
-
-.photo-admin .upload-section input[type="file"] {
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 4px;
-}
-
-.photo-admin .upload-section button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 6px 12px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.photo-admin .upload-section button:hover {
-  background-color: #0056b3;
-}
-
-.photo-admin .message {
-  margin-bottom: 1rem;
-  color: #555;
-  font-size: 14px;
-}
-
-.photo-admin .images-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-}
-
-.photo-admin .image-card {
-  width: 140px;
-  border: 1px solid #ddd;
+  background: #1c1c1c;
+  padding: 6px 10px;
   border-radius: 8px;
-  padding: 8px;
-  text-align: center;
-  transition: box-shadow 0.2s;
+  color: #ccc;
 }
 
-.photo-admin .image-card:hover {
-  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-}
-
-.photo-admin .image-card img {
-  width: 120px;
-  height: 120px;
-  object-fit: cover;
-  border-radius: 5px;
-}
-
-.photo-admin .image-card p {
-  font-size: 12px;
-  margin: 5px 0;
-  word-break: break-all;
-}
-
-.photo-admin .image-card button {
-  background-color: #dc3545;
-  color: white;
+.cancel-file-btn {
   border: none;
-  border-radius: 5px;
-  padding: 4px 8px;
+  background: transparent;
   cursor: pointer;
-  font-size: 12px;
-  transition: background-color 0.2s;
+  font-size: 16px;
 }
 
-.photo-admin .image-card button:hover {
-  background-color: #a71d2a;
+.cancel-file-btn:hover {
+  color: #ff5c5c;
 }
+
+
