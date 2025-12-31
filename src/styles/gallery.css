@@ -1,10 +1,11 @@
 .gallery-section {
-  padding-top: 100px;
+  position: relative; /* evitar que se superponga */
+  padding-bottom: 2rem; /* espacio inferior */
 }
 
 .gallery-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   height: min(60vh, 520px);
 }
 
