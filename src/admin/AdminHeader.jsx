@@ -4,7 +4,7 @@ import '../styles/AdminHeader.css';
 export default function AdminHeader({ activeTab, setActiveTab, role }) {
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    window.location.href = '/login';
+    window.location.href = '/#/login';
   };
 
   return (
