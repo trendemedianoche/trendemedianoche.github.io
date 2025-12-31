@@ -1,8 +1,11 @@
 import React, { useEffect, useState, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { getSiteSections } from './services/siteSectionsService';
 
-// Lazy loading de componentes de secciones
+import { getSiteSections } from './services/siteSectionsService';
+import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
+
+// Lazy loading secciones
 const Header = React.lazy(() => import('./components/Header.jsx'));
 const Gallery = React.lazy(() => import('./components/Gallery.jsx'));
 const About = React.lazy(() => import('./components/About.jsx'));
@@ -11,10 +14,11 @@ const Footer = React.lazy(() => import('./components/Footer.jsx'));
 const News = React.lazy(() => import('./features/news/News.jsx'));
 const ChatWidget = React.lazy(() => import('./components/ChatWidget.jsx'));
 
-// Lazy loading del panel de administración
+// Admin
 const AdminPanel = React.lazy(() => import('./admin/AdminPanel.jsx'));
+const Login = React.lazy(() => import('./admin/Login.jsx'));
 
-// Mapa de secciones a componentes
+// Mapa dinámico
 const SECTION_COMPONENTS = {
   header: Header,
   gallery: Gallery,
@@ -27,10 +31,16 @@ const SECTION_COMPONENTS = {
 
 function Home() {
   const [sections, setSections] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getSiteSections().then(setSections);
+    getSiteSections().then(data => {
+      setSections(data);
+      setLoading(false);
+    });
   }, []);
+
+  if (loading) return <div>Cargando sitio...</div>;
 
   return (
     <>
@@ -44,14 +54,24 @@ function Home() {
 
 export default function App() {
   return (
-    <Router>
-      <Suspense fallback={<div>Cargando...</div>}>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/admin" element={<AdminPanel />} />
-        </Routes>
-        <ChatWidget />
-      </Suspense>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <Suspense fallback={<div>Cargando...</div>}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute>
+                  <AdminPanel />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </Suspense>
+      </Router>
+    </AuthProvider>
   );
 }

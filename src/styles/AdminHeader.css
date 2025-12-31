@@ -1,0 +1,55 @@
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #0b0b0b;
+  padding: 0 2rem;
+  height: 64px;
+  border-bottom: 1px solid #222;
+}
+
+.admin-left {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.admin-left h1 {
+  font-size: 1.1rem;
+  color: #fff;
+  letter-spacing: 1px;
+}
+
+.admin-header nav button {
+  background: transparent;
+  border: none;
+  color: #bbb;
+  margin-right: 1rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.admin-header nav button.active {
+  color: #fff;
+  border-bottom: 2px solid #fff;
+}
+
+.admin-right {
+  display: flex;
+  align-items: center;
+}
+
+.logout-btn {
+  background: #b30000;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background 0.2s;
+}
+
+.logout-btn:hover {
+  background: #e60000;
+}
