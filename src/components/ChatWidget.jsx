@@ -1,89 +1,61 @@
 import { useState } from 'react';
-import '../styles/chat.css';
+import { sendChatMessage } from '../services/chatService';
+import '../styles/ChatWidget.css';
 
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
-  const [form, setForm] = useState({
-    nombre: '',
-    email: '',
-    mensaje: '',
-  });
+  const [form, setForm] = useState({ name: '', email: '', message: '' });
+  const [sent, setSent] = useState(false);
 
-  const handleChange = (e) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const messages =
-      JSON.parse(localStorage.getItem('chatMessages')) || [];
-
-    messages.push({
-      ...form,
-      date: new Date().toISOString(),
-    });
-
-    localStorage.setItem('chatMessages', JSON.stringify(messages));
-
-    alert('Mensaje enviado 🙌');
-    setForm({ nombre: '', email: '', mensaje: '' });
-    setOpen(false);
+    await sendChatMessage(form);
+    setSent(true);
+    setForm({ name: '', email: '', message: '' });
   };
 
   return (
     <>
       {/* BOTÓN */}
-      <div
-        id="chat-button"
-        onClick={() => setOpen(true)}
-        title="Escríbenos"
-      >
+      <button className="chat-fab" onClick={() => setOpen(!open)}>
         💬
-      </div>
+      </button>
 
-      {/* POPUP */}
+      {/* WIDGET */}
       {open && (
-        <div id="chat-popup">
-          <div className="chat-header">
-            <span>Escríbenos</span>
-            <button onClick={() => setOpen(false)}>×</button>
-          </div>
+        <div className="chat-widget">
+          <h3>Contacto</h3>
 
-          <div className="chat-body">
+          {sent ? (
+            <p className="chat-success">Mensaje enviado ✨</p>
+          ) : (
             <form onSubmit={handleSubmit}>
               <input
-                type="text"
-                name="nombre"
-                placeholder="Tu nombre"
-                value={form.nombre}
-                onChange={handleChange}
+                placeholder="Nombre"
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
                 required
               />
 
               <input
                 type="email"
-                name="email"
-                placeholder="Tu email"
+                placeholder="Email"
                 value={form.email}
-                onChange={handleChange}
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
                 required
               />
 
               <textarea
-                name="mensaje"
-                placeholder="Escribe tu mensaje..."
-                value={form.mensaje}
-                onChange={handleChange}
+                placeholder="Mensaje"
+                rows={4}
+                value={form.message}
+                onChange={(e) => setForm({ ...form, message: e.target.value })}
                 required
               />
 
               <button type="submit">Enviar</button>
             </form>
-          </div>
+          )}
         </div>
       )}
     </>

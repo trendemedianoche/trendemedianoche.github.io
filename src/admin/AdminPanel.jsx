@@ -5,11 +5,13 @@ import NewsAdmin from './NewsAdmin';
 import ExtraNewsAdmin from './ExtraNewsAdmin';
 import DonationAdmin from './DonationAdmin';
 import SectionAdmin from './SectionAdmin';
+import ChatAdmin from './ChatAdmin';
+
 
 import '../styles/AdminPanel.css';
 
 export default function AdminPanel() {
-  const [activeTab, setActiveTab] = useState('news');
+  const [activeTab, setActiveTab] = useState('chat');
 
   return (
     <div className="admin-layout">
@@ -17,6 +19,7 @@ export default function AdminPanel() {
 
       {/* OFFSET HEADER */}
       <main className="admin-content">
+        {activeTab === 'chat' && <ChatAdmin />}
         {activeTab === 'photos' && <PhotoAdmin />}
         {activeTab === 'sections' && <SectionAdmin />}
         {activeTab === 'news' && <NewsAdmin />}

@@ -1,7 +1,7 @@
 /* ============================= */
 /* BOTÓN FLOTANTE */
 /* ============================= */
-#chat-button {
+.chat-fab {
   position: fixed;
   bottom: 20px;
   right: 20px;
@@ -17,19 +17,19 @@
   justify-content: center;
   cursor: pointer;
   box-shadow: 0 6px 18px rgba(0,0,0,.7);
-  z-index: 1000;
+  z-index: 9999;
   transition: background .15s ease, transform .1s ease;
 }
 
-#chat-button:hover {
+.chat-fab:hover {
   background: #222;
   transform: scale(1.05);
 }
 
 /* ============================= */
-/* POPUP */
+/* POPUP / WIDGET */
 /* ============================= */
-#chat-popup {
+.chat-widget {
   position: fixed;
   bottom: 90px;
   right: 20px;
@@ -38,49 +38,34 @@
   border-radius: 14px;
   border: 1px solid #333;
   box-shadow: 0 15px 40px rgba(0,0,0,.85);
-  z-index: 1000;
+  z-index: 9999;
   overflow: hidden;
 }
 
 /* ============================= */
 /* HEADER */
 /* ============================= */
-.chat-header {
+.chat-widget h3 {
   background: #111;
   color: #f5f5f5;
   padding: 12px 14px;
+  margin: 0;
   font-weight: 600;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   border-bottom: 1px solid #333;
-}
-
-.chat-header button {
-  background: none;
-  border: none;
-  color: #aaa;
-  font-size: 22px;
-  cursor: pointer;
-  line-height: 1;
-}
-
-.chat-header button:hover {
-  color: #fff;
 }
 
 /* ============================= */
 /* BODY */
 /* ============================= */
-.chat-body {
+.chat-widget form {
   padding: 14px;
 }
 
 /* ============================= */
 /* INPUTS */
 /* ============================= */
-.chat-body input,
-.chat-body textarea {
+.chat-widget input,
+.chat-widget textarea {
   width: 100%;
   margin-bottom: 10px;
   padding: 9px 10px;
@@ -91,12 +76,12 @@
   font-size: 14px;
 }
 
-.chat-body input::placeholder,
-.chat-body textarea::placeholder {
+.chat-widget input::placeholder,
+.chat-widget textarea::placeholder {
   color: #999;
 }
 
-.chat-body textarea {
+.chat-widget textarea {
   resize: none;
   height: 80px;
 }
@@ -104,7 +89,7 @@
 /* ============================= */
 /* BOTÓN ENVIAR */
 /* ============================= */
-.chat-body button {
+.chat-widget button {
   width: 100%;
   padding: 10px;
   background: #ffd400;
@@ -116,19 +101,28 @@
   transition: background .15s ease, transform .1s ease;
 }
 
-.chat-body button:hover {
+.chat-widget button:hover {
   background: #ffea00;
 }
 
-.chat-body button:active {
+.chat-widget button:active {
   transform: scale(0.97);
+}
+
+/* ============================= */
+/* MENSAJE DE ÉXITO */
+/* ============================= */
+.chat-success {
+  color: #9eff9e;
+  text-align: center;
+  padding: 10px;
 }
 
 /* ============================= */
 /* TIPOGRAFÍA SEGURA */
 /* ============================= */
-#chat-popup,
-#chat-popup * {
+.chat-widget,
+.chat-widget * {
   font-family: inherit;
   box-sizing: border-box;
 }

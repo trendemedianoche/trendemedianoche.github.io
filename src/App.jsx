@@ -50,6 +50,7 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/admin" element={<AdminPanel />} />
         </Routes>
+        <ChatWidget />
       </Suspense>
     </Router>
   );

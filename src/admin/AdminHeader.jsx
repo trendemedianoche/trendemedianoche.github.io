@@ -32,6 +32,12 @@ export default function AdminHeader({ activeTab, setActiveTab }) {
       <nav className={`nav ${menuOpen ? "active" : ""}`}>
 
         <button
+          className={activeTab === "chat" ? "active" : ""}
+          onClick={() => handleTab("chat")}
+        >
+          Chat
+        </button>
+        <button
           className={activeTab === "news" ? "active" : ""}
           onClick={() => handleTab("news")}
         >
