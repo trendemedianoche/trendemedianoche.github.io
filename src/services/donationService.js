@@ -15,7 +15,9 @@ export async function getTransferData() {
         field_key,
         field_value,
         position,
-        visible
+        active,
+        visible,
+        visibleFooter
       )
     `)
     .eq('type', 'transfer')
@@ -28,7 +30,7 @@ export async function getTransferData() {
     return [];
   }
 
-  return data.donation_transfer_data.filter(f => f.visible);
+  return data.donation_transfer_data.filter(f => f.active);
 }
 
 /* ===============================
@@ -46,7 +48,9 @@ export async function getTransferDataAdmin() {
         field_key,
         field_value,
         position,
-        visible
+        active,
+        visible,
+        visibleFooter
       )
     `)
     .eq('type', 'transfer')
@@ -75,7 +79,9 @@ export async function createTransferField(methodId, field) {
       position: field.position,
       field_key: field.field_key,
       field_value: field.field_value,
-      visible: true
+      visible: true,
+      visibleFooter: false,
+      active: true
     });
 }
 

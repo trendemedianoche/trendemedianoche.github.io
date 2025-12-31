@@ -21,10 +21,10 @@ export default function Footer() {
       if (!items) return;
 
       const emailItem = items.find(
-        item => item.field_key === 'Email Banda' && item.visible
+        item => item.field_key === 'Email Banda' && item.visibleFooter
       );
       const telefonoItem = items.find(
-        item => item.field_key === 'Telefono' && item.visible
+        item => item.field_key === 'Telefono' && item.visibleFooter
       );
 
       setEmail(emailItem?.field_value || null);
