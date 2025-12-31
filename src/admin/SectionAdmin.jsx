@@ -1,87 +1,104 @@
 import { useEffect, useState } from 'react';
-import {
-  getSiteSections,
-  createSiteSection,
-  updateSiteSection,
-  deleteSiteSection
-} from '../services/siteSectionsService';
+import { supabase } from '../lib/supabase';
 import '../styles/SectionAdmin.css';
 
 export default function SectionAdmin() {
   const [sections, setSections] = useState([]);
-  const [newKey, setNewKey] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const loadSections = async () => {
-    const data = await getSiteSections();
+    setLoading(true);
+
+    const { data, error } = await supabase
+      .from('site_sections')
+      .select('*')
+      .order('position');
+
+    if (error) {
+      console.error('Error loading sections:', error);
+      setLoading(false);
+      return;
+    }
+
     setSections(data);
+    setLoading(false);
   };
 
   useEffect(() => {
     loadSections();
   }, []);
 
-  const handleCreate = async () => {
-    if (!newKey.trim()) return;
+  const toggleActive = async (section) => {
+    await supabase
+      .from('site_sections')
+      .update({ active: !section.active })
+      .eq('id', section.id);
 
-    await createSiteSection({
-      key: newKey,
-      position: sections.length + 1
-    });
+    loadSections();
+  };
 
-    setNewKey('');
+  const move = async (index, dir) => {
+    const target = index + dir;
+    if (target < 0 || target >= sections.length) return;
+
+    const current = sections[index];
+    const swap = sections[target];
+
+    await supabase
+      .from('site_sections')
+      .update({ position: -1 })
+      .eq('id', current.id);
+
+    await supabase
+      .from('site_sections')
+      .update({ position: current.position })
+      .eq('id', swap.id);
+
+    await supabase
+      .from('site_sections')
+      .update({ position: swap.position })
+      .eq('id', current.id);
+
     loadSections();
   };
 
   return (
     <div className="section-admin">
-      <h2>Gestión de Secciones</h2>
+      <h2>Gestión de secciones</h2>
 
-      {/* CREAR */}
-      <div className="section-create">
-        <input
-          placeholder="key sección (ej: news)"
-          value={newKey}
-          onChange={e => setNewKey(e.target.value)}
-        />
-        <button onClick={handleCreate}>Agregar</button>
-      </div>
-
-      {/* LISTA */}
-      {sections.map(section => (
+      {sections.map((section, i) => (
         <div
           key={section.id}
           className={`section-row ${!section.active ? 'inactive' : ''}`}
         >
           <div className="section-info">
-            <input
-              value={section.key}
-              onChange={e =>
-                updateSiteSection(section.id, { key: e.target.value })
-              }
-            />
-            <span>Posición: {section.position}</span>
+            <strong>{section.label}</strong>
+            <span>{section.key}</span>
           </div>
 
           <div className="section-actions">
             <button
-              onClick={() =>
-                updateSiteSection(section.id, {
-                  active: !section.active
-                }).then(loadSections)
-              }
+              onClick={() => move(i, -1)}
+              disabled={loading}
+              title="Subir"
             >
-              {section.active ? '👁' : '🚫'}
+              ⬆
             </button>
 
             <button
-              className="danger"
-              onClick={() => {
-                if (confirm('¿Eliminar sección?')) {
-                  deleteSiteSection(section.id).then(loadSections);
-                }
-              }}
+              onClick={() => move(i, 1)}
+              disabled={loading}
+              title="Bajar"
             >
-              🗑
+              ⬇
+            </button>
+
+            <button
+              className="toggle"
+              onClick={() => toggleActive(section)}
+              disabled={loading}
+            >
+              {section.active ? '👁' : '🚫'}
             </button>
           </div>
         </div>

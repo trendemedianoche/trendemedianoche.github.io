@@ -1,9 +1,13 @@
 import { supabase } from '../lib/supabase';
 
+// ==========================
+// GET (Home)
+// ==========================
 export async function getSiteSections() {
   const { data, error } = await supabase
     .from('site_sections')
-    .select('id, key, active, position')
+    .select('key')
+    .eq('active', true)
     .order('position');
 
   if (error) {
@@ -11,22 +15,35 @@ export async function getSiteSections() {
     return [];
   }
 
+  return data.map(s => s.key);
+}
+
+// ==========================
+// ADMIN CRUD
+// ==========================
+export async function getAllSections() {
+  const { data, error } = await supabase
+    .from('site_sections')
+    .select('*')
+    .order('position');
+
+  if (error) throw error;
   return data;
 }
 
-export async function createSiteSection(section) {
+export async function createSection(section) {
   const { error } = await supabase
     .from('site_sections')
     .insert({
       key: section.key,
-      active: true,
-      position: section.position
+      active: section.active ?? true,
+      position: section.position ?? 0
     });
 
   if (error) throw error;
 }
 
-export async function updateSiteSection(id, updates) {
+export async function updateSection(id, updates) {
   const { error } = await supabase
     .from('site_sections')
     .update(updates)
@@ -35,7 +52,7 @@ export async function updateSiteSection(id, updates) {
   if (error) throw error;
 }
 
-export async function deleteSiteSection(id) {
+export async function deleteSection(id) {
   const { error } = await supabase
     .from('site_sections')
     .delete()
