@@ -1,0 +1,137 @@
+/* CONTENEDOR PRINCIPAL */
+.extra-news-admin {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* HEADER DEL MÓDULO */
+.extra-news-admin .admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #222;
+  padding-bottom: 12px;
+}
+
+.extra-news-admin h2 {
+  font-size: 20px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* BOTÓN CANCELAR */
+.extra-news-admin .cancel-btn {
+  background: transparent;
+  border: 1px solid #444;
+  color: #ccc;
+  padding: 6px 14px;
+  font-size: 12px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.extra-news-admin .cancel-btn:hover {
+  background: #222;
+  color: #fff;
+}
+
+/* FORMULARIO */
+.extra-news-admin .news-form {
+  display: grid;
+  gap: 14px;
+  max-width: 620px;
+}
+
+.extra-news-admin .news-form input,
+.extra-news-admin .news-form textarea {
+  background: #0d0d0d;
+  border: 1px solid #222;
+  color: #fff;
+  padding: 10px 12px;
+  font-size: 14px;
+}
+
+.extra-news-admin .news-form textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* BOTÓN PRINCIPAL */
+.extra-news-admin .primary-btn {
+  align-self: flex-start;
+  background: #ff0000;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 13px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.extra-news-admin .primary-btn:hover {
+  background: #cc0000;
+}
+
+/* LISTADO */
+.extra-news-admin .news-admin-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ITEM */
+.extra-news-admin .news-admin-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px;
+  border: 1px solid #222;
+  background: #0b0b0b;
+}
+
+.extra-news-admin .news-admin-item strong {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.extra-news-admin .news-admin-item span {
+  font-size: 11px;
+  opacity: 0.6;
+}
+
+/* ACCIONES */
+.extra-news-admin .actions {
+  display: flex;
+  gap: 10px;
+}
+
+.extra-news-admin .actions button {
+  background: transparent;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.extra-news-admin .actions button:hover {
+  opacity: 1;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .extra-news-admin .news-admin-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .extra-news-admin .actions {
+    align-self: flex-end;
+  }
+}

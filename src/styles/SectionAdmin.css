@@ -1,0 +1,155 @@
+/* =========================
+   CONTENEDOR GENERAL
+========================= */
+.section-admin {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 24px;
+  background: #0f0f0f;
+  border-radius: 12px;
+  color: #eaeaea;
+  font-family: system-ui, sans-serif;
+}
+
+.section-admin h2 {
+  margin-bottom: 20px;
+  font-size: 1.6rem;
+  border-bottom: 1px solid #2a2a2a;
+  padding-bottom: 10px;
+}
+
+/* =========================
+   CREAR SECCIÓN
+========================= */
+.section-create {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.section-create input {
+  padding: 10px 12px;
+  background: #1c1c1c;
+  border: 1px solid #333;
+  color: #fff;
+  border-radius: 8px;
+}
+
+.section-create input:focus {
+  outline: none;
+  border-color: #4fa3ff;
+}
+
+.section-create button {
+  padding: 10px 16px;
+  background: #4fa3ff;
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.section-create button:hover {
+  background: #6ab3ff;
+}
+
+/* =========================
+   FILA SECCIÓN
+========================= */
+.section-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  background: #1a1a1a;
+  border-radius: 10px;
+  border: 1px solid #2a2a2a;
+  transition: background 0.2s ease;
+}
+
+.section-row:hover {
+  background: #222;
+}
+
+.section-row.inactive {
+  opacity: 0.5;
+}
+
+/* =========================
+   INFO SECCIÓN
+========================= */
+.section-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.section-info input {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.section-info input:focus {
+  outline: none;
+  border-bottom: 1px solid #4fa3ff;
+}
+
+.section-info span {
+  font-size: 0.8rem;
+  color: #888;
+}
+
+/* =========================
+   ACCIONES
+========================= */
+.section-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.section-actions button {
+  background: #2a2a2a;
+  border: none;
+  color: #fff;
+  padding: 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.section-actions button:hover {
+  background: #3a3a3a;
+}
+
+.section-actions .danger {
+  background: #402020;
+}
+
+.section-actions .danger:hover {
+  background: #6a2a2a;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 700px) {
+  .section-create {
+    grid-template-columns: 1fr;
+  }
+
+  .section-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .section-actions {
+    align-self: flex-end;
+  }
+}

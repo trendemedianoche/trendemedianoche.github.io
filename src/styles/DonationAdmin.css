@@ -1,0 +1,159 @@
+/* =========================
+   DONATION ADMIN
+========================= */
+
+.donation-admin {
+  background: #111;
+  border-radius: 16px;
+  padding: 1.6rem;
+  box-shadow: 0 0 30px rgba(0,0,0,.45);
+  max-width: 900px;
+}
+
+.donation-admin h2 {
+  margin-bottom: 1.2rem;
+  font-size: 1.4rem;
+  letter-spacing: 1px;
+  color: #f5c400;
+}
+
+/* =========================
+   ROW
+========================= */
+
+.donation-admin-row {
+  display: grid;
+  grid-template-columns: 1fr 140px auto auto auto auto;
+  gap: .6rem;
+  align-items: center;
+  padding: .7rem;
+  border-radius: 10px;
+  background: #1a1a1a;
+  margin-bottom: .6rem;
+  transition: background .2s ease;
+}
+
+.donation-admin-row:hover {
+  background: #222;
+}
+
+/* =========================
+   INPUT
+========================= */
+
+.donation-admin-row input {
+  background: #111;
+  border: 1px solid #333;
+  color: #fff;
+  padding: .5rem .7rem;
+  border-radius: 6px;
+  font-size: .9rem;
+}
+
+.donation-admin-row input:focus {
+  outline: none;
+  border-color: #f5c400;
+}
+
+/* =========================
+   FIELD KEY
+========================= */
+
+.donation-admin-row span {
+  font-size: .75rem;
+  color: #aaa;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+.donation-admin-row button {
+  background: #1c1c1c;
+  border: none;
+  color: #ccc;
+  border-radius: 6px;
+  padding: .35rem .5rem;
+  cursor: pointer;
+  font-size: .85rem;
+  transition: background .15s ease, color .15s ease;
+}
+
+.donation-admin-row button:hover {
+  background: #333;
+  color: #fff;
+}
+
+/* Visibility */
+.donation-admin-row button:first-of-type {
+  color: #f5c400;
+}
+
+/* Move */
+.donation-admin-row button:nth-of-type(2),
+.donation-admin-row button:nth-of-type(3) {
+  font-size: .9rem;
+}
+
+/* Delete */
+.donation-admin-row button:last-of-type {
+  color: #ff5c5c;
+}
+
+.donation-admin-row button:last-of-type:hover {
+  background: #401010;
+}
+
+/* =========================
+   ADD NEW (future)
+========================= */
+
+.donation-admin-add {
+  margin-top: 1.2rem;
+  display: flex;
+  gap: .6rem;
+}
+
+.donation-admin-add input {
+  flex: 1;
+  background: #111;
+  border: 1px solid #333;
+  color: #fff;
+  padding: .6rem .8rem;
+  border-radius: 6px;
+}
+
+.donation-admin-add button {
+  background: #f5c400;
+  color: #111;
+  border: none;
+  border-radius: 999px;
+  padding: .6rem 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.donation-admin-add button:hover {
+  background: #ffda33;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 700px) {
+  .donation-admin-row {
+    grid-template-columns: 1fr;
+    gap: .4rem;
+  }
+
+  .donation-admin-row span {
+    order: -1;
+  }
+
+  .donation-admin-row button {
+    width: 100%;
+  }
+}

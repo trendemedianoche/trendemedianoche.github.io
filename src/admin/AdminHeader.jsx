@@ -30,6 +30,21 @@ export default function AdminHeader({ activeTab, setActiveTab }) {
 
       {/* NAV ADMIN */}
       <nav className={`nav ${menuOpen ? "active" : ""}`}>
+
+        <button
+          className={activeTab === "news" ? "active" : ""}
+          onClick={() => handleTab("news")}
+        >
+          Noticias
+        </button>
+
+        <button
+          className={activeTab === "extra-news" ? "active" : ""}
+          onClick={() => handleTab("extra-news")}
+        >
+          Extra News
+        </button>
+
         <button
           className={activeTab === "photos" ? "active" : ""}
           onClick={() => handleTab("photos")}
@@ -38,10 +53,10 @@ export default function AdminHeader({ activeTab, setActiveTab }) {
         </button>
 
         <button
-          className={activeTab === "settings" ? "active" : ""}
-          onClick={() => handleTab("settings")}
+          className={activeTab === "donation" ? "active" : ""}
+          onClick={() => handleTab("donation")}
         >
-          Textos
+          Donacion
         </button>
 
         <button
@@ -50,12 +65,7 @@ export default function AdminHeader({ activeTab, setActiveTab }) {
         >
           Secciones
         </button>
-        <button
-          className={activeTab === "news" ? "active" : ""}
-          onClick={() => handleTab("news")}
-        >
-          Noticias
-        </button>
+        
       </nav>
     </header>
   );
