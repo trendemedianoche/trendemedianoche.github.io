@@ -1,5 +1,5 @@
 import { supabase } from '../lib/supabase';
-import '../styles/AdminHeader.css';
+import '../styles/AdminHeader-Modern.css';
 
 export default function AdminHeader({ activeTab, setActiveTab, role }) {
   const handleLogout = async () => {
@@ -8,65 +8,13 @@ export default function AdminHeader({ activeTab, setActiveTab, role }) {
   };
 
   return (
-    <header className="admin-header">
-      <div className="admin-left">
-        <h1>Admin · Tren de Medianoche</h1>
-
-        <nav>
-          <button
-            className={activeTab === 'chat' ? 'active' : ''}
-            onClick={() => setActiveTab('chat')}
-          >
-            Chat
-          </button>
-
-          <button
-            className={activeTab === 'photos' ? 'active' : ''}
-            onClick={() => setActiveTab('photos')}
-          >
-            Fotos
-          </button>
-
-          <button
-            className={activeTab === 'sections' ? 'active' : ''}
-            onClick={() => setActiveTab('sections')}
-          >
-            Secciones
-          </button>
-
-          <button
-            className={activeTab === 'news' ? 'active' : ''}
-            onClick={() => setActiveTab('news')}
-          >
-            Noticias
-          </button>
-
-          <button
-            className={activeTab === 'extra-news' ? 'active' : ''}
-            onClick={() => setActiveTab('extra-news')}
-          >
-            Extra
-          </button>
-
-          <button
-            className={activeTab === 'donation' ? 'active' : ''}
-            onClick={() => setActiveTab('donation')}
-          >
-            Donaciones
-          </button>
-
-          {role === 'admin' && (
-            <button
-              className={activeTab === 'users' ? 'active' : ''}
-              onClick={() => setActiveTab('users')}
-            >
-              Usuarios
-            </button>
-          )}
-        </nav>
+    <header className="admin-header-modern">
+      <div className="admin-header-left">
+        <h1 className="admin-title">🎵 Admin · Tren de Medianoche</h1>
+        <p className="admin-subtitle">Panel de Control</p>
       </div>
 
-      <div className="admin-right">
+      <div className="admin-header-right">
         <button className="logout-btn" onClick={handleLogout}>
           Cerrar sesión
         </button>

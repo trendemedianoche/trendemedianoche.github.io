@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
-import '../styles/SectionAdmin.css';
+import '../styles/AdminComponents.css';
 
 export default function SectionAdmin() {
   const [sections, setSections] = useState([]);
@@ -29,6 +29,7 @@ export default function SectionAdmin() {
   }, []);
 
   const toggleActive = async (section) => {
+    setLoading(true);
     await supabase
       .from('site_sections')
       .update({ active: !section.active })
@@ -44,6 +45,7 @@ export default function SectionAdmin() {
     const current = sections[index];
     const swap = sections[target];
 
+    setLoading(true);
     await supabase
       .from('site_sections')
       .update({ position: -1 })
@@ -63,46 +65,69 @@ export default function SectionAdmin() {
   };
 
   return (
-    <div className="section-admin">
-      <h2>Gestión de secciones</h2>
+    <div className="admin-card">
+      <div className="admin-card-header">
+        <h2 className="admin-card-title">🔀 Secciones del Sitio ({sections.length})</h2>
+      </div>
 
-      {sections.map((section, i) => (
-        <div
-          key={section.id}
-          className={`section-row ${!section.active ? 'inactive' : ''}`}
-        >
-          <div className="section-info">
-            <strong>{section.label}</strong>
-            <span>{section.key}</span>
-          </div>
-
-          <div className="section-actions">
-            <button
-              onClick={() => move(i, -1)}
-              disabled={loading}
-              title="Subir"
-            >
-              ⬆
-            </button>
-
-            <button
-              onClick={() => move(i, 1)}
-              disabled={loading}
-              title="Bajar"
-            >
-              ⬇
-            </button>
-
-            <button
-              className="toggle"
-              onClick={() => toggleActive(section)}
-              disabled={loading}
-            >
-              {section.active ? '👁' : '🚫'}
-            </button>
-          </div>
+      {loading ? (
+        <div className="empty-state">
+          <div className="loading-spinner" />
+          <p className="empty-state-text">Cargando...</p>
         </div>
-      ))}
+      ) : sections.length === 0 ? (
+        <div className="empty-state">
+          <div className="empty-state-icon">🔀</div>
+          <p className="empty-state-text">No hay secciones</p>
+        </div>
+      ) : (
+        <div className="admin-card-body">
+          {sections.map((section, i) => (
+            <div
+              key={section.id}
+              className="item-card"
+            >
+              <div>
+                <strong style={{ color: '#f5c400', fontSize: '1.05rem' }}>
+                  {section.label}
+                </strong>
+                <p style={{ color: '#999', fontSize: '0.85rem', margin: '0.3rem 0 0 0' }}>
+                  {section.key}
+                </p>
+                {!section.active && <span className="badge badge-inactive">Inactivo</span>}
+              </div>
+
+              <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                <button
+                  className="btn btn-secondary btn-small"
+                  onClick={() => move(i, -1)}
+                  disabled={loading || i === 0}
+                  title="Subir"
+                >
+                  ⬆
+                </button>
+
+                <button
+                  className="btn btn-secondary btn-small"
+                  onClick={() => move(i, 1)}
+                  disabled={loading || i === sections.length - 1}
+                  title="Bajar"
+                >
+                  ⬇
+                </button>
+
+                <button
+                  className="btn btn-success btn-small"
+                  onClick={() => toggleActive(section)}
+                  disabled={loading}
+                >
+                  {section.active ? '👁' : '🚫'}
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

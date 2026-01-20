@@ -1,0 +1,115 @@
+/* ADMIN HEADER MODERNO */
+
+.admin-header-modern {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(90deg, #0b0b0b 0%, #1a1a1a 50%, #0b0b0b 100%);
+  padding: 1.2rem 2rem;
+  border-bottom: 2px solid #f5c400;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  position: relative;
+}
+
+.admin-header-modern::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, #f5c400 50%, transparent 100%);
+}
+
+.admin-header-left {
+  flex: 1;
+}
+
+.admin-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  margin: 0;
+  color: #f5f5f5;
+  text-transform: uppercase;
+}
+
+.admin-subtitle {
+  font-size: 0.8rem;
+  color: #f5c400;
+  margin: 0.3rem 0 0 0;
+  letter-spacing: 1px;
+}
+
+.admin-header-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logout-btn {
+  background: linear-gradient(135deg, #b30000 0%, #8b0000 100%);
+  color: #fff;
+  border: none;
+  padding: 0.7rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  box-shadow: 0 4px 15px rgba(179, 0, 0, 0.3);
+}
+
+.logout-btn:hover {
+  background: linear-gradient(135deg, #d40000 0%, #a00000 100%);
+  box-shadow: 0 6px 20px rgba(179, 0, 0, 0.5);
+  transform: translateY(-2px);
+}
+
+.logout-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 10px rgba(179, 0, 0, 0.3);
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .admin-header-modern {
+    padding: 1rem 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .admin-title {
+    font-size: 1.2rem;
+  }
+
+  .admin-subtitle {
+    font-size: 0.7rem;
+  }
+
+  .logout-btn {
+    padding: 0.6rem 1rem;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-header-modern {
+    padding: 0.8rem 1rem;
+  }
+
+  .admin-title {
+    font-size: 1rem;
+    letter-spacing: 1px;
+  }
+
+  .admin-subtitle {
+    font-size: 0.65rem;
+  }
+
+  .logout-btn {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.7rem;
+  }
+}

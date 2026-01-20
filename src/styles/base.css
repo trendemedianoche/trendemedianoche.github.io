@@ -5,11 +5,59 @@
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
   font-family: 'Oswald', sans-serif;
   background: #000;
   color: #fff;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
+
+/* SCROLLBAR STYLING */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0b0b0b;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #f5c400;
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #ffd700;
+}
+
+/* SELECCIÓN */
+::selection {
+  background: #f5c400;
+  color: #000;
+}
+
+::-moz-selection {
+  background: #f5c400;
+  color: #000;
+}
+
+/* MAIN CONTENT */
+.site-main {
+  margin-top: 80px;
+  /* Compensar el header fixed */
+}
+
+main {
+  display: block;
+}
+
 
 

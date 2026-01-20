@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { supabase } from '../lib/supabase';
-import '../styles/PhotoAdmin.css';
+import '../styles/AdminComponents.css';
 import visible from '../assets/visible.png';
 import no_visible from '../assets/no_visible.svg';
 
@@ -10,27 +10,18 @@ export default function PhotoAdmin() {
   const [images, setImages] = useState([]);
   const [file, setFile] = useState(null);
   const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState('');
   const [loading, setLoading] = useState(false);
 
   const fileInputRef = useRef(null);
 
-  /* ==========================
-     HELPERS
-  ========================== */
   const shortName = (path) => {
     const name = path.split('/').pop();
-    if (!name) return '';
-    return name.length > 18
-      ? `${name.slice(0, 10)}…${name.slice(-6)}`
-      : name;
+    return name.length > 20 ? `${name.slice(0, 12)}…${name.slice(-6)}` : name;
   };
 
-  /* ==========================
-     LOAD
-  ========================== */
   const loadImages = async () => {
     setLoading(true);
-
     const { data, error } = await supabase
       .from('gallery_images')
       .select('*')
@@ -38,6 +29,7 @@ export default function PhotoAdmin() {
 
     if (error) {
       setMessage('Error cargando imágenes');
+      setMessageType('error');
       setLoading(false);
       return;
     }
@@ -47,10 +39,7 @@ export default function PhotoAdmin() {
         const { data: signed } = await supabase.storage
           .from(BUCKET)
           .createSignedUrl(img.path, 3600);
-
-        return signed
-          ? { ...img, url: signed.signedUrl }
-          : null;
+        return signed ? { ...img, url: signed.signedUrl } : null;
       })
     );
 
@@ -62,35 +51,21 @@ export default function PhotoAdmin() {
     loadImages();
   }, []);
 
-  /* ==========================
-     CANCEL FILE
-  ========================== */
-  const handleCancel = () => {
-    setFile(null);
-    setMessage('');
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
-  };
-
-  /* ==========================
-     UPLOAD
-  ========================== */
   const handleUpload = async () => {
     if (!file) {
       setMessage('Selecciona una imagen');
+      setMessageType('error');
       return;
     }
 
     setLoading(true);
     const filePath = `images/${Date.now()}-${file.name}`;
 
-    const { error } = await supabase.storage
-      .from(BUCKET)
-      .upload(filePath, file);
+    const { error } = await supabase.storage.from(BUCKET).upload(filePath, file);
 
     if (error) {
       setMessage(error.message);
+      setMessageType('error');
       setLoading(false);
       return;
     }
@@ -103,28 +78,22 @@ export default function PhotoAdmin() {
       active: true
     });
 
-    handleCancel();
-    setMessage('Imagen subida correctamente');
-    setLoading(false);
+    setFile(null);
+    setMessage('✓ Imagen subida correctamente');
+    setMessageType('success');
+    if (fileInputRef.current) fileInputRef.current.value = '';
     loadImages();
   };
 
-  /* ==========================
-     TOGGLE ACTIVE
-  ========================== */
   const toggleActive = async (img) => {
     setLoading(true);
     await supabase
       .from('gallery_images')
       .update({ active: !img.active })
       .eq('id', img.id);
-
     loadImages();
   };
 
-  /* ==========================
-     MOVE
-  ========================== */
   const move = async (index, direction) => {
     const targetIndex = index + direction;
     if (targetIndex < 0 || targetIndex >= images.length) return;
@@ -133,108 +102,142 @@ export default function PhotoAdmin() {
     const target = images[targetIndex];
 
     setLoading(true);
-
     await supabase.from('gallery_images').update({ position: -1 }).eq('id', current.id);
     await supabase.from('gallery_images').update({ position: current.position }).eq('id', target.id);
     await supabase.from('gallery_images').update({ position: target.position }).eq('id', current.id);
-
     loadImages();
   };
 
-  /* ==========================
-     DELETE
-  ========================== */
   const remove = async (img) => {
-    if (!window.confirm('¿Eliminar imagen definitivamente?')) return;
-
+    if (!window.confirm('¿Eliminar esta imagen?')) return;
     setLoading(true);
     await supabase.storage.from(BUCKET).remove([img.path]);
     await supabase.from('gallery_images').delete().eq('id', img.id);
-    setMessage('Imagen eliminada');
+    setMessage('✓ Imagen eliminada');
+    setMessageType('success');
     loadImages();
   };
 
-  /* ==========================
-     JSX
-  ========================== */
   return (
-    <div className="photo-admin">
-      <header className="admin-header">
-        <h2>Galería · Administración</h2>
-        <p>Gestiona imágenes visibles en el sitio</p>
-      </header>
+    <div>
+      {message && (
+        <div className={`admin-alert alert-${messageType}`}>
+          {message}
+        </div>
+      )}
 
-      {/* UPLOAD */}
-      <div className="upload-panel">
-        <label className="upload-box">
-          <input
-            type="file"
-            hidden
-            ref={fileInputRef}
-            disabled={loading}
-            onChange={(e) => setFile(e.target.files[0])}
-          />
-          <span>➕ Seleccionar imagen</span>
-        </label>
+      <div className="admin-card">
+        <div className="admin-card-header">
+          <h2 className="admin-card-title">🖼️ Galería</h2>
+        </div>
 
-        
+        <div className="admin-card-body">
+          <div className="admin-form" style={{ gap: '1rem' }}>
+            <div className="form-group">
+              <label htmlFor="photo-upload">Seleccionar Imagen</label>
+              <input
+                id="photo-upload"
+                type="file"
+                ref={fileInputRef}
+                onChange={(e) => setFile(e.target.files?.[0] || null)}
+                disabled={loading}
+                accept="image/*"
+              />
+            </div>
 
-        <button
-          className="primary-btn"
-          onClick={handleUpload}
-          disabled={!file || loading}
-        >
-          {loading ? 'Subiendo…' : 'Subir a galería'}
-        </button>
+            {file && (
+              <div className="item-card" style={{ borderLeft: '4px solid #00a300' }}>
+                <strong>Archivo seleccionado:</strong>
+                <p>{shortName(file.name)}</p>
+              </div>
+            )}
 
-        {/* INFO ARCHIVO */}
-        {file && !loading && (
-          <div className="file-hint">
-            <span>
-              📎 Archivo seleccionado: <strong>{shortName(file.name)}</strong>
-            </span>
             <button
-              type="button"
-              className="cancel-file-btn"
-              onClick={handleCancel}
-              title="Quitar imagen"
+              className="btn btn-primary btn-block"
+              onClick={handleUpload}
+              disabled={!file || loading}
             >
-              ❌
+              {loading ? '⏳ Subiendo...' : '📤 Subir Imagen'}
             </button>
           </div>
-        )}
+        </div>
       </div>
 
-      {/* MENSAJES */}
-      {message && <p className="message">{message}</p>}
-      {loading && <p className="message">Procesando…</p>}
+      <div className="admin-card" style={{ marginTop: '2rem' }}>
+        <div className="admin-card-header">
+          <h2 className="admin-card-title">Imágenes ({images.length})</h2>
+        </div>
 
-      {/* GRID */}
-      <div className="photo-admin-grid">
-        {images.map((img, i) => (
-          <div key={img.id} className={`photo-card ${!img.active ? 'inactive' : ''}`}>
-            <div className="photo-preview">
-              {img.url && <img src={img.url} alt={img.path} />}
-              {!img.active && <span className="badge">Inactiva</span>}
-            </div>
-
-            <div className="photo-info">
-              <strong title={img.path}>{shortName(img.path)}</strong>
-              <span>{new Date(img.created_at).toLocaleDateString()}</span>
-            </div>
-
-            <div className="photo-actions">
-              <button onClick={() => move(i, -1)} disabled={loading}>⬅</button>
-              <button onClick={() => move(i, 1)} disabled={loading}>➡</button>
-              <button className="toggle" onClick={() => toggleActive(img)} disabled={loading}>
-                {img.active
-                  ? <img src={visible} alt="Visible" className="img" />
-                  : <img src={no_visible} alt="No visible" className="img" />}
-              </button>
-              <button className="danger" onClick={() => remove(img)}>❌</button>
-            </div>
+        {images.length === 0 ? (
+          <div className="empty-state">
+            <div className="empty-state-icon">🖼️</div>
+            <p className="empty-state-text">No hay imágenes en la galería</p>
           </div>
-        ))}
+        ) : (
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+            gap: '1rem',
+            padding: '1rem'
+          }}>
+            {images.map((img, i) => (
+              <div key={img.id} className="item-card" style={{ display: 'flex', flexDirection: 'column' }}>
+                {img.url && (
+                  <img
+                    src={img.url}
+                    alt={img.path}
+                    style={{
+                      width: '100%',
+                      height: '150px',
+                      objectFit: 'cover',
+                      borderRadius: '4px',
+                      marginBottom: '0.8rem',
+                      opacity: img.active ? 1 : 0.5
+                    }}
+                  />
+                )}
+                <strong style={{ fontSize: '0.9rem' }}>{shortName(img.path)}</strong>
+                <span style={{ fontSize: '0.75rem', color: '#aaa' }}>
+                  {new Date(img.created_at).toLocaleDateString()}
+                </span>
+                {!img.active && <span className="badge badge-inactive">Inactiva</span>}
+                <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.8rem', flexWrap: 'wrap' }}>
+                  <button
+                    className="btn btn-secondary btn-small"
+                    onClick={() => move(i, -1)}
+                    disabled={loading || i === 0}
+                    title="Subir"
+                  >
+                    ⬆
+                  </button>
+                  <button
+                    className="btn btn-secondary btn-small"
+                    onClick={() => move(i, 1)}
+                    disabled={loading || i === images.length - 1}
+                    title="Bajar"
+                  >
+                    ⬇
+                  </button>
+                  <button
+                    className="btn btn-success btn-small"
+                    onClick={() => toggleActive(img)}
+                    disabled={loading}
+                    title={img.active ? 'Ocultar' : 'Mostrar'}
+                  >
+                    {img.active ? '👁' : '🚫'}
+                  </button>
+                  <button
+                    className="btn btn-danger btn-small"
+                    onClick={() => remove(img)}
+                    disabled={loading}
+                  >
+                    🗑
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

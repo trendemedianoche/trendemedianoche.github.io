@@ -6,7 +6,7 @@ import {
   deleteExtraNewsItem
 } from '../services/extraNewsService';
 
-import '../styles/ExtraNewsAdmin.css';
+import '../styles/AdminComponents.css';
 
 export default function ExtraNewsAdmin() {
   const [items, setItems] = useState([]);
@@ -19,21 +19,17 @@ export default function ExtraNewsAdmin() {
     active: true
   });
 
-  /* ======================
-     LOAD
-  ====================== */
   const loadItems = async () => {
+    setLoading(true);
     const data = await getExtraNewsItems();
     setItems(data);
+    setLoading(false);
   };
 
   useEffect(() => {
     loadItems();
   }, []);
 
-  /* ======================
-     CREATE / UPDATE
-  ====================== */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -42,10 +38,9 @@ export default function ExtraNewsAdmin() {
       await updateExtraNewsItem(editing.id, form);
     } else {
       const nextPosition =
-      items.length > 0
-        ? Math.max(...items.map(i => i.position))
-        + 1
-        : 1;
+        items.length > 0
+          ? Math.max(...items.map(i => i.position)) + 1
+          : 1;
       await createExtraNewsItem({
         ...form,
         position: nextPosition
@@ -54,13 +49,9 @@ export default function ExtraNewsAdmin() {
 
     setForm({ icon: '', content: '', active: true });
     setEditing(null);
-    setLoading(false);
     loadItems();
   };
 
-  /* ======================
-     EDIT
-  ====================== */
   const handleEdit = (item) => {
     setEditing(item);
     setForm({
@@ -70,28 +61,19 @@ export default function ExtraNewsAdmin() {
     });
   };
 
-  /* ======================
-     DELETE
-  ====================== */
   const handleDelete = async (id) => {
-    if (!window.confirm('¿Eliminar Extra News?')) return;
+    if (!window.confirm('¿Eliminar?')) return;
+    setLoading(true);
     await deleteExtraNewsItem(id);
     loadItems();
   };
 
-  /* ======================
-     TOGGLE ACTIVE
-  ====================== */
   const toggleActive = async (item) => {
-    await updateExtraNewsItem(item.id, {
-      active: !item.active
-    });
+    setLoading(true);
+    await updateExtraNewsItem(item.id, { active: !item.active });
     loadItems();
   };
 
-  /* ======================
-     MOVE POSITION
-  ====================== */
   const move = async (index, dir) => {
     const target = index + dir;
     if (target < 0 || target >= items.length) return;
@@ -99,87 +81,148 @@ export default function ExtraNewsAdmin() {
     const a = items[index];
     const b = items[target];
 
+    setLoading(true);
     await updateExtraNewsItem(a.id, { position: -1 });
     await updateExtraNewsItem(b.id, { position: a.position });
     await updateExtraNewsItem(a.id, { position: b.position });
-
     loadItems();
   };
 
-  /* ======================
-     JSX
-  ====================== */
   return (
-    <div className="extra-news-admin">
-      <h2>Extra News · Barra superior</h2>
+    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
+      {/* FORMULARIO */}
+      <div className="admin-card">
+        <div className="admin-card-header">
+          <h2 className="admin-card-title">
+            {editing ? '✏️ Editar' : '⭐ Nueva Extra'}
+          </h2>
+        </div>
 
-      {/* FORM */}
-      <form className="news-form" onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Icono (🔥 📅 ⚡)"
-          value={form.icon}
-          onChange={(e) =>
-            setForm({ ...form, icon: e.target.value })
-          }
-          required
-        />
-
-        <textarea
-          placeholder="Contenido (HTML permitido)"
-          value={form.content}
-          onChange={(e) =>
-            setForm({ ...form, content: e.target.value })
-          }
-          required
-        />
-
-        <button className="primary-btn" type="submit" disabled={loading}>
-          {editing ? 'Actualizar' : 'Crear'} Extra News
-        </button>
-
-        {editing && (
-          <button
-            type="button"
-            className="cancel-btn"
-            onClick={() => {
-              setEditing(null);
-              setForm({ icon: '', content: '', active: true });
-            }}
-          >
-            Cancelar edición
-          </button>
-        )}
-      </form>
-
-      {/* LIST */}
-      <div className="news-admin-list">
-        {items.map((item, i) => (
-          <div
-            key={item.id}
-            className={`news-admin-item ${!item.active ? 'inactive' : ''}`}
-          >
-            <div className="content">
-              <strong>{item.icon}</strong>
-              <span
-                dangerouslySetInnerHTML={{ __html: item.content }}
-              />
-            </div>
-
-            <div className="actions">
-              <button onClick={() => move(i, -1)} title="Subir">⬆</button>
-              <button onClick={() => move(i, 1)} title="Bajar">⬇</button>
-              <button
-                onClick={() => toggleActive(item)}
-                title={item.active ? 'Ocultar' : 'Mostrar'}
-              >
-                {item.active ? '👁' : '🚫'}
-              </button>
-              <button onClick={() => handleEdit(item)} title="Editar">✏️</button>
-              <button onClick={() => handleDelete(item.id)} title="Eliminar">🗑</button>
-            </div>
+        <form className="admin-form" onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label htmlFor="icon">Icono</label>
+            <input
+              id="icon"
+              type="text"
+              placeholder="Ej: 🔥 📅 ⚡"
+              value={form.icon}
+              onChange={(e) => setForm({ ...form, icon: e.target.value })}
+              required
+            />
           </div>
-        ))}
+
+          <div className="form-group">
+            <label htmlFor="content">Contenido</label>
+            <textarea
+              id="content"
+              placeholder="Contenido del anuncio"
+              value={form.content}
+              onChange={(e) => setForm({ ...form, content: e.target.value })}
+              required
+              style={{ minHeight: '100px' }}
+            />
+          </div>
+
+          <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.95rem', color: '#f5c400', cursor: 'pointer' }}>
+            <input
+              type="checkbox"
+              checked={form.active}
+              onChange={(e) => setForm({ ...form, active: e.target.checked })}
+            />
+            Activo
+          </label>
+
+          <div style={{ display: 'flex', gap: '1rem' }}>
+            <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
+              {loading ? '⏳ Guardando...' : editing ? '✓ Actualizar' : '✓ Crear'}
+            </button>
+            {editing && (
+              <button
+                type="button"
+                className="btn btn-secondary btn-block"
+                onClick={() => {
+                  setEditing(null);
+                  setForm({ icon: '', content: '', active: true });
+                }}
+              >
+                ✕ Cancelar
+              </button>
+            )}
+          </div>
+        </form>
+      </div>
+
+      {/* LISTADO */}
+      <div className="admin-card">
+        <div className="admin-card-header">
+          <h2 className="admin-card-title">⭐ Extra ({items.length})</h2>
+        </div>
+
+        {loading ? (
+          <div className="empty-state">
+            <div className="loading-spinner" />
+            <p className="empty-state-text">Cargando...</p>
+          </div>
+        ) : items.length === 0 ? (
+          <div className="empty-state">
+            <div className="empty-state-icon">⭐</div>
+            <p className="empty-state-text">No hay extras</p>
+          </div>
+        ) : (
+          <div className="admin-card-body">
+            {items.map((item, i) => (
+              <div key={item.id} className="item-card">
+                <div className="item-header">
+                  <div>
+                    <strong style={{ color: '#f5c400', fontSize: '1.1rem' }}>
+                      {item.icon} {item.content.substring(0, 40)}...
+                    </strong>
+                    {!item.active && <span className="badge badge-inactive">Inactivo</span>}
+                  </div>
+                </div>
+                <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                  <button
+                    className="btn btn-secondary btn-small"
+                    onClick={() => move(i, -1)}
+                    disabled={loading || i === 0}
+                    title="Subir"
+                  >
+                    ⬆
+                  </button>
+                  <button
+                    className="btn btn-secondary btn-small"
+                    onClick={() => move(i, 1)}
+                    disabled={loading || i === items.length - 1}
+                    title="Bajar"
+                  >
+                    ⬇
+                  </button>
+                  <button
+                    className="btn btn-success btn-small"
+                    onClick={() => toggleActive(item)}
+                    disabled={loading}
+                  >
+                    {item.active ? '👁' : '🚫'}
+                  </button>
+                  <button
+                    className="btn btn-secondary btn-small"
+                    onClick={() => handleEdit(item)}
+                    disabled={loading}
+                  >
+                    ✏️
+                  </button>
+                  <button
+                    className="btn btn-danger btn-small"
+                    onClick={() => handleDelete(item.id)}
+                    disabled={loading}
+                  >
+                    🗑
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
