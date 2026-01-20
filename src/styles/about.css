@@ -1,109 +1,79 @@
-/* ABOUT SECTION - Diseño Mejorado */
+/* ABOUT SECTION - Minimalista y Elegante */
 
 .about-section {
-  padding: 3rem 2rem;
+  padding: 5rem 2rem;
   position: relative;
-  background: linear-gradient(135deg, #0b0b0b 0%, #1a1a1a 100%);
-  border-left: 4px solid #f5c400;
-  border-right: 4px solid #f5c400;
-  margin: 2rem 0;
-}
-
-.about-section::before {
-  content: "SOBRE NOSOTROS";
-  display: block;
-  text-align: center;
-  font-size: clamp(1.5rem, 4vw, 2.2rem);
-  font-weight: 800;
-  color: #f5c400;
-  letter-spacing: 3px;
-  margin-bottom: 2rem;
-  text-transform: uppercase;
-  text-shadow: 0 4px 10px rgba(245, 196, 0, 0.3);
-}
-
-.about-section::after {
-  content: "";
-  display: block;
-  width: 100px;
-  height: 3px;
-  background: linear-gradient(90deg, transparent, #f5c400, transparent);
-  margin: 2rem auto;
+  background: #ffffff;
+  border-left: none;
+  border-right: none;
+  margin: 0;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .about-container {
-  max-width: 1200px;
+  max-width: 1000px;
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 0;
 }
 
 .about-container p {
   font-size: clamp(0.95rem, 2vw, 1.1rem);
   line-height: 1.8;
-  color: #e0e0e0;
-  margin-bottom: 1.5rem;
-  padding: 1rem 1.5rem;
-  background: rgba(245, 196, 0, 0.05);
-  border-left: 3px solid #f5c400;
-  border-radius: 4px;
+  color: #2c2c2c;
+  margin-bottom: 1.8rem;
+  padding: 0;
+  background: transparent;
+  border-left: none;
+  border-radius: 0;
   transition: all 0.3s ease;
 }
 
 .about-container p:hover {
-  background: rgba(245, 196, 0, 0.1);
-  transform: translateX(8px);
-  box-shadow: 0 4px 12px rgba(245, 196, 0, 0.15);
+  background: transparent;
+  transform: translateX(0);
+  box-shadow: none;
 }
 
 #history,
 #about {
-  scroll-margin-top: 120px; /* header + news-bar */
+  scroll-margin-top: 120px;
 }
 
 /* RESPONSIVE - Tablet */
 @media (max-width: 1024px) {
   .about-section {
-    padding: 2rem 1.5rem;
+    padding: 3rem 1.5rem;
   }
 
   .about-container p {
-    padding: 0.8rem 1.2rem;
+    padding: 0;
   }
 }
 
 /* RESPONSIVE - Mobile */
 @media (max-width: 768px) {
   .about-section {
-    padding: 1.5rem 1rem;
-    margin: 1rem 0;
-  }
-
-  .about-section::before {
-    font-size: 1.5rem;
-    margin-bottom: 1.5rem;
+    padding: 2.5rem 1rem;
+    margin: 0;
   }
 
   .about-container p {
     font-size: 1rem;
-    padding: 0.8rem 1rem;
+    padding: 0;
   }
 }
 
 /* RESPONSIVE - Mobile Small */
 @media (max-width: 480px) {
   .about-section {
-    padding: 1rem;
-    border-left: 2px solid #f5c400;
-    border-right: 2px solid #f5c400;
-  }
-
-  .about-section::before {
-    font-size: 1.2rem;
+    padding: 1.5rem;
   }
 
   .about-container p {
     font-size: 0.95rem;
-    padding: 0.6rem 0.8rem;
+    padding: 0;
     margin-bottom: 1rem;
   }
 }

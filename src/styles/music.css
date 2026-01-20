@@ -1,59 +1,48 @@
-/* MUSIC SECTION - Diseño Mejorado */
+/* MUSIC SECTION - Minimalista y Elegante */
 
 .music-section {
-  padding: 3rem 2rem;
+  padding: 5rem 2rem;
   max-width: 1400px;
   margin: 0 auto;
-  background: linear-gradient(135deg, #0b0b0b 0%, #1a1a1a 100%);
-  border-top: 3px solid #f5c400;
-  border-bottom: 3px solid #f5c400;
-}
-
-.music-section::before {
-  content: "🎵 MÚSICA";
-  display: block;
-  text-align: center;
-  font-size: clamp(1.5rem, 4vw, 2.2rem);
-  font-weight: 800;
-  color: #f5c400;
-  letter-spacing: 3px;
-  margin-bottom: 2rem;
-  text-transform: uppercase;
-  text-shadow: 0 4px 10px rgba(245, 196, 0, 0.3);
+  background: #ffffff;
+  border-top: none;
+  border-bottom: none;
 }
 
 .section-title {
   text-align: center;
   margin-bottom: 3rem;
   font-size: clamp(1.5rem, 4vw, 2.2rem);
-  color: #f5c400;
-  text-transform: uppercase;
-  letter-spacing: 2px;
+  color: #1a1a1a;
+  text-transform: none;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+  font-family: 'Playfair Display', serif;
 }
 
 /* TARJETA DE MÚSICA */
 .music-card {
-  background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
-  border-radius: 8px;
+  background: #f5f5f5;
+  border-radius: 2px;
   padding: 2rem;
   margin-bottom: 2rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-  border: 1px solid #333;
-  border-left: 4px solid #f5c400;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e5e5e5;
+  border-left: none;
   transition: all 0.3s ease;
 }
 
 .music-card:hover {
-  border-color: #ffd700;
-  border-left-color: #ffd700;
-  box-shadow: 0 8px 20px rgba(245, 196, 0, 0.2);
-  transform: translateY(-4px);
+  border-color: #1a1a1a;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+  background: #ffffff;
 }
 
 .music-card.featured {
-  border: 2px solid #f5c400;
-  background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
-  box-shadow: 0 8px 24px rgba(245, 196, 0, 0.25);
+  border: 1px solid #1a1a1a;
+  background: #ffffff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
 }
 
 /* BADGE */
@@ -61,53 +50,56 @@
   display: inline-block;
   font-size: 0.7rem;
   text-transform: uppercase;
-  letter-spacing: 1.5px;
-  color: #000;
-  background: linear-gradient(135deg, #f5c400 0%, #ffd700 100%);
+  letter-spacing: 1px;
+  color: #ffffff;
+  background: #1a1a1a;
   padding: 0.4rem 0.9rem;
-  border-radius: 999px;
+  border-radius: 2px;
   margin-bottom: 0.8rem;
-  font-weight: 700;
+  font-weight: 600;
+  font-family: 'Lato', sans-serif;
 }
 
 /* TÍTULO DE CANCIÓN */
 .song-title {
   font-size: clamp(1.3rem, 3vw, 1.8rem);
-  font-weight: 800;
-  color: #f5c400;
+  font-weight: 500;
+  color: #1a1a1a;
   margin: 0.5rem 0 0.8rem 0;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+  text-transform: none;
+  letter-spacing: 0.3px;
+  font-family: 'Playfair Display', serif;
 }
 
 /* REPRODUCTOR AUDIO */
 audio {
   width: 100%;
   margin-top: 1rem;
-  height: 50px;
-  background: #0d0d0d;
-  border-radius: 4px;
+  height: 45px;
+  background: #ffffff;
+  border-radius: 2px;
+  border: 1px solid #e5e5e5;
 }
 
 audio::-webkit-media-controls-panel {
-  background-color: #1a1a1a;
+  background-color: #ffffff;
 }
 
 audio::-webkit-media-controls-play-button {
-  filter: brightness(1.2);
+  filter: brightness(0.8);
 }
 
 /* SPOTIFY EMBED */
 .spotify-card iframe {
-  border-radius: 8px;
-  border: 1px solid #333;
+  border-radius: 2px;
+  border: 1px solid #e5e5e5;
   margin-top: 1rem;
   width: 100%;
 }
 
 /* DESCRIPCIÓN */
 .music-card p {
-  color: #e0e0e0;
+  color: #2c2c2c;
   line-height: 1.8;
   margin: 1rem 0;
 }
@@ -126,7 +118,7 @@ audio::-webkit-media-controls-play-button {
 /* RESPONSIVE - Tablet */
 @media (max-width: 1024px) {
   .music-section {
-    padding: 2rem 1.5rem;
+    padding: 3rem 1.5rem;
   }
 
   .music-card {
@@ -141,12 +133,33 @@ audio::-webkit-media-controls-play-button {
 /* RESPONSIVE - Mobile */
 @media (max-width: 768px) {
   .music-section {
-    padding: 1.5rem 1rem;
+    padding: 2.5rem 1rem;
   }
 
-  .music-section::before {
-    font-size: 1.5rem;
+  .music-card {
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
   }
+
+  .music-grid {
+    gap: 1.5rem;
+  }
+}
+
+/* RESPONSIVE - Mobile Small */
+@media (max-width: 480px) {
+  .music-section {
+    padding: 1.5rem;
+  }
+
+  .music-card {
+    padding: 1rem;
+  }
+
+  .song-title {
+    font-size: 1.2rem;
+  }
+}
 
   .music-card {
     padding: 1.5rem;

@@ -3,14 +3,14 @@
   top: 0;
   width: 100%;
   height: 80px;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.98) 0%, rgba(0, 0, 0, 0.95) 100%);
+  background: #ffffff;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 25px;
+  padding: 0 2rem;
   z-index: 9999;
-  border-bottom: 2px solid #f5c400;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
+  border-bottom: 1px solid #e5e5e5;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
 }
 
@@ -19,52 +19,59 @@
   align-items: center;
   gap: 12px;
   transition: transform 0.3s ease;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  text-decoration: none;
 }
 
 .logo-combo:hover {
-  transform: scale(1.05);
+  transform: scale(1.02);
 }
 
 .logo-icon {
-  width: 60px;
-  height: 60px;
+  width: 50px;
+  height: 50px;
   background: url('../assets/logo.png') no-repeat center;
   background-size: contain;
-  filter: invert(1);
-  transition: filter 0.3s ease;
+  filter: none;
+  transition: opacity 0.3s ease;
 }
 
 .logo-icon:hover {
-  filter: invert(1) drop-shadow(0 0 8px #f5c400);
+  opacity: 0.8;
 }
 
 .logo-text {
-  width: 160px;
+  width: 150px;
   height: 40px;
   background: url('../assets/letters.png') no-repeat center;
   background-size: contain;
-  filter: invert(1);
-  transition: filter 0.3s ease;
+  filter: none;
+  transition: opacity 0.3s ease;
 }
 
 .logo-text:hover {
-  filter: invert(1) drop-shadow(0 0 8px #f5c400);
+  opacity: 0.8;
 }
 
 .nav {
   display: flex;
-  gap: 2rem;
+  gap: 2.5rem;
+  align-items: center;
 }
 
 .nav a {
-  color: #f5f5f5;
+  color: #2c2c2c;
   text-decoration: none;
-  font-size: 0.95rem;
-  letter-spacing: 2px;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
   text-transform: uppercase;
   transition: all 0.3s ease;
   position: relative;
-  font-weight: 600;
+  font-weight: 500;
+  font-family: 'Lato', sans-serif;
 }
 
 .nav a::before {
@@ -73,14 +80,13 @@
   bottom: -8px;
   left: 0;
   width: 0;
-  height: 2px;
-  background: #f5c400;
+  height: 1px;
+  background: #1a1a1a;
   transition: width 0.3s ease;
 }
 
 .nav a:hover {
-  color: #f5c400;
-  text-shadow: 0 0 10px rgba(245, 196, 0, 0.5);
+  color: #1a1a1a;
 }
 
 .nav a:hover::before {
@@ -103,10 +109,10 @@
 
 .hamburger span {
   width: 28px;
-  height: 3px;
-  background: #f5c400;
+  height: 2px;
+  background: #1a1a1a;
   transition: all 0.3s ease;
-  border-radius: 2px;
+  border-radius: 1px;
 }
 
 /* FIX OFFSET PARA SECCIONES CON HEADER FIJO */
@@ -118,19 +124,19 @@ footer {
 /* RESPONSIVE - Tablet */
 @media (max-width: 1024px) {
   .main-header {
-    padding: 0 15px;
+    padding: 0 1.5rem;
   }
 
   .logo-text {
-    width: 140px;
+    width: 130px;
   }
 
   .nav {
-    gap: 1.5rem;
+    gap: 2rem;
   }
 
   .nav a {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
   }
 }
 
@@ -138,16 +144,16 @@ footer {
 @media (max-width: 768px) {
   .main-header {
     height: 70px;
-    padding: 0 12px;
+    padding: 0 1rem;
   }
 
   .logo-icon {
-    width: 50px;
-    height: 50px;
+    width: 45px;
+    height: 45px;
   }
 
   .logo-text {
-    width: 120px;
+    width: 110px;
     height: 35px;
   }
 
@@ -169,16 +175,16 @@ footer {
 @media (max-width: 480px) {
   .main-header {
     height: 60px;
-    padding: 0 8px;
+    padding: 0 0.8rem;
   }
 
   .logo-icon {
-    width: 45px;
-    height: 45px;
+    width: 40px;
+    height: 40px;
   }
 
   .logo-text {
-    width: 100px;
+    width: 95px;
     height: 30px;
   }
 

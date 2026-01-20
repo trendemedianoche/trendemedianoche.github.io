@@ -1,84 +1,71 @@
-/* NOTICIAS & COMUNIDAD - Diseño Mejorado */
+/* NOTICIAS & COMUNIDAD - Minimalista y Elegante */
 
 .news-section {
-  padding: 3rem 2rem;
-  background: linear-gradient(135deg, #0b0b0b 0%, #1a1a1a 100%);
-  border-top: 3px solid #f5c400;
-  border-bottom: 3px solid #f5c400;
-  margin: 2rem 0;
-}
-
-.news-section::before {
-  content: "📰 NOTICIAS";
-  display: block;
-  text-align: center;
-  font-size: clamp(1.5rem, 4vw, 2.2rem);
-  font-weight: 800;
-  color: #f5c400;
-  letter-spacing: 3px;
-  margin-bottom: 2rem;
-  text-transform: uppercase;
-  text-shadow: 0 4px 10px rgba(245, 196, 0, 0.3);
+  padding: 5rem 2rem;
+  background: #ffffff;
+  border-top: none;
+  border-bottom: none;
+  margin: 0;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .news-layout {
-  max-width: 1400px;
-  margin: 0 auto;
   display: grid;
-  grid-template-columns: 1fr 360px;
+  grid-template-columns: 1fr 340px;
   gap: 3rem;
   align-items: start;
 }
 
 /* NOTICIAS */
 .news-item {
-  background: rgba(26, 26, 26, 0.8);
+  background: #f5f5f5;
   padding: 2rem;
-  border-radius: 8px;
+  border-radius: 2px;
   margin-bottom: 2rem;
-  border-left: 4px solid #f5c400;
-  border: 1px solid #333;
-  border-left: 4px solid #f5c400;
+  border: 1px solid #e5e5e5;
+  border-left: none;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .news-item:hover {
-  background: rgba(26, 26, 26, 1);
-  border-color: #ffd700;
-  border-left-color: #ffd700;
-  box-shadow: 0 8px 16px rgba(245, 196, 0, 0.2);
-  transform: translateY(-4px);
+  background: #ffffff;
+  border-color: #1a1a1a;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
 }
 
 .news-item h3 {
   margin: 0 0 0.5rem 0;
-  color: #f5c400;
+  color: #1a1a1a;
   font-size: 1.3rem;
 }
 
 .news-date {
   font-size: 0.8rem;
   opacity: 0.6;
-  color: #999;
+  color: #999999;
 }
 
 /* FORMULARIO */
 .news-form {
   margin-top: 3rem;
-  background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+  background: #f5f5f5;
   padding: 2rem;
-  border-radius: 8px;
-  border: 1px solid #333;
-  border-top: 3px solid #f5c400;
+  border-radius: 2px;
+  border: 1px solid #e5e5e5;
+  border-top: none;
   position: sticky;
   top: 100px;
 }
 
 .news-form h3 {
-  color: #f5c400;
+  color: #1a1a1a;
   margin-bottom: 1.5rem;
   font-size: 1.1rem;
+  font-family: 'Playfair Display', serif;
 }
 
 .news-form form {
@@ -89,44 +76,52 @@
 
 .news-form input,
 .news-form textarea {
-  background: #0d0d0d;
-  border: 2px solid #333;
-  color: #f5f5f5;
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  color: #2c2c2c;
   padding: 0.8rem;
-  border-radius: 6px;
+  border-radius: 2px;
   font-family: inherit;
   transition: all 0.3s ease;
 }
 
 .news-form input:hover,
 .news-form textarea:hover {
-  border-color: #f5c400;
+  border-color: #1a1a1a;
 }
 
 .news-form input:focus,
 .news-form textarea:focus {
   outline: none;
-  border-color: #f5c400;
-  background: #1a1a1a;
-  box-shadow: 0 0 10px rgba(245, 196, 0, 0.2);
+  border-color: #1a1a1a;
+  background: #ffffff;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
 }
 
 .news-form button {
-  background: linear-gradient(135deg, #f5c400 0%, #ffd700 100%);
-  color: #000;
+  background: #1a1a1a;
+  color: #ffffff;
   border: none;
   padding: 0.8rem;
-  border-radius: 6px;
-  font-weight: 700;
+  border-radius: 2px;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
+  font-size: 0.9rem;
 }
 
 .news-form button:hover {
+  background: #333333;
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(245, 196, 0, 0.4);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* ASIDE FIJO */
+.support-aside {
+  position: sticky;
+  top: 140px;
 }
 
 /* RESPONSIVE - Tablet */
@@ -144,7 +139,7 @@
 /* RESPONSIVE - Mobile */
 @media (max-width: 768px) {
   .news-section {
-    padding: 1.5rem 1rem;
+    padding: 2.5rem 1rem;
   }
 
   .news-item {
@@ -159,8 +154,8 @@
 
 /* RESPONSIVE - Mobile Small */
 @media (max-width: 480px) {
-  .news-section::before {
-    font-size: 1.2rem;
+  .news-section {
+    padding: 1.5rem;
   }
 
   .news-item {
@@ -170,17 +165,5 @@
   .news-item h3 {
     font-size: 1.1rem;
   }
-}
-  border: 1px solid #f1c40f;
-  color: #f1c40f;
-  padding: 0.8rem;
-  border-radius: 10px;
-  cursor: pointer;
-}
-
-/* ASIDE FIJO */
-.support-aside {
-  position: sticky;
-  top: 140px;
 }
 
