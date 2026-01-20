@@ -3,14 +3,14 @@
   top: 0;
   width: 100%;
   height: 80px;
-  background: #ffffff;
+  background: #1a1a1a;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 2rem;
   z-index: 9999;
-  border-bottom: 1px solid #e5e5e5;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid #333333;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.8);
   transition: all 0.3s ease;
 }
 
@@ -35,7 +35,7 @@
   height: 50px;
   background: url('../assets/logo.png') no-repeat center;
   background-size: contain;
-  filter: none;
+  filter: invert(1);
   transition: opacity 0.3s ease;
 }
 
@@ -48,7 +48,7 @@
   height: 40px;
   background: url('../assets/letters.png') no-repeat center;
   background-size: contain;
-  filter: none;
+  filter: invert(1);
   transition: opacity 0.3s ease;
 }
 
@@ -63,7 +63,7 @@
 }
 
 .nav a {
-  color: #2c2c2c;
+  color: #d0d0d0;
   text-decoration: none;
   font-size: 0.85rem;
   letter-spacing: 0.5px;
@@ -81,12 +81,12 @@
   left: 0;
   width: 0;
   height: 1px;
-  background: #1a1a1a;
+  background: #ffffff;
   transition: width 0.3s ease;
 }
 
 .nav a:hover {
-  color: #1a1a1a;
+  color: #ffffff;
 }
 
 .nav a:hover::before {

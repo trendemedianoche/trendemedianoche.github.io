@@ -3,7 +3,7 @@
 .about-section {
 
   position: relative;
-  background: #ffffff;
+  background: #0a0a0a;
   border-left: none;
   border-right: none;
   margin: 0;
@@ -16,13 +16,12 @@
   max-width: 1000px;
   top: 1010px; /* altura del header */
   margin: 0 auto;
-  padding: 5rem 0rem;
 }
 
 .about-container p {
   font-size: clamp(0.95rem, 2vw, 1.1rem);
   line-height: 1.8;
-  color: #2c2c2c;
+  color: #e0e0e0;
   margin-bottom: 1.8rem;
   padding: 0;
   background: transparent;
