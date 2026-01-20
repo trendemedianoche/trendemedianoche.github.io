@@ -1,61 +1,188 @@
+/* MUSIC SECTION - Diseño Mejorado */
+
 .music-section {
-  padding: 1rem 1.5rem;
-  max-width: 1100px;
-  margin: auto;
+  padding: 3rem 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  background: linear-gradient(135deg, #0b0b0b 0%, #1a1a1a 100%);
+  border-top: 3px solid #f5c400;
+  border-bottom: 3px solid #f5c400;
+}
+
+.music-section::before {
+  content: "🎵 MÚSICA";
+  display: block;
+  text-align: center;
+  font-size: clamp(1.5rem, 4vw, 2.2rem);
+  font-weight: 800;
+  color: #f5c400;
+  letter-spacing: 3px;
+  margin-bottom: 2rem;
+  text-transform: uppercase;
+  text-shadow: 0 4px 10px rgba(245, 196, 0, 0.3);
 }
 
 .section-title {
   text-align: center;
   margin-bottom: 3rem;
-  font-size: 2.2rem;
+  font-size: clamp(1.5rem, 4vw, 2.2rem);
+  color: #f5c400;
+  text-transform: uppercase;
+  letter-spacing: 2px;
 }
 
+/* TARJETA DE MÚSICA */
 .music-card {
-  background: #111;
-  border-radius: 16px;
+  background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+  border-radius: 8px;
   padding: 2rem;
-  margin-bottom: 3rem;
-  box-shadow: 0 0 30px rgba(0,0,0,.4);
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  border: 1px solid #333;
+  border-left: 4px solid #f5c400;
+  transition: all 0.3s ease;
+}
+
+.music-card:hover {
+  border-color: #ffd700;
+  border-left-color: #ffd700;
+  box-shadow: 0 8px 20px rgba(245, 196, 0, 0.2);
+  transform: translateY(-4px);
 }
 
 .music-card.featured {
-  border: 2px solid #f1c40f;
+  border: 2px solid #f5c400;
+  background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+  box-shadow: 0 8px 24px rgba(245, 196, 0, 0.25);
 }
 
+/* BADGE */
+.badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #000;
+  background: linear-gradient(135deg, #f5c400 0%, #ffd700 100%);
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  margin-bottom: 0.8rem;
+  font-weight: 700;
+}
+
+/* TÍTULO DE CANCIÓN */
 .song-title {
-  font-size: 1.6rem;
-  font-weight: bold;
-  color: #f1c40f;
+  font-size: clamp(1.3rem, 3vw, 1.8rem);
+  font-weight: 800;
+  color: #f5c400;
+  margin: 0.5rem 0 0.8rem 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
+/* REPRODUCTOR AUDIO */
 audio {
   width: 100%;
   margin-top: 1rem;
+  height: 50px;
+  background: #0d0d0d;
+  border-radius: 4px;
 }
 
-.badge {
-  display: inline-block;
-  font-size: .75rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: #000;
-  background: #f5c400;
-  padding: .3rem .7rem;
-  border-radius: 999px;
-  margin-bottom: .5rem;
+audio::-webkit-media-controls-panel {
+  background-color: #1a1a1a;
 }
 
-.song-title {
-  font-size: 1.8rem;
-  color: #f5c400;
-  margin: .5rem 0 0;
+audio::-webkit-media-controls-play-button {
+  filter: brightness(1.2);
 }
 
-/* 🎵 Spotify */
+/* SPOTIFY EMBED */
 .spotify-card iframe {
-  border-radius: 12px;
-  border: none;
+  border-radius: 8px;
+  border: 1px solid #333;
   margin-top: 1rem;
+  width: 100%;
+}
+
+/* DESCRIPCIÓN */
+.music-card p {
+  color: #e0e0e0;
+  line-height: 1.8;
+  margin: 1rem 0;
+}
+
+/* GRID DE MÚLTIPLES CANCIONES */
+.music-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.music-grid .music-card {
+  margin-bottom: 0;
+}
+
+/* RESPONSIVE - Tablet */
+@media (max-width: 1024px) {
+  .music-section {
+    padding: 2rem 1.5rem;
+  }
+
+  .music-card {
+    padding: 1.5rem;
+  }
+
+  .music-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* RESPONSIVE - Mobile */
+@media (max-width: 768px) {
+  .music-section {
+    padding: 1.5rem 1rem;
+  }
+
+  .music-section::before {
+    font-size: 1.5rem;
+  }
+
+  .music-card {
+    padding: 1.5rem;
+  }
+
+  .song-title {
+    font-size: 1.3rem;
+  }
+
+  audio {
+    height: 45px;
+  }
+}
+
+/* RESPONSIVE - Mobile Small */
+@media (max-width: 480px) {
+  .music-section {
+    padding: 1rem;
+  }
+
+  .music-section::before {
+    font-size: 1.2rem;
+  }
+
+  .music-card {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .song-title {
+    font-size: 1.1rem;
+  }
+
+  audio {
+    height: 40px;
+  }
 }
 
 .music-section.alt-design {

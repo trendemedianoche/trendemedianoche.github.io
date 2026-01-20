@@ -1,20 +1,18 @@
-/* =======================
-   FOOTER
-======================= */
+/* FOOTER - Diseño Mejorado */
 
 .footer {
-  background: #000;
-  border-top: 1px solid #222;
+  background: linear-gradient(180deg, #000 0%, #0b0b0b 100%);
+  border-top: 3px solid #f5c400;
   padding: 4rem 2rem 2rem;
 }
 
 /* GRID SUPERIOR */
 .footer-columns {
-  max-width: 1200px;
-  margin: auto;
+  max-width: 1400px;
+  margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 2.5rem;
+  gap: 3rem;
   align-items: start;
 }
 
@@ -25,77 +23,107 @@
 
 .footer-logo-column img {
   width: 140px;
-  filter: invert(1);
+  filter: invert(1) drop-shadow(0 0 8px rgba(245, 196, 0, 0.3));
+  transition: filter 0.3s ease;
+}
+
+.footer-logo-column img:hover {
+  filter: invert(1) drop-shadow(0 0 12px rgba(245, 196, 0, 0.6));
 }
 
 /* BLOQUES */
 .footer-block h3 {
-  font-size: 1.1rem;
-  margin-bottom: 1rem;
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 2px;
+  color: #f5c400;
+  text-shadow: 0 2px 8px rgba(245, 196, 0, 0.2);
+}
+
+.footer-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
 }
 
 .footer-text a {
-  color: #fff;  /* Color blanco */
-  text-decoration: none;  /* Quita el subrayado */
+  color: #e0e0e0;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  padding: 0.5rem 0;
+  border-left: 3px solid transparent;
+  padding-left: 0.8rem;
 }
 
 .footer-text a:hover {
-  color: #f1c40f;  /* Cambia el color a dorado cuando pasa el ratón */
+  color: #f5c400;
+  border-left-color: #f5c400;
+  transform: translateX(4px);
 }
 
 /* CONTACTO */
 .contact-row {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  margin-bottom: 0.6rem;
+  gap: 0.8rem;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
 }
 
 .contact-row img {
-  width: 20px;
+  width: 24px;
+  filter: brightness(0) invert(1);
+}
+
+.contact-row:hover {
+  color: #f5c400;
 }
 
 /* REDES */
 .footer-socials {
   display: flex;
-  gap: 1rem;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.footer-socials a {
+  display: inline-block;
 }
 
 .footer-socials img {
-  width: 30px;
-  transition: transform 0.3s ease;
+  width: 32px;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  filter: brightness(0) invert(1);
 }
 
 .footer-socials a:hover img {
-  transform: scale(1.15);
+  transform: scale(1.2) translateY(-4px);
+  filter: brightness(0) invert(1) drop-shadow(0 4px 12px rgba(245, 196, 0, 0.5));
 }
 
-/* =======================
-   DONACIÓN
-======================= */
-
+/* DONACIÓN */
 .footer-donation {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 3rem auto 2rem;
   display: flex;
   justify-content: center;
 }
 
 .donation-card {
-
   width: 100%;
-  background: #111;
-  border: 1px solid #222;
-  border-radius: 14px;
+  background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+  border: 2px solid #f5c400;
+  border-radius: 8px;
   padding: 2rem 1.5rem;
   text-align: center;
+  box-shadow: 0 8px 20px rgba(245, 196, 0, 0.15);
 }
 
 .donation-intro {
-  color: #ccc;
+  color: #e0e0e0;
   margin-bottom: 1.5rem;
+  font-size: 1rem;
 }
 
 .donation-grid {
@@ -106,47 +134,62 @@
 }
 
 .donation-grid div {
-  background: #000;
-  border: 1px solid #222;
-  border-radius: 8px;
-  padding: 0.7rem;
+  background: #0d0d0d;
+  border: 1px solid #333;
+  border-radius: 6px;
+  padding: 1rem;
+  transition: all 0.3s ease;
+}
+
+.donation-grid div:hover {
+  border-color: #f5c400;
+  box-shadow: 0 4px 12px rgba(245, 196, 0, 0.2);
 }
 
 .donation-grid span {
-  font-size: 0.7rem;
-  color: #777;
+  font-size: 0.75rem;
+  color: #999;
   display: block;
   text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 0.5rem;
 }
 
 .donation-grid strong {
-  font-size: 0.95rem;
+  font-size: 1rem;
+  color: #f5f5f5;
 }
 
 /* BOTÓN COPIAR */
 .copy-button {
   width: 100%;
-  background: #000;
-  border: 1px solid #333;
-  color: #fff;
-  padding: 0.8rem;
-  border-radius: 10px;
+  background: linear-gradient(135deg, #f5c400 0%, #ffd700 100%);
+  border: none;
+  color: #000;
+  padding: 1rem;
+  border-radius: 6px;
   cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 0.6rem;
-  transition: all 0.25s ease;
+  gap: 0.8rem;
+  transition: all 0.3s ease;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .copy-button img {
-  width: 16px;
-  filter: invert(1);
+  width: 18px;
 }
 
 .copy-button:hover {
-  border-color: #f1c40f;
-  color: #f1c40f;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(245, 196, 0, 0.4);
+}
+
+.copy-button:active {
+  transform: translateY(0);
 }
 
 /* COPY */
@@ -155,4 +198,54 @@
   font-size: 0.85rem;
   opacity: 0.6;
   margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #333;
+}
+
+/* RESPONSIVE - Tablet */
+@media (max-width: 1024px) {
+  .footer-columns {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+
+  .footer {
+    padding: 3rem 1.5rem 1.5rem;
+  }
+}
+
+/* RESPONSIVE - Mobile */
+@media (max-width: 768px) {
+  .footer-columns {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .donation-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .footer {
+    padding: 2rem 1rem 1rem;
+  }
+
+  .footer-block h3 {
+    font-size: 0.95rem;
+  }
+}
+
+/* RESPONSIVE - Mobile Small */
+@media (max-width: 480px) {
+  .footer {
+    padding: 1.5rem;
+  }
+
+  .footer-logo-column img {
+    width: 100px;
+  }
+
+  .copy-button {
+    padding: 0.8rem;
+    font-size: 0.9rem;
+  }
 }
