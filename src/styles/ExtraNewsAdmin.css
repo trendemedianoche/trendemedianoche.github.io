@@ -41,7 +41,7 @@
 .extra-news-admin .news-form {
   display: grid;
   gap: 14px;
-  max-width: 620px;
+  max-width: 720px;
 }
 
 .extra-news-admin .news-form input,

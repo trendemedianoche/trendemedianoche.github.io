@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { getSectionDividers } from '../services/sectionImagesService';
 import { getSectionDescriptions } from '../services/sectionDescriptionsService';
+import { getGalleryImages } from '../services/galleryService';
 
 const SiteContext = createContext();
 
@@ -15,18 +16,24 @@ export const useSite = () => {
 export const SiteProvider = ({ children }) => {
   const [dividers, setDividers] = useState([]);
   const [descriptions, setDescriptions] = useState({});
+  const [firstGalleryImage, setFirstGalleryImage] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const loadSiteContent = async () => {
     try {
       setLoading(true);
-      const [dividersData, descriptionsData] = await Promise.all([
+      const [dividersData, descriptionsData, galleryImages] = await Promise.all([
         getSectionDividers(),
         getSectionDescriptions(),
+        getGalleryImages(),
       ]);
 
       setDividers(dividersData);
+
+      // Primera imagen de galería como fallback global para divisores
+      const firstImageUrl = galleryImages?.[0]?.url || null;
+      setFirstGalleryImage(firstImageUrl);
 
       // Transformar descripciones a objeto por clave
       const descMap = {};
@@ -50,6 +57,7 @@ export const SiteProvider = ({ children }) => {
   const value = {
     dividers,
     descriptions,
+    firstGalleryImage,
     loading,
     error,
     refresh: loadSiteContent,

@@ -1,7 +1,7 @@
 /* ABOUT SECTION - Minimalista y Elegante */
 
 .about-section {
-  padding: 5rem 2rem;
+
   position: relative;
   background: #ffffff;
   border-left: none;
@@ -14,8 +14,9 @@
 
 .about-container {
   max-width: 1000px;
+  top: 1010px; /* altura del header */
   margin: 0 auto;
-  padding: 0;
+  padding: 5rem 0rem;
 }
 
 .about-container p {

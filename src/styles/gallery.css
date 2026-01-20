@@ -2,10 +2,10 @@
 
 .gallery-section {
   position: relative;
-  padding: 5rem 2rem;
+  padding: 1rem 0; /* reducir espacio vertical */
   background: #ffffff;
   margin-top: 0;
-  top: 80px; /* altura del header */
+  top: 110px; /* altura del header */
   border-top: none;
   border-bottom: none;
   max-width: 1400px;
@@ -15,12 +15,29 @@
 
 /* GRID DE IMÁGENES */
 .gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 2rem;
-  max-width: 1600px;
-  margin: 0 auto;
-  padding: 0;
+  display: none;
+}
+
+/* MEDIA CTA HERO */
+.media-cta-container {
+  position: relative;
+  width: 100%;
+  height: 620px; /* altura más compacta */
+  border-radius: 6px;
+  
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.18);
+  margin-bottom: 1rem; /* menos espacio bajo el hero */
+  cursor: pointer;
+}
+
+.media-cta-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, rgba(0, 0, 0, 0.78) 0%, rgba(0, 0, 0, 0.45) 55%, rgba(0, 0, 0, 0.15) 100%);
+  display: block;
 }
 
 /* CONTENEDOR DE IMAGEN */

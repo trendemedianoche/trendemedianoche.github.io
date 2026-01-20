@@ -1,7 +1,7 @@
 /* MUSIC SECTION - Minimalista y Elegante */
 
 .music-section {
-  padding: 5rem 2rem;
+ 
   max-width: 1400px;
   margin: 0 auto;
   background: #ffffff;
@@ -149,39 +149,7 @@ audio::-webkit-media-controls-play-button {
 /* RESPONSIVE - Mobile Small */
 @media (max-width: 480px) {
   .music-section {
-    padding: 1.5rem;
-  }
-
-  .music-card {
     padding: 1rem;
-  }
-
-  .song-title {
-    font-size: 1.2rem;
-  }
-}
-
-  .music-card {
-    padding: 1.5rem;
-  }
-
-  .song-title {
-    font-size: 1.3rem;
-  }
-
-  audio {
-    height: 45px;
-  }
-}
-
-/* RESPONSIVE - Mobile Small */
-@media (max-width: 480px) {
-  .music-section {
-    padding: 1rem;
-  }
-
-  .music-section::before {
-    font-size: 1.2rem;
   }
 
   .music-card {

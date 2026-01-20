@@ -4,6 +4,7 @@ import { getGalleryImages } from '../services/galleryService';
 export default function Gallery() {
   const [images, setImages] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [heroIndex, setHeroIndex] = useState(0);
 
   useEffect(() => {
     getGalleryImages().then(setImages);
@@ -31,21 +32,41 @@ export default function Gallery() {
     setSelectedImage(images[prevIndex]);
   };
 
+  const heroImage = images.length ? images[heroIndex % images.length] : null;
+
+  const handleHeroNext = () => {
+    if (!images.length) return;
+    setHeroIndex((prev) => (prev + 1) % images.length);
+  };
+
+  const handleHeroPrev = () => {
+    if (!images.length) return;
+    setHeroIndex((prev) => (prev - 1 + images.length) % images.length);
+  };
+
+  // autoplay cada 3s
+  useEffect(() => {
+    if (!images.length) return;
+    const id = setInterval(() => {
+      setHeroIndex((prev) => (prev + 1) % images.length);
+    }, 3000);
+    return () => clearInterval(id);
+  }, [images.length]);
+
   return (
     <>
       <section id="media" className="gallery-section">
-        <div className="gallery-grid">
-          {images.map((img) => (
-            <img
-              key={img.id}
-              src={img.url}
-              alt={img.alt || 'Tren de Medianoche'}
-              loading="lazy"
-              onClick={() => handleImageClick(img)}
-              style={{ cursor: 'pointer' }}
-            />
-          ))}
-        </div>
+        {heroImage && (
+          <div
+            className="media-cta-container"
+            style={{ backgroundImage: `url(${heroImage.url})` }}
+            onClick={() => setSelectedImage(heroImage)}
+            role="button"
+            aria-label="Ver foto"
+          >
+            <div className="media-cta-overlay" onClick={() => setSelectedImage(heroImage)}></div>
+          </div>
+        )}
       </section>
 
       {/* MODAL DE IMAGEN EN GRANDE */}
