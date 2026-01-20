@@ -4,7 +4,7 @@
  
   max-width: 1400px;
   margin: 0 auto;
-  background: #ffffff;
+  background: #0a0a0a;
   border-top: none;
   border-bottom: none;
 }
@@ -13,7 +13,7 @@
   text-align: center;
   margin-bottom: 3rem;
   font-size: clamp(1.5rem, 4vw, 2.2rem);
-  color: #1a1a1a;
+  color: #ffffff;
   text-transform: none;
   letter-spacing: 0.5px;
   font-weight: 500;
@@ -22,27 +22,27 @@
 
 /* TARJETA DE MÚSICA */
 .music-card {
-  background: #f5f5f5;
+  background: #1a1a1a;
   border-radius: 2px;
   padding: 2rem;
   margin-bottom: 2rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  border: 1px solid #e5e5e5;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  border: 1px solid #333333;
   border-left: none;
   transition: all 0.3s ease;
 }
 
 .music-card:hover {
-  border-color: #1a1a1a;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-color: #666666;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
   transform: translateY(-2px);
-  background: #ffffff;
+  background: #252525;
 }
 
 .music-card.featured {
-  border: 1px solid #1a1a1a;
-  background: #ffffff;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  border: 1px solid #666666;
+  background: #252525;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.7);
 }
 
 /* BADGE */
@@ -51,20 +51,21 @@
   font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 1px;
-  color: #ffffff;
-  background: #1a1a1a;
+  color: #0a0a0a;
+  background: #c0c0c0;
   padding: 0.4rem 0.9rem;
   border-radius: 2px;
   margin-bottom: 0.8rem;
   font-weight: 600;
   font-family: 'Lato', sans-serif;
 }
+}
 
 /* TÍTULO DE CANCIÓN */
 .song-title {
   font-size: clamp(1.3rem, 3vw, 1.8rem);
   font-weight: 500;
-  color: #1a1a1a;
+  color: #ffffff;
   margin: 0.5rem 0 0.8rem 0;
   text-transform: none;
   letter-spacing: 0.3px;
@@ -76,30 +77,30 @@ audio {
   width: 100%;
   margin-top: 1rem;
   height: 45px;
-  background: #ffffff;
+  background: #2a2a2a;
   border-radius: 2px;
-  border: 1px solid #e5e5e5;
+  border: 1px solid #444444;
 }
 
 audio::-webkit-media-controls-panel {
-  background-color: #ffffff;
+  background-color: #2a2a2a;
 }
 
 audio::-webkit-media-controls-play-button {
-  filter: brightness(0.8);
+  filter: brightness(1.2);
 }
 
 /* SPOTIFY EMBED */
 .spotify-card iframe {
   border-radius: 2px;
-  border: 1px solid #e5e5e5;
+  border: 1px solid #333333;
   margin-top: 1rem;
   width: 100%;
 }
 
 /* DESCRIPCIÓN */
 .music-card p {
-  color: #2c2c2c;
+  color: #e0e0e0;
   line-height: 1.8;
   margin: 1rem 0;
 }
