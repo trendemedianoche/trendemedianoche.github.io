@@ -104,9 +104,48 @@
 
 /* RESPONSIVE: ajustar altura respecto al header */
 @media (max-width: 1024px) {
-  .news-bar { top: 70px; }
+  .news-bar { 
+    height: 32px;
+  }
+  
+  .news-label {
+    font-size: 0.8rem;
+    padding: 0 15px;
+  }
+  
+  .news-track span {
+    font-size: 0.8rem;
+  }
 }
 
 @media (max-width: 768px) {
-  .news-bar { top: 70px; }
+  .news-bar { 
+    top: 70px;
+    height: 36px;
+  }
+  
+  .news-label {
+    font-size: 0.75rem;
+    padding: 0 12px;
+    letter-spacing: 1px;
+  }
+  
+  .news-track span {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .news-bar {
+    height: 40px;
+  }
+  
+  .news-label {
+    font-size: 0.7rem;
+    padding: 0 10px;
+  }
+  
+  .news-track span {
+    font-size: 0.7rem;
+  }
 }
