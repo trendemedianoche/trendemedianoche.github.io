@@ -12,6 +12,8 @@ export default function DonationAdmin() {
   const [fields, setFields] = useState([]);
   const [methodId, setMethodId] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [editingId, setEditingId] = useState(null);
+  const [editValue, setEditValue] = useState('');
 
   useEffect(() => {
     load();
@@ -36,7 +38,19 @@ export default function DonationAdmin() {
   const updateValue = async (id, value) => {
     setLoading(true);
     await updateTransferField(id, { field_value: value });
-    setLoading(false);
+    setEditingId(null);
+    setEditValue('');
+    load();
+  };
+
+  const startEdit = (field) => {
+    setEditingId(field.id);
+    setEditValue(field.field_value);
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
+    setEditValue('');
   };
 
   const move = async (index, dir) => {
@@ -84,21 +98,53 @@ export default function DonationAdmin() {
                 <label style={{ display: 'block', marginBottom: '0.5rem', color: '#f5c400', fontSize: '0.9rem' }}>
                   {f.field_key}
                 </label>
-                <input
-                  type="text"
-                  value={f.field_value}
-                  onChange={e => updateValue(f.id, e.target.value)}
-                  disabled={loading}
-                  style={{
-                    width: '100%',
-                    padding: '0.6rem',
-                    border: '1px solid #333',
-                    background: '#0d0d0d',
-                    color: '#f5f5f5',
-                    borderRadius: '4px',
-                    fontSize: '0.95rem'
-                  }}
-                />
+                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                  <input
+                    type="text"
+                    value={editingId === f.id ? editValue : f.field_value}
+                    onChange={e => setEditValue(e.target.value)}
+                    disabled={editingId !== f.id}
+                    style={{
+                      flex: 1,
+                      padding: '0.6rem',
+                      border: '1px solid #333',
+                      background: editingId === f.id ? '#1a1a1a' : '#0d0d0d',
+                      color: '#f5f5f5',
+                      borderRadius: '4px',
+                      fontSize: '0.95rem',
+                      opacity: editingId === f.id ? 1 : 0.7
+                    }}
+                  />
+                  {editingId === f.id ? (
+                    <>
+                      <button
+                        className="btn btn-success btn-small"
+                        onClick={() => updateValue(f.id, editValue)}
+                        disabled={loading}
+                        title="Guardar"
+                      >
+                        💾
+                      </button>
+                      <button
+                        className="btn btn-secondary btn-small"
+                        onClick={cancelEdit}
+                        disabled={loading}
+                        title="Cancelar"
+                      >
+                        ✕
+                      </button>
+                    </>
+                  ) : (
+                    <button
+                      className="btn btn-primary btn-small"
+                      onClick={() => startEdit(f)}
+                      disabled={loading || editingId !== null}
+                      title="Editar"
+                    >
+                      ✏️
+                    </button>
+                  )}
+                </div>
               </div>
 
               <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
