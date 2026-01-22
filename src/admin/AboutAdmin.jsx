@@ -92,19 +92,10 @@ export default function AboutAdmin() {
   }
 
   return (
-    <div className="admin-section">
-      <div className="admin-section-header">
-        <h2>📝 Editar Acerca de</h2>
-        <p className="admin-section-subtitle">
-          Gestiona el contenido de la sección "Acerca de"
-        </p>
+    <div className="admin-card">
+      <div className="admin-card-header">
+        <h2 className="admin-card-title">📝 Editar Acerca de</h2>
       </div>
-
-      {message && (
-        <div className={`admin-message ${message.includes('✅') ? 'success' : 'error'}`}>
-          {message}
-        </div>
-      )}
 
       <div className="admin-preview">
         <h3>Vista Previa</h3>
@@ -160,6 +151,12 @@ export default function AboutAdmin() {
             Selecciona texto y usa la barra de herramientas para aplicar formato HTML
           </small>
         </div>
+
+        {message && (
+          <div className={`admin-message ${message.includes('✅') ? 'success' : 'error'}`}>
+            {message}
+          </div>
+        )}
 
         <div className="admin-actions">
           <button

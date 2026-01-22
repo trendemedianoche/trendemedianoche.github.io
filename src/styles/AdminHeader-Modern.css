@@ -23,10 +23,50 @@
 
 .admin-header-left {
   flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.admin-logo-combo {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.admin-logo-icon {
+  width: 45px;
+  height: 45px;
+  background: url('../assets/logo.png') no-repeat center;
+  background-size: contain;
+  filter: invert(1);
+  transition: opacity 0.3s ease;
+}
+
+.admin-logo-icon:hover {
+  opacity: 0.8;
+}
+
+.admin-logo-text {
+  width: 140px;
+  height: 35px;
+  background: url('../assets/letters.png') no-repeat center;
+  background-size: contain;
+  filter: invert(1);
+  transition: opacity 0.3s ease;
+}
+
+.admin-logo-text:hover {
+  opacity: 0.8;
+}
+
+.admin-title-section {
+  border-left: 2px solid #f5c400;
+  padding-left: 1.5rem;
 }
 
 .admin-title {
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   font-weight: 700;
   letter-spacing: 2px;
   margin: 0;
@@ -44,7 +84,44 @@
 .admin-header-right {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.5rem;
+}
+
+.admin-user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 1rem;
+  background: rgba(245, 196, 0, 0.1);
+  border-radius: 6px;
+  border: 1px solid rgba(245, 196, 0, 0.3);
+}
+
+.user-icon {
+  font-size: 1.1rem;
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.user-name {
+  font-size: 0.85rem;
+  color: #f5f5f5;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  line-height: 1.1;
+}
+
+.user-role {
+  font-size: 0.7rem;
+  color: #f5c400;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  line-height: 1.1;
 }
 
 .logout-btn {
@@ -78,13 +155,58 @@
   .admin-header-modern {
     padding: 1rem 1.5rem;
     flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .admin-header-left {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .admin-logo-combo {
+    gap: 0.6rem;
+  }
+
+  .admin-logo-icon {
+    width: 35px;
+    height: 35px;
+  }
+
+  .admin-logo-text {
+    width: 110px;
+    height: 28px;
+  }
+
+  .admin-title-section {
+    border-left: none;
+    border-top: 2px solid #f5c400;
+    padding-left: 0;
+    padding-top: 0.8rem;
   }
 
   .admin-title {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
   }
 
   .admin-subtitle {
+    font-size: 0.7rem;
+  }
+
+  .admin-header-right {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .admin-user-info {
+    padding: 0.5rem 0.8rem;
+  }
+
+  .user-name {
+    font-size: 0.85rem;
+  }
+
+  .user-role {
     font-size: 0.7rem;
   }
 
