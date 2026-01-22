@@ -5,6 +5,8 @@ export default function Gallery() {
   const [images, setImages] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
   const [heroIndex, setHeroIndex] = useState(0);
+  const [heroImageLoaded, setHeroImageLoaded] = useState(false);
+  const [nextHeroImage, setNextHeroImage] = useState(null);
 
   useEffect(() => {
     getGalleryImages().then(setImages);
@@ -34,24 +36,61 @@ export default function Gallery() {
 
   const heroImage = images.length ? images[heroIndex % images.length] : null;
 
+  // Precargar la siguiente imagen
+  useEffect(() => {
+    if (!images.length || !heroImage) return;
+    
+    const img = new Image();
+    img.src = heroImage.url;
+    img.onload = () => setHeroImageLoaded(true);
+    
+    return () => {
+      setHeroImageLoaded(false);
+    };
+  }, [heroImage, images.length]);
+
   const handleHeroNext = () => {
     if (!images.length) return;
-    setHeroIndex((prev) => (prev + 1) % images.length);
+    const nextIndex = (heroIndex + 1) % images.length;
+    const nextImg = images[nextIndex];
+    
+    // Precargar imagen antes de cambiar
+    const img = new Image();
+    img.src = nextImg.url;
+    img.onload = () => {
+      setHeroIndex(nextIndex);
+    };
   };
 
   const handleHeroPrev = () => {
     if (!images.length) return;
-    setHeroIndex((prev) => (prev - 1 + images.length) % images.length);
+    const prevIndex = (heroIndex - 1 + images.length) % images.length;
+    const prevImg = images[prevIndex];
+    
+    // Precargar imagen antes de cambiar
+    const img = new Image();
+    img.src = prevImg.url;
+    img.onload = () => {
+      setHeroIndex(prevIndex);
+    };
   };
 
-  // autoplay cada 3s
+  // autoplay cada 3s con precarga
   useEffect(() => {
     if (!images.length) return;
     const id = setInterval(() => {
-      setHeroIndex((prev) => (prev + 1) % images.length);
+      const nextIndex = (heroIndex + 1) % images.length;
+      const nextImg = images[nextIndex];
+      
+      // Precargar imagen antes de cambiar
+      const img = new Image();
+      img.src = nextImg.url;
+      img.onload = () => {
+        setHeroIndex(nextIndex);
+      };
     }, 3000);
     return () => clearInterval(id);
-  }, [images.length]);
+  }, [images.length, heroIndex]);
 
   return (
     <>
