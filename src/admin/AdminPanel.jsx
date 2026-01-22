@@ -6,7 +6,6 @@ import ExtraNewsAdmin from './ExtraNewsAdmin';
 import DonationAdmin from './DonationAdmin';
 import SectionAdmin from './SectionAdmin';
 import ChatAdmin from './ChatAdmin';
-import UserAdmin from './UserAdmin';
 import AboutAdmin from './AboutAdmin';
 
 import '../styles/AdminPanel.css';
@@ -20,7 +19,6 @@ const TABS = [
   { id: 'news', label: 'Noticias', icon: '' },
   { id: 'extra-news', label: 'Extra', icon: '' },
   { id: 'donation', label: 'Donaciones', icon: '' },
-  { id: 'users', label: 'Usuarios', icon: '' },
 ];
 
 export default function AdminPanel() {
@@ -42,8 +40,6 @@ export default function AdminPanel() {
         return <ExtraNewsAdmin />;
       case 'donation':
         return <DonationAdmin />;
-      case 'users':
-        return <UserAdmin />;
       default:
         return <ChatAdmin />;
     }

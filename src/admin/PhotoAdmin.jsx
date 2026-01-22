@@ -220,53 +220,42 @@ export default function PhotoAdmin() {
                   </div>
                 </div>
                 
-                {/* Botones de orden */}
+                {/* Botones de acción */}
                 <div style={{ 
                   display: 'grid',
-                  gridTemplateColumns: '1fr 1fr',
-                  gap: '0.5rem',
-                  marginBottom: '0.5rem'
+                  gridTemplateColumns: '1fr 1fr 1fr 1fr',
+                  gap: '0.5rem'
                 }}>
                   <button
                     className="btn btn-secondary btn-small"
                     onClick={() => move(i, -1)}
                     disabled={loading || i === 0}
-                    title="Mover arriba"
+                    title="Mover a la izquierda"
                     style={{
                       padding: '0.6rem',
-                      fontSize: '1rem',
+                      fontSize: '0.9rem',
                       display: 'flex',
                       alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '0.4rem'
+                      justifyContent: 'center'
                     }}
                   >
-                    ⬆ Subir
+                    ⬅
                   </button>
                   <button
                     className="btn btn-secondary btn-small"
                     onClick={() => move(i, 1)}
                     disabled={loading || i === images.length - 1}
-                    title="Mover abajo"
+                    title="Mover a la derecha"
                     style={{
                       padding: '0.6rem',
-                      fontSize: '1rem',
+                      fontSize: '0.9rem',
                       display: 'flex',
                       alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '0.4rem'
+                      justifyContent: 'center'
                     }}
                   >
-                    ⬇ Bajar
+                    ➡
                   </button>
-                </div>
-
-                {/* Botones de acción */}
-                <div style={{ 
-                  display: 'grid',
-                  gridTemplateColumns: '1fr 1fr',
-                  gap: '0.5rem'
-                }}>
                   <button
                     className="btn btn-success btn-small"
                     onClick={() => toggleActive(img)}
@@ -274,14 +263,13 @@ export default function PhotoAdmin() {
                     title={img.active ? 'Ocultar imagen' : 'Mostrar imagen'}
                     style={{
                       padding: '0.6rem',
-                      fontSize: '0.85rem',
+                      fontSize: '0.9rem',
                       display: 'flex',
                       alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '0.4rem'
+                      justifyContent: 'center'
                     }}
                   >
-                    {img.active ? '👁 Visible' : '🚫 Oculta'}
+                    {img.active ? '👁' : '🚫'}
                   </button>
                   <button
                     className="btn btn-danger btn-small"
@@ -290,14 +278,13 @@ export default function PhotoAdmin() {
                     title="Eliminar imagen"
                     style={{
                       padding: '0.6rem',
-                      fontSize: '0.85rem',
+                      fontSize: '0.9rem',
                       display: 'flex',
                       alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '0.4rem'
+                      justifyContent: 'center'
                     }}
                   >
-                    🗑 Eliminar
+                    🗑
                   </button>
                 </div>
               </div>
