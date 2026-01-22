@@ -7,18 +7,20 @@ import DonationAdmin from './DonationAdmin';
 import SectionAdmin from './SectionAdmin';
 import ChatAdmin from './ChatAdmin';
 import UserAdmin from './UserAdmin';
+import AboutAdmin from './AboutAdmin';
 
 import '../styles/AdminPanel.css';
 import '../styles/AdminPanel-Modern.css';
 
 const TABS = [
-  { id: 'chat', label: 'Chat', icon: '💬' },
-  { id: 'photos', label: 'Fotos', icon: '🖼️' },
-  { id: 'sections', label: 'Secciones', icon: '📑' },
-  { id: 'news', label: 'Noticias', icon: '📰' },
-  { id: 'extra-news', label: 'Extra', icon: '⭐' },
-  { id: 'donation', label: 'Donaciones', icon: '❤️' },
-  { id: 'users', label: 'Usuarios', icon: '👥' },
+  { id: 'chat', label: 'Chat', icon: '' },
+  { id: 'photos', label: 'Fotos', icon: '' },
+  { id: 'sections', label: 'Secciones', icon: '' },
+  { id: 'about', label: 'Acerca de', icon: '' },
+  { id: 'news', label: 'Noticias', icon: '' },
+  { id: 'extra-news', label: 'Extra', icon: '' },
+  { id: 'donation', label: 'Donaciones', icon: '' },
+  { id: 'users', label: 'Usuarios', icon: '' },
 ];
 
 export default function AdminPanel() {
@@ -32,6 +34,8 @@ export default function AdminPanel() {
         return <PhotoAdmin />;
       case 'sections':
         return <SectionAdmin />;
+      case 'about':
+        return <AboutAdmin />;
       case 'news':
         return <NewsAdmin />;
       case 'extra-news':
