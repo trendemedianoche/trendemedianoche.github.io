@@ -128,7 +128,7 @@ export default function PhotoAdmin() {
 
       <div className="admin-card">
         <div className="admin-card-header">
-          <h2 className="admin-card-title">🖼️ Galería</h2>
+          <h2 className="admin-card-title"> Galería</h2>
         </div>
 
         <div className="admin-card-body">
@@ -170,7 +170,7 @@ export default function PhotoAdmin() {
 
         {images.length === 0 ? (
           <div className="empty-state">
-            <div className="empty-state-icon">🖼️</div>
+            <div className="empty-state-icon"></div>
             <p className="empty-state-text">No hay imágenes en la galería</p>
           </div>
         ) : (

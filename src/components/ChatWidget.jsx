@@ -18,7 +18,7 @@ export default function ChatWidget() {
     <>
       {/* BOTÓN */}
       <button className="chat-fab" onClick={() => setOpen(!open)}>
-        💬
+        
       </button>
 
       {/* WIDGET */}

@@ -424,7 +424,7 @@ No necesitas hacer nada especial, los media queries están incluidos. ✨
 
 ---
 
-## ✅ Buenas Prácticas
+##  Buenas Prácticas
 
 1. **Siempre importa el CSS**: `import '../styles/AdminComponents.css';`
 2. **Usa clases base + modificadores**: `.btn.btn-primary`

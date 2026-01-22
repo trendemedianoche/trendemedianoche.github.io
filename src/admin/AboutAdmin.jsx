@@ -36,7 +36,7 @@ export default function AboutAdmin() {
       console.log('💾 AboutAdmin: Guardando contenido...', { length: content.length });
       await updateAbout(content);
       console.log('💾 AboutAdmin: Guardado exitoso');
-      setMessage('✅ Contenido actualizado correctamente');
+      setMessage(' Contenido actualizado correctamente');
       setTimeout(() => setMessage(''), 3000);
     } catch (error) {
       console.error('💾 AboutAdmin: Error al guardar:', error);
@@ -153,7 +153,7 @@ export default function AboutAdmin() {
         </div>
 
         {message && (
-          <div className={`admin-message ${message.includes('✅') ? 'success' : 'error'}`}>
+          <div className={`admin-message ${message.includes('') ? 'success' : 'error'}`}>
             {message}
           </div>
         )}

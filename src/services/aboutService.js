@@ -13,7 +13,7 @@ export async function getAbout() {
     return '';
   }
 
-  console.log('✅ Contenido cargado:', data);
+  console.log(' Contenido cargado:', data);
   return data.content || '';
 }
 
@@ -46,7 +46,7 @@ export async function updateAbout(content) {
       console.error('❌ Error updating about:', error);
       throw error;
     }
-    console.log('✅ Actualizado correctamente:', data);
+    console.log(' Actualizado correctamente:', data);
   } else {
     // Si no existe, insertar
     console.log('➕ Insertando nuevo registro...');
@@ -59,7 +59,7 @@ export async function updateAbout(content) {
       console.error('❌ Error inserting about:', error);
       throw error;
     }
-    console.log('✅ Insertado correctamente:', data);
+    console.log(' Insertado correctamente:', data);
   }
 
   return true;

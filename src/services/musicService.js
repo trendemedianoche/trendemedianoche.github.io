@@ -19,7 +19,7 @@ export async function getLatestSong() {
       .from(BUCKET)
       .createSignedUrl(data.storage_path, 3600);
 
-    // 🖼️ cover (opcional)
+    //  cover (opcional)
     let coverUrl = null;
     if (data.cover_path) {
       const { data: coverSigned } = await supabase.storage

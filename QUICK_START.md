@@ -8,7 +8,7 @@ Has solicitado un diseño tipo **Metallica.com** con imágenes integradas en las
 
 ## 🎯 Lo que se ha hecho
 
-### ✅ Nuevo Diseño Visual
+###  Nuevo Diseño Visual
 
 1. **SectionDivider Component** - Las imágenes ahora están integradas dentro de las separaciones de contenido
    - Altura: 400px (responsive)
@@ -27,7 +27,7 @@ Has solicitado un diseño tipo **Metallica.com** con imágenes integradas en las
    - Dorado (#f5c400) - Acentos y bordes
    - Gris oscuro (#0b0b0b) - Fondos secundarios
 
-### ✅ Archivos Creados
+###  Archivos Creados
 
 ```
 📁 Components
@@ -74,7 +74,7 @@ Sigue el archivo `DATABASE_SETUP.md` para:
 ### 2. Agregar Imágenes Divisoras
 
 En el panel admin:
-1. Ve a **"Secciones"** (📑 tab)
+1. Ve a **"Secciones"** ( tab)
 2. Agrega nuevas divisiones con:
    - Clave de sección (gallery, news, about, music)
    - URL de imagen (debe ser pública)
@@ -120,13 +120,13 @@ Las divisiones aparecerán automáticamente en la página principal entre las se
 │  🎵 Admin · Tren de Medianoche    [X]│
 ├──────┬───────────────────────────────┤
 │      │                               │
-│ 💬  │   CONTENIDO DE LA PESTAÑA     │
-│ 🖼️  │   ACTIVA (scrolleable)        │
-│ 📑  │                               │
-│ 📰  │   - Chat Admin                │
-│ ⭐  │   - Fotos Admin              │
-│ ❤️  │   - Secciones Admin          │
-│ 👥  │   - Noticias Admin           │
+│   │   CONTENIDO DE LA PESTAÑA     │
+│   │   ACTIVA (scrolleable)        │
+│   │                               │
+│   │   - Chat Admin                │
+│   │   - Fotos Admin              │
+│   │   - Secciones Admin          │
+│   │   - Noticias Admin           │
 │      │   etc...                      │
 │ Tabs │                               │
 │      │                               │
@@ -313,7 +313,7 @@ import './styles/SectionDivider.css';
 
 ---
 
-## ✅ Checklist Final
+##  Checklist Final
 
 - [ ] Tablas creadas en Supabase
 - [ ] Políticas RLS configuradas

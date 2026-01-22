@@ -13,7 +13,7 @@ Todo contenido debe estar dentro de un `.admin-card`:
 ```jsx
 <div className="admin-card">
   <div className="admin-card-header">
-    <h2 className="admin-card-title">📰 Noticias</h2>
+    <h2 className="admin-card-title"> Noticias</h2>
   </div>
   
   <div className="admin-card-body">
@@ -147,7 +147,7 @@ Fondo verde gradient, para acciones positivas.
 ```jsx
 {items.length === 0 ? (
   <div className="empty-state">
-    <div className="empty-state-icon">📰</div>
+    <div className="empty-state-icon"></div>
     <p className="empty-state-text">No hay noticias</p>
   </div>
 ) : (
@@ -174,7 +174,7 @@ Fondo verde gradient, para acciones positivas.
 
 ```jsx
 <div className="admin-alert alert-success">
-  ✅ Cambios guardados correctamente
+   Cambios guardados correctamente
 </div>
 
 <div className="admin-alert alert-error">
@@ -286,7 +286,7 @@ export default function NewsAdmin() {
       {/* LISTADO */}
       <div className="admin-card">
         <div className="admin-card-header">
-          <h2 className="admin-card-title">📰 Noticias ({news.length})</h2>
+          <h2 className="admin-card-title"> Noticias ({news.length})</h2>
         </div>
 
         {loading ? (
@@ -296,7 +296,7 @@ export default function NewsAdmin() {
           </div>
         ) : news.length === 0 ? (
           <div className="empty-state">
-            <div className="empty-state-icon">📰</div>
+            <div className="empty-state-icon"></div>
             <p className="empty-state-text">No hay noticias</p>
           </div>
         ) : (

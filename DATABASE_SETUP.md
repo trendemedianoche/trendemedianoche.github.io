@@ -181,18 +181,18 @@ Una vez creadas las tablas, ve a la sección **"Secciones"** del panel admin par
 ## 🆘 Troubleshooting
 
 ### Las imágenes no aparecen:
-- ✅ Verifica que las URLs sean completas (http/https)
-- ✅ Verifica que las imágenes sean públicas
-- ✅ Revisa la consola del navegador (DevTools)
+-  Verifica que las URLs sean completas (http/https)
+-  Verifica que las imágenes sean públicas
+-  Revisa la consola del navegador (DevTools)
 
 ### El admin no permite guardar:
-- ✅ Verifica que RLS esté habilitado correctamente
-- ✅ Verifica que el usuario esté autenticado
-- ✅ Revisa los permisos en Supabase
+-  Verifica que RLS esté habilitado correctamente
+-  Verifica que el usuario esté autenticado
+-  Revisa los permisos en Supabase
 
 ### Las divisiones no aparecen en el orden correcto:
-- ✅ Verifica que la columna `position` esté correctamente setada
-- ✅ Usa el admin para reordenar las secciones
+-  Verifica que la columna `position` esté correctamente setada
+-  Usa el admin para reordenar las secciones
 
 ---
 
