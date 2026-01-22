@@ -94,7 +94,7 @@ export default function AboutAdmin() {
   return (
     <div className="admin-card">
       <div className="admin-card-header">
-        <h2 className="admin-card-title">📝 Editar Acerca de</h2>
+        <h2 className="admin-card-title"> Editar Acerca de</h2>
       </div>
 
       <div className="admin-preview">

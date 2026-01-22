@@ -10,12 +10,21 @@ import '../styles/AdminComponents.css';
 export default function UserAdmin() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const load = async () => {
     setLoading(true);
-    const data = await getUsers();
-    setUsers(data);
-    setLoading(false);
+    setError('');
+    try {
+      const data = await getUsers();
+      setUsers(data || []);
+    } catch (err) {
+      console.error('Error loading users:', err);
+      setError('Error al cargar usuarios: ' + err.message);
+      setUsers([]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -37,8 +46,14 @@ export default function UserAdmin() {
   return (
     <div className="admin-card">
       <div className="admin-card-header">
-        <h2 className="admin-card-title"> Usuarios ({users.length})</h2>
+        <h2 className="admin-card-title">👥 Usuarios ({users.length})</h2>
       </div>
+
+      {error && (
+        <div className="admin-alert alert-error" style={{ margin: '1rem' }}>
+          {error}
+        </div>
+      )}
 
       {loading ? (
         <div className="empty-state">
@@ -47,8 +62,10 @@ export default function UserAdmin() {
         </div>
       ) : users.length === 0 ? (
         <div className="empty-state">
-          <div className="empty-state-icon"></div>
-          <p className="empty-state-text">No hay usuarios</p>
+          <div className="empty-state-icon">👥</div>
+          <p className="empty-state-text">
+            {error ? 'No se pudieron cargar los usuarios' : 'No hay usuarios registrados'}
+          </p>
         </div>
       ) : (
         <div className="admin-card-body">

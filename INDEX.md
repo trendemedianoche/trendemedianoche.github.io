@@ -287,7 +287,7 @@ Bienvenido a la documentación del nuevo diseño de **Tren de Medianoche** inspi
 
 ---
 
-## 📝 Historial de Cambios
+##  Historial de Cambios
 
 | Fecha | Versión | Cambios |
 |-------|---------|---------|

@@ -176,62 +176,128 @@ export default function PhotoAdmin() {
         ) : (
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
-            gap: '1rem',
-            padding: '1rem'
+            gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+            gap: '1.5rem',
+            padding: '1.5rem'
           }}>
             {images.map((img, i) => (
-              <div key={img.id} className="item-card" style={{ display: 'flex', flexDirection: 'column' }}>
+              <div key={img.id} className="item-card" style={{ 
+                display: 'flex', 
+                flexDirection: 'column',
+                padding: '1rem',
+                background: 'linear-gradient(180deg, #1a1a1a, #0f0f0f)',
+                border: '1px solid #333',
+                borderRadius: '8px'
+              }}>
                 {img.url && (
                   <img
                     src={img.url}
                     alt={img.path}
                     style={{
                       width: '100%',
-                      height: '150px',
+                      height: '180px',
                       objectFit: 'cover',
-                      borderRadius: '4px',
-                      marginBottom: '0.8rem',
-                      opacity: img.active ? 1 : 0.5
+                      borderRadius: '6px',
+                      marginBottom: '1rem',
+                      opacity: img.active ? 1 : 0.5,
+                      border: img.active ? '2px solid #f5c400' : '2px solid #555'
                     }}
                   />
                 )}
-                <strong style={{ fontSize: '0.9rem' }}>{shortName(img.path)}</strong>
-                <span style={{ fontSize: '0.75rem', color: '#aaa' }}>
-                  {new Date(img.created_at).toLocaleDateString()}
-                </span>
-                {!img.active && <span className="badge badge-inactive">Inactiva</span>}
-                <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.8rem', flexWrap: 'wrap' }}>
+                <div style={{ marginBottom: '0.8rem' }}>
+                  <strong style={{ fontSize: '0.9rem', color: '#f5f5f5' }}>{shortName(img.path)}</strong>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.3rem' }}>
+                    <span style={{ fontSize: '0.75rem', color: '#aaa' }}>
+                      {new Date(img.created_at).toLocaleDateString()}
+                    </span>
+                    {!img.active && <span className="badge badge-inactive" style={{
+                      fontSize: '0.7rem',
+                      padding: '0.2rem 0.5rem',
+                      background: 'rgba(255,0,0,0.2)',
+                      color: '#ff6b6b',
+                      borderRadius: '4px'
+                    }}>Inactiva</span>}
+                  </div>
+                </div>
+                
+                {/* Botones de orden */}
+                <div style={{ 
+                  display: 'grid',
+                  gridTemplateColumns: '1fr 1fr',
+                  gap: '0.5rem',
+                  marginBottom: '0.5rem'
+                }}>
                   <button
                     className="btn btn-secondary btn-small"
                     onClick={() => move(i, -1)}
                     disabled={loading || i === 0}
-                    title="Subir"
+                    title="Mover arriba"
+                    style={{
+                      padding: '0.6rem',
+                      fontSize: '1rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '0.4rem'
+                    }}
                   >
-                    ⬆
+                    ⬆ Subir
                   </button>
                   <button
                     className="btn btn-secondary btn-small"
                     onClick={() => move(i, 1)}
                     disabled={loading || i === images.length - 1}
-                    title="Bajar"
+                    title="Mover abajo"
+                    style={{
+                      padding: '0.6rem',
+                      fontSize: '1rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '0.4rem'
+                    }}
                   >
-                    ⬇
+                    ⬇ Bajar
                   </button>
+                </div>
+
+                {/* Botones de acción */}
+                <div style={{ 
+                  display: 'grid',
+                  gridTemplateColumns: '1fr 1fr',
+                  gap: '0.5rem'
+                }}>
                   <button
                     className="btn btn-success btn-small"
                     onClick={() => toggleActive(img)}
                     disabled={loading}
-                    title={img.active ? 'Ocultar' : 'Mostrar'}
+                    title={img.active ? 'Ocultar imagen' : 'Mostrar imagen'}
+                    style={{
+                      padding: '0.6rem',
+                      fontSize: '0.85rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '0.4rem'
+                    }}
                   >
-                    {img.active ? '👁' : '🚫'}
+                    {img.active ? '👁 Visible' : '🚫 Oculta'}
                   </button>
                   <button
                     className="btn btn-danger btn-small"
                     onClick={() => remove(img)}
                     disabled={loading}
+                    title="Eliminar imagen"
+                    style={{
+                      padding: '0.6rem',
+                      fontSize: '0.85rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '0.4rem'
+                    }}
                   >
-                    🗑
+                    🗑 Eliminar
                   </button>
                 </div>
               </div>

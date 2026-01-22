@@ -153,7 +153,7 @@ ALTER TABLE section_descriptions ENABLE ROW LEVEL SECURITY;
 
 ---
 
-## 📝 Pasos para Implementar
+##  Pasos para Implementar
 
 ### 1. En la consola Supabase:
 

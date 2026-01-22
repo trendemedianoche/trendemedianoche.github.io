@@ -44,7 +44,7 @@ box-shadow: 0 12px 24px rgba(245, 196, 0, 0.4);
 **Mejoras:**
 - ✨ Borde dorado inferior
 - 🎬 Transiciones smooth en hover
-- 📝 Efecto underline en links
+-  Efecto underline en links
 - ☀️ Glow effect en logo
 
 **Responsive:**
@@ -87,7 +87,7 @@ section {
 
 **Mejoras:**
 - 🎯 Título prominente
-- 📝 Párrafos con hover effect
+-  Párrafos con hover effect
 - 🎨 Borde izquierdo dorado
 - 💫 Background dorado sutil
 
@@ -338,7 +338,7 @@ box-shadow: 0 8px 20px rgba(245, 196, 0, 0.15);
 
 ---
 
-## 📝 Conclusión
+##  Conclusión
 
 El sitio web ahora tiene:
 

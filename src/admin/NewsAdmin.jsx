@@ -64,7 +64,7 @@ export default function NewsAdmin() {
       <div className="admin-card">
         <div className="admin-card-header">
           <h2 className="admin-card-title">
-            {editing ? '✏️ Editar' : '📝 Nueva Noticia'}
+            {editing ? '✏️ Editar' : ' Nueva Noticia'}
           </h2>
         </div>
 

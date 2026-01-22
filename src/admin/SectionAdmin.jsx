@@ -67,7 +67,7 @@ export default function SectionAdmin() {
   return (
     <div className="admin-card">
       <div className="admin-card-header">
-        <h2 className="admin-card-title">🔀 Secciones del Sitio ({sections.length})</h2>
+        <h2 className="admin-card-title"> Secciones del Sitio ({sections.length})</h2>
       </div>
 
       {loading ? (
@@ -77,7 +77,7 @@ export default function SectionAdmin() {
         </div>
       ) : sections.length === 0 ? (
         <div className="empty-state">
-          <div className="empty-state-icon">🔀</div>
+          <div className="empty-state-icon"></div>
           <p className="empty-state-text">No hay secciones</p>
         </div>
       ) : (
