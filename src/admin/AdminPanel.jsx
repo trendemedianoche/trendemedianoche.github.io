@@ -4,6 +4,7 @@ import AdminHeader from './AdminHeader';
 import NewsAdmin from './NewsAdmin';
 import ExtraNewsAdmin from './ExtraNewsAdmin';
 import DonationAdmin from './DonationAdmin';
+import FooterAdmin from './FooterAdmin';
 import SectionAdmin from './SectionAdmin';
 import ChatAdmin from './ChatAdmin';
 import AboutAdmin from './AboutAdmin';
@@ -18,6 +19,7 @@ const TABS = [
   { id: 'about', label: 'Acerca de', icon: '' },
   { id: 'news', label: 'Noticias', icon: '' },
   { id: 'extra-news', label: 'Extra', icon: '' },
+  { id: 'footer', label: 'Footer', icon: '' },
   { id: 'donation', label: 'Donaciones', icon: '' },
 ];
 
@@ -38,6 +40,8 @@ export default function AdminPanel() {
         return <NewsAdmin />;
       case 'extra-news':
         return <ExtraNewsAdmin />;
+      case 'footer':
+        return <FooterAdmin />;
       case 'donation':
         return <DonationAdmin />;
       default:

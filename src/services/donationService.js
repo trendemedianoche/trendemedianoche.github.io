@@ -16,8 +16,7 @@ export async function getTransferData() {
         field_value,
         position,
         active,
-        visible,
-        visibleFooter
+        visible
       )
     `)
     .eq('type', 'transfer')
@@ -49,8 +48,7 @@ export async function getTransferDataAdmin() {
         field_value,
         position,
         active,
-        visible,
-        visibleFooter
+        visible
       )
     `)
     .eq('type', 'transfer')
@@ -80,7 +78,6 @@ export async function createTransferField(methodId, field) {
       field_key: field.field_key,
       field_value: field.field_value,
       visible: true,
-      visibleFooter: false,
       active: true
     });
 }
@@ -113,3 +110,97 @@ export async function reorderTransferFields(fields) {
   }
 }
 
+/* ===============================
+   REDES SOCIALES
+================================ */
+
+export async function getSocialNetworks() {
+  const { data, error } = await supabase
+    .from('social_networks')
+    .select('*')
+    .eq('active', true)
+    .order('position');
+
+  if (error) {
+    console.error('Error loading social networks:', error);
+    return [];
+  }
+
+  return data || [];
+}
+
+export async function getSocialNetworksAdmin() {
+  const { data, error } = await supabase
+    .from('social_networks')
+    .select('*')
+    .order('position');
+
+  if (error) {
+    console.error('Error loading social networks admin:', error);
+    return [];
+  }
+
+  return data || [];
+}
+
+export async function updateSocialNetwork(id, updates) {
+  return supabase
+    .from('social_networks')
+    .update(updates)
+    .eq('id', id);
+}
+
+export async function toggleSocialNetworkActive(id, active) {
+  return supabase
+    .from('social_networks')
+    .update({ active })
+    .eq('id', id);
+}
+
+export async function reorderSocialNetworks(networks) {
+  for (let i = 0; i < networks.length; i++) {
+    await supabase
+      .from('social_networks')
+      .update({ position: i + 1 })
+      .eq('id', networks[i].id);
+  }
+}
+// Funciones helper para obtener datos específicos del footer
+export async function getFooterContactData() {
+  const { data, error } = await supabase
+    .from('social_networks')
+    .select('*')
+    .eq('active', true)
+    .in('type', ['email', 'phone'])
+    .order('position');
+
+  if (error) {
+    console.error('Error loading footer contact data:', error);
+    return { email: null, phone: null };
+  }
+
+  const result = { email: null, phone: null };
+  
+  data?.forEach(item => {
+    if (item.type === 'email') result.email = item.url;
+    if (item.type === 'phone') result.phone = item.url;
+  });
+
+  return result;
+}
+
+export async function getFooterSocialNetworks() {
+  const { data, error } = await supabase
+    .from('social_networks')
+    .select('*')
+    .eq('active', true)
+    .eq('type', 'social')
+    .order('position');
+
+  if (error) {
+    console.error('Error loading footer social networks:', error);
+    return [];
+  }
+
+  return data || [];
+}

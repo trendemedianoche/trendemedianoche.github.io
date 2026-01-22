@@ -1,11 +1,17 @@
 import { useEffect, useState } from 'react';
-import { getTransferData } from '../services/donationService';
+import { getFooterContactData, getFooterSocialNetworks } from '../services/donationService';
 
 import logoFooter from '../assets/logo_2.png';
 import whatsapp from '../assets/whatsapp.png';
 import instagram from '../assets/instagram-new.png';
 import facebook from '../assets/facebook-new.png';
 import youtube from '../assets/youtube.png';
+
+const socialIcons = {
+  Instagram: instagram,
+  Facebook: facebook,
+  YouTube: youtube
+};
 
 const formatPhoneCL = (phone) => {
   if (!phone) return '';
@@ -15,21 +21,17 @@ const formatPhoneCL = (phone) => {
 export default function Footer() {
   const [email, setEmail] = useState(null);
   const [telefono, setTelefono] = useState(null);
+  const [socialNetworks, setSocialNetworks] = useState([]);
 
   useEffect(() => {
-    getTransferData().then((items) => {
-      if (!items) return;
-
-      const emailItem = items.find(
-        item => item.field_key === 'Email Banda' && item.visibleFooter
-      );
-      const telefonoItem = items.find(
-        item => item.field_key === 'Telefono' && item.visibleFooter
-      );
-
-      setEmail(emailItem?.field_value || null);
-      setTelefono(telefonoItem?.field_value || null);
+    // Cargar datos de contacto (email y teléfono)
+    getFooterContactData().then((data) => {
+      setEmail(data.email);
+      setTelefono(data.phone);
     });
+
+    // Cargar redes sociales
+    getFooterSocialNetworks().then(setSocialNetworks);
   }, []);
 
   return (
@@ -81,29 +83,17 @@ export default function Footer() {
           <h3>Redes Sociales</h3>
 
           <div className="footer-socials">
-            <a
-              href="https://www.instagram.com/trendemedianoche_oficial/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img src={instagram} alt="Instagram" />
-            </a>
-
-            <a
-              href="https://www.facebook.com/bandaTDMN"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img src={facebook} alt="Facebook" />
-            </a>
-
-            <a
-              href="https://youtube.com/@trendemedianochechile4904"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img src={youtube} alt="YouTube" />
-            </a>
+            {socialNetworks.map((social) => (
+              <a
+                key={social.id}
+                href={social.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                title={social.name}
+              >
+                <img src={socialIcons[social.name]} alt={social.name} />
+              </a>
+            ))}
           </div>
         </div>
 

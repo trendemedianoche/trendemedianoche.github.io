@@ -77,7 +77,7 @@ export default function DonationAdmin() {
   return (
     <div className="admin-card">
       <div className="admin-card-header">
-        <h2 className="admin-card-title"> Datos de Donación ({fields.length})</h2>
+        <h2 className="admin-card-title">💰 Datos de Donación ({fields.length})</h2>
       </div>
 
       {loading ? (
@@ -87,8 +87,8 @@ export default function DonationAdmin() {
         </div>
       ) : fields.length === 0 ? (
         <div className="empty-state">
-          <div className="empty-state-icon"></div>
-          <p className="empty-state-text">No hay campos</p>
+          <div className="empty-state-icon">💳</div>
+          <p className="empty-state-text">No hay datos de donación configurados</p>
         </div>
       ) : (
         <div className="admin-card-body">
@@ -168,6 +168,7 @@ export default function DonationAdmin() {
                   className="btn btn-success btn-small"
                   onClick={() => toggleVisible(f)}
                   disabled={loading}
+                  title={f.visible ? 'Visible' : 'Oculto'}
                 >
                   {f.visible ? '👁' : '🚫'}
                 </button>
@@ -175,6 +176,7 @@ export default function DonationAdmin() {
                   className="btn btn-danger btn-small"
                   onClick={() => handleDelete(f.id)}
                   disabled={loading}
+                  title="Eliminar"
                 >
                   🗑
                 </button>
@@ -186,3 +188,4 @@ export default function DonationAdmin() {
     </div>
   );
 }
+
