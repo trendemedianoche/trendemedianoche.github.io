@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import PhotoAdmin from './PhotoAdmin';
 import AdminHeader from './AdminHeader';
 import NewsAdmin from './NewsAdmin';
@@ -26,11 +26,26 @@ const TABS = [
 export default function AdminPanel() {
   const [activeTab, setActiveTab] = useState('chat');
   const [menuOpen, setMenuOpen] = useState(false);
+  const sidebarRef = useRef(null);
 
   const handleTabChange = (tabId) => {
     setActiveTab(tabId);
     setMenuOpen(false); // Cerrar menú al seleccionar una opción
   };
+
+  // Cerrar menú al hacer clic fuera
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target) && menuOpen) {
+        setMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [menuOpen]);
 
   const renderContent = () => {
     switch (activeTab) {
@@ -61,7 +76,7 @@ export default function AdminPanel() {
 
       <div className="admin-container">
         {/* SIDEBAR con pestañas vertical */}
-        <aside className="admin-sidebar">
+        <aside className="admin-sidebar" ref={sidebarRef}>
           {/* Botón hamburguesa (solo visible en mobile) */}
           <button 
             className="admin-hamburger"
