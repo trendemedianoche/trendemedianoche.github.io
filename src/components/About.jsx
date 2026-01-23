@@ -9,7 +9,7 @@ export default function About() {
   }, []);
 
   return (
-    <section id="about">
+    <section id="about" className="about-section">
       <div
         className="about-container"
         dangerouslySetInnerHTML={{ __html: content }}

@@ -9,17 +9,14 @@
 
 }
 .news-bar {
-  position: fixed;
-  top: 80px; /* altura del header por defecto */
-  left: 0;
+  position: relative;
   width: 100%;
-  height: 28px;                 /* ALTURA FIJA */
+  height: 28px;
   display: flex;
-  align-items: center;          /* 🔑 CLAVE */
-   background: rgba(138, 2, 2, 0.95);
-  border-bottom: 1px solid rgba(138, 2, 2, 0.95);
+  align-items: center;
+  background: rgba(138, 2, 2, 0.95);
+  border-top: 1px solid rgba(138, 2, 2, 0.95);
   color: #fff;
-  z-index: 900;
 }
 
 

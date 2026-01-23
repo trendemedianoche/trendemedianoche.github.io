@@ -28,16 +28,12 @@ export default function Header() {
   };
 
   return (
-    <>
-      {/* HEADER */}
-      
-      <header className="main-header">
-
-        
+    <header className="main-header">
+      <div className="header-top">
         <div className="logo-combo">
-            <div className="logo-icon"></div>
-            <div className="logo-text"></div>
-         </div>
+          <div className="logo-icon"></div>
+          <div className="logo-text"></div>
+        </div>
 
         <button
           className="hamburger"
@@ -56,9 +52,9 @@ export default function Header() {
           <a href="#news" onClick={(e) => handleNavClick(e, '#news')}>Noticias</a>
           <a href="#contact" onClick={(e) => handleNavClick(e, '#contact')}>Contacto</a>
         </nav>
-      </header>
-
+      </div>
+      
       <ExtraNewsBar />
-    </>
+    </header>
   );
 }
