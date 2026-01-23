@@ -1,1 +1,0 @@
-import{r as t,j as e}from"./index-BEh20QK3.js";import{g as n}from"./aboutService-BTwL-mmO.js";function u(){const[o,s]=t.useState("");return t.useEffect(()=>{n().then(s)},[]),e.jsx("section",{id:"about",className:"about-section",children:e.jsx("div",{className:"about-container",dangerouslySetInnerHTML:{__html:o}})})}export{u as default};
