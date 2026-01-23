@@ -1,0 +1,1 @@
+import{r as t,j as e}from"./index-DOv1jrS-.js";import{g as s}from"./aboutService-DoifS0ze.js";function u(){const[o,n]=t.useState("");return t.useEffect(()=>{s().then(n)},[]),e.jsx("section",{id:"about",children:e.jsx("div",{className:"about-container",dangerouslySetInnerHTML:{__html:o}})})}export{u as default};
