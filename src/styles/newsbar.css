@@ -17,6 +17,8 @@
   background: rgba(138, 2, 2, 0.95);
   border-top: 1px solid rgba(138, 2, 2, 0.95);
   color: #fff;
+  margin: 0;
+  padding: 0;
 }
 
 
@@ -117,7 +119,6 @@
 
 @media (max-width: 768px) {
   .news-bar { 
-    top: 70px;
     height: 36px;
   }
   

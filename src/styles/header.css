@@ -126,7 +126,7 @@ footer {
 
 /* RESPONSIVE - Tablet */
 @media (max-width: 1024px) {
-  .main-header {
+  .header-top {
     padding: 0 1.5rem;
   }
 
