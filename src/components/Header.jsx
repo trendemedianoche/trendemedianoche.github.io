@@ -14,6 +14,19 @@ export default function Header() {
     setMenuOpen(false);
   };
 
+  const handleNavClick = (e, targetId) => {
+    e.preventDefault();
+    closeMenu();
+    
+    const element = document.querySelector(targetId);
+    if (element) {
+      element.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start' 
+      });
+    }
+  };
+
   return (
     <>
       {/* HEADER */}
@@ -37,11 +50,11 @@ export default function Header() {
         </button>
 
         <nav className={`nav ${menuOpen ? 'active' : ''}`}>
-          <a href="#media" onClick={closeMenu}>Galería</a>
-          <a href="#about" onClick={closeMenu}>Historia</a>
-          <a href="#music" onClick={closeMenu}>Música</a>
-          <a href="#news" onClick={closeMenu}>Noticias</a>
-          <a href="#contact" onClick={closeMenu}>Contacto</a>
+          <a href="#media" onClick={(e) => handleNavClick(e, '#media')}>Galería</a>
+          <a href="#about" onClick={(e) => handleNavClick(e, '#about')}>Historia</a>
+          <a href="#music" onClick={(e) => handleNavClick(e, '#music')}>Música</a>
+          <a href="#news" onClick={(e) => handleNavClick(e, '#news')}>Noticias</a>
+          <a href="#contact" onClick={(e) => handleNavClick(e, '#contact')}>Contacto</a>
         </nav>
       </header>
 
