@@ -85,37 +85,132 @@
 
 @media (max-width: 768px) {
 
-  /* HEADER SIEMPRE VISIBLE */
+  /* HEADER */
   .main-header {
+    height: 70px;
     z-index: 9999;
     position: fixed;
+  }
+
+  .header-top {
+    padding: 0 1rem;
+    height: 70px;
+  }
+
+  /* LOGO */
+  .logo-icon {
+    width: 45px;
+    height: 45px;
+  }
+
+  .logo-text {
+    width: 110px;
+    height: 35px;
   }
 
   /* HAMBURGUESA VISIBLE */
   .hamburger {
     display: flex !important;
-    z-index: 10000;
+    z-index: 10001;
   }
 
   /* NAV OCULTO POR DEFECTO */
   .nav {
     display: none;
-    position: absolute;
-    top: 106px;
+    position: fixed;
+    top: 70px;
     left: 0;
+    right: 0;
     width: 100%;
-    background: #000;
+    background: #1a1a1a;
     flex-direction: column;
     align-items: center;
-    padding: 30px 0;
-    z-index: 9998;
+    padding: 2rem 0;
+    gap: 1.5rem;
+    z-index: 10000;
+    border-bottom: 1px solid #333;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.9);
   }
 
   /* NAV ACTIVO */
   .nav.active {
     display: flex !important;
+    animation: slideDown 0.3s ease;
   }
 
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* ESTILOS DE ENLACES EN MENÚ DESPLEGABLE */
+  .nav a {
+    font-size: 1.1rem !important;
+    padding: 1rem 0 !important;
+    width: 100%;
+    text-align: center;
+    border-bottom: 1px solid #2a2a2a;
+    color: #f5f5f5 !important;
+    letter-spacing: 1px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+
+  .nav a:hover {
+    background: rgba(245, 196, 0, 0.1);
+    color: #f5c400 !important;
+  }
+
+  .nav a::before {
+    display: none;
+  }
+
+  .nav a:last-child {
+    border-bottom: none;
+  }
+
+  /* SCROLL MARGIN */
+  section,
+  footer {
+    scroll-margin-top: 108px;
+  }
+
+}
+
+/* RESPONSIVE - Mobile Small */
+@media (max-width: 480px) {
+  .main-header {
+    height: 60px;
+  }
+
+  .header-top {
+    padding: 0 0.8rem;
+    height: 60px;
+  }
+
+  .logo-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .logo-text {
+    width: 95px;
+    height: 30px;
+  }
+
+  .hamburger span {
+    width: 24px;
+  }
+
+  .nav {
+    top: 60px;
+  }
 }
 
 /* =================================================

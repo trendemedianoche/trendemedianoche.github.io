@@ -25,6 +25,12 @@ const TABS = [
 
 export default function AdminPanel() {
   const [activeTab, setActiveTab] = useState('chat');
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const handleTabChange = (tabId) => {
+    setActiveTab(tabId);
+    setMenuOpen(false); // Cerrar menú al seleccionar una opción
+  };
 
   const renderContent = () => {
     switch (activeTab) {
@@ -56,12 +62,23 @@ export default function AdminPanel() {
       <div className="admin-container">
         {/* SIDEBAR con pestañas vertical */}
         <aside className="admin-sidebar">
-          <nav className="admin-nav">
+          {/* Botón hamburguesa (solo visible en mobile) */}
+          <button 
+            className="admin-hamburger"
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="Menú"
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+          
+          <nav className={`admin-nav ${menuOpen ? 'active' : ''}`}>
             {TABS.map(tab => (
               <button
                 key={tab.id}
                 className={`admin-nav-item ${activeTab === tab.id ? 'active' : ''}`}
-                onClick={() => setActiveTab(tab.id)}
+                onClick={() => handleTabChange(tab.id)}
                 title={tab.label}
               >
                 <span className="nav-icon">{tab.icon}</span>

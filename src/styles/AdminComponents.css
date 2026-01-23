@@ -409,9 +409,36 @@
   margin-bottom: 0.8rem;
 }
 
+/* ============== LAYOUT NEWS/EXTRAS ============== */
+
+.news-admin-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  width: 100%;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+
 /* ============== RESPONSIVE ============== */
 
+@media (max-width: 1024px) {
+  .news-admin-container {
+    gap: 1.5rem;
+  }
+}
+
 @media (max-width: 768px) {
+  .news-admin-container {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
   .admin-form {
     padding: 1.5rem;
   }
@@ -433,17 +460,60 @@
     padding: 0.6rem 1.2rem;
     font-size: 0.85rem;
   }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .form-actions .btn {
+    width: 100%;
+  }
+
+  .item-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.8rem;
+  }
 }
 
 @media (max-width: 480px) {
+  .news-admin-container {
+    gap: 1.5rem;
+  }
+
   .admin-form {
     padding: 1rem;
     gap: 1rem;
   }
 
+  .admin-card {
+    padding: 0.8rem;
+  }
+
   .admin-card-header {
     flex-direction: column;
     align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .admin-card-title {
+    font-size: 1rem;
+  }
+
+  .form-group label {
+    font-size: 0.85rem;
+  }
+
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    padding: 0.6rem 0.8rem;
+    font-size: 0.85rem;
+  }
+
+  .btn {
+    padding: 0.7rem 1rem;
+    font-size: 0.8rem;
   }
 
   .btn-block {
@@ -452,5 +522,11 @@
 
   .admin-modal-content {
     padding: 1.5rem;
+  }
+
+  .item-card,
+  .message-item,
+  .list-item {
+    padding: 0.8rem;
   }
 }

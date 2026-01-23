@@ -120,6 +120,30 @@
   background: #ffd700;
 }
 
+/* BOTÓN HAMBURGUESA (oculto por defecto) */
+.admin-hamburger {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  flex-direction: column;
+  gap: 5px;
+  padding: 0.8rem;
+  z-index: 1000;
+}
+
+.admin-hamburger span {
+  width: 25px;
+  height: 2px;
+  background: #f5c400;
+  transition: all 0.3s ease;
+  border-radius: 2px;
+}
+
+.admin-hamburger:hover span {
+  background: #ffd700;
+}
+
 /* RESPONSIVE */
 @media (max-width: 1024px) {
   .admin-sidebar {
@@ -149,33 +173,79 @@
     width: 100%;
     border-right: none;
     border-bottom: 2px solid #f5c400;
-    padding: 0.8rem 0;
-    max-height: 80px;
-    overflow-x: auto;
-    overflow-y: hidden;
+    padding: 0.8rem 1rem;
+    max-height: none;
+    overflow: visible;
+    position: relative;
   }
 
+  /* Mostrar hamburguesa */
+  .admin-hamburger {
+    display: flex !important;
+  }
+
+  /* Ocultar nav por defecto */
   .admin-nav {
-    flex-direction: row;
-    padding: 0 0.5rem;
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    width: 100%;
+    background: #1a1a1a;
+    flex-direction: column;
+    padding: 1rem;
+    gap: 0.5rem;
+    z-index: 999;
+    border-bottom: 2px solid #f5c400;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+  }
+
+  /* Mostrar nav cuando está activo */
+  .admin-nav.active {
+    display: flex !important;
+    animation: slideDownAdmin 0.3s ease;
+  }
+
+  @keyframes slideDownAdmin {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   .admin-nav-item {
-    padding: 0.6rem 0.8rem;
-    flex-shrink: 0;
-    border-bottom: 3px solid transparent;
-    border-left: none;
+    padding: 1rem;
+    width: 100%;
+    justify-content: flex-start;
+    border-bottom: 1px solid #2a2a2a;
+    border-left: 3px solid transparent;
+    font-size: 1rem;
+  }
+
+  .admin-nav-item:last-child {
+    border-bottom: none;
   }
 
   .admin-nav-item:hover,
   .admin-nav-item.active {
-    border-left: none;
-    border-bottom-color: #f5c400;
-    box-shadow: inset 0 -3px 0 #f5c400;
+    border-left-color: #f5c400;
+    border-bottom-color: #2a2a2a;
+    box-shadow: none;
   }
 
+  /* Mostrar labels en mobile */
   .nav-label {
-    display: none;
+    display: block !important;
+    font-weight: 500;
+  }
+
+  .nav-icon {
+    font-size: 1.2rem;
   }
 
   .admin-content-modern {
@@ -184,17 +254,25 @@
 }
 
 @media (max-width: 480px) {
+  .admin-hamburger {
+    padding: 0.6rem;
+  }
+
+  .admin-hamburger span {
+    width: 22px;
+  }
+
   .admin-sidebar {
-    max-height: 70px;
+    padding: 0.6rem 0.8rem;
   }
 
   .admin-nav-item {
-    padding: 0.5rem 0.6rem;
-    font-size: 0.75rem;
+    padding: 0.8rem;
+    font-size: 0.95rem;
   }
 
   .nav-icon {
-    font-size: 1rem;
+    font-size: 1.1rem;
   }
 
   .admin-content-modern {

@@ -59,7 +59,7 @@ export default function NewsAdmin() {
   };
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
+    <div className="news-admin-container">
       {/* FORMULARIO */}
       <div className="admin-card">
         <div className="admin-card-header">
@@ -104,7 +104,7 @@ export default function NewsAdmin() {
             />
           </div>
 
-          <div style={{ display: 'flex', gap: '1rem' }}>
+          <div className="form-actions">
             <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
               {loading ? '⏳ Guardando...' : editing ? '✓ Actualizar' : '✓ Crear'}
             </button>
