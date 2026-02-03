@@ -36,7 +36,8 @@ export default function BlogAdmin() {
 
   const loadPosts = async () => {
     const data = await getAllBlogPosts();
-    setPosts(data);
+    console.log('📊 Posts cargados en BlogAdmin:', data);
+    setPosts(data || []);
   };
 
   const loadComments = async () => {
@@ -203,19 +204,19 @@ export default function BlogAdmin() {
           className={activeTab === 'posts' ? 'active' : ''}
           onClick={() => setActiveTab('posts')}
         >
-          Posts ({posts.length})
+          Publicaciones ({posts?.length || 0})
         </button>
         <button 
           className={activeTab === 'comments' ? 'active' : ''}
           onClick={() => setActiveTab('comments')}
         >
-          Comentarios ({comments.length})
+          Comentarios ({comments?.length || 0})
         </button>
         <button 
           className={activeTab === 'pending' ? 'active' : ''}
           onClick={() => setActiveTab('pending')}
         >
-          Pendientes ({pendingComments.length})
+          Pendientes ({pendingComments?.length || 0})
         </button>
       </div>
 

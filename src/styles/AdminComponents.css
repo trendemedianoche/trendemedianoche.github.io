@@ -420,9 +420,16 @@
 
 .form-actions {
   display: flex;
-  gap: 1rem;
+  gap: 2rem;
   justify-content: center;
   margin-top: 0.5rem;
+}
+
+.admin-actions {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  margin-top: 1.5rem;
 }
 
 /* ============== RESPONSIVE ============== */
@@ -461,11 +468,13 @@
     font-size: 0.85rem;
   }
 
-  .form-actions {
+  .form-actions,
+  .admin-actions {
     flex-direction: column;
   }
 
-  .form-actions .btn {
+  .form-actions .btn,
+  .admin-actions .btn {
     width: 100%;
   }
 
