@@ -116,6 +116,7 @@ USING (true);
 -- Cualquiera puede crear comentarios (serán moderados)
 CREATE POLICY "Cualquiera puede crear comentarios"
 ON blog_comments FOR INSERT
+TO anon, authenticated
 WITH CHECK (true);
 
 -- Solo usuarios autenticados pueden actualizar comentarios

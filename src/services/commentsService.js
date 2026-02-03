@@ -10,7 +10,6 @@ export async function getComments(postId) {
     .from('blog_comments')
     .select('*')
     .eq('post_id', postId)
-    .eq('approved', true)
     .order('created_at', { ascending: true });
 
   if (error) {
@@ -86,7 +85,7 @@ export async function createComment(comment) {
       author_name: comment.author_name,
       author_email: comment.author_email,
       content: comment.content,
-      approved: false, // Por defecto no aprobado
+      approved: true, // Aprobado automáticamente
       created_at: new Date().toISOString()
     }])
     .select();
@@ -149,8 +148,7 @@ export async function getCommentsCount(postId) {
   const { count, error } = await supabase
     .from('blog_comments')
     .select('*', { count: 'exact', head: true })
-    .eq('post_id', postId)
-    .eq('approved', true);
+    .eq('post_id', postId);
 
   if (error) {
     console.error('❌ Error contando comentarios:', error);

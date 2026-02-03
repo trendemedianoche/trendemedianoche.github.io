@@ -63,8 +63,11 @@ export default function Blog() {
         ...newComment
       });
       
-      setSubmitStatus('¡Comentario enviado! Será visible una vez aprobado.');
+      setSubmitStatus('¡Comentario publicado correctamente!');
       setNewComment({ author_name: '', author_email: '', content: '' });
+      
+      // Recargar comentarios para mostrar el nuevo
+      await loadComments(selectedPost.id);
       
       // Actualizar el conteo
       const count = await getCommentsCount(selectedPost.id);

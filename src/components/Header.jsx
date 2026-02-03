@@ -50,10 +50,17 @@ export default function Header() {
     window.location.hash = '#/blog';
   };
 
+  const handleLogoClick = (e) => {
+    e.preventDefault();
+    closeMenu();
+    window.location.hash = '#/';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <header className="main-header">
       <div className="header-top">
-        <div className="logo-combo">
+        <div className="logo-combo" onClick={handleLogoClick} style={{ cursor: 'pointer' }}>
           <div className="logo-icon"></div>
           <div className="logo-text"></div>
         </div>

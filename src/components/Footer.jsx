@@ -23,6 +23,11 @@ export default function Footer() {
   const [telefono, setTelefono] = useState(null);
   const [socialNetworks, setSocialNetworks] = useState([]);
 
+  const handleLogoClick = () => {
+    window.location.hash = '#/';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   useEffect(() => {
     // Cargar datos de contacto (email y teléfono)
     getFooterContactData().then((data) => {
@@ -39,7 +44,11 @@ export default function Footer() {
       <div className="footer-columns">
 
         {/* LOGO */}
-        <div className="footer-block footer-logo-column">
+        <div 
+          className="footer-block footer-logo-column" 
+          onClick={handleLogoClick}
+          style={{ cursor: 'pointer' }}
+        >
           <img src={logoFooter} alt="Tren de Medianoche" />
         </div>
 
