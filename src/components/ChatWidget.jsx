@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { sendChatMessage } from '../services/chatService';
 import '../styles/ChatWidget.css';
 
@@ -6,6 +6,27 @@ export default function ChatWidget() {
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({ name: '', email: '', message: '' });
   const [sent, setSent] = useState(false);
+  const chatWidgetRef = useRef(null);
+  const fabRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        open &&
+        chatWidgetRef.current &&
+        fabRef.current &&
+        !chatWidgetRef.current.contains(event.target) &&
+        !fabRef.current.contains(event.target)
+      ) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [open]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -17,14 +38,14 @@ export default function ChatWidget() {
   return (
     <>
       {/* BOTÓN */}
-      <button className="chat-fab" onClick={() => setOpen(!open)}>
+      <button ref={fabRef} className="chat-fab" onClick={() => setOpen(!open)}>
         💬
 
       </button>
 
       {/* WIDGET */}
       {open && (
-        <div className="chat-widget">
+        <div ref={chatWidgetRef} className="chat-widget">
           <h3>Contacto</h3>
 
           {sent ? (

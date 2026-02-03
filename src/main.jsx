@@ -5,6 +5,7 @@ import './styles/gallery.css';
 import './styles/about.css';
 import './styles/music.css';
 import './styles/news.css';
+import './styles/blog.css';
 import './styles/responsive.css';
 import './styles/footer.css';
 

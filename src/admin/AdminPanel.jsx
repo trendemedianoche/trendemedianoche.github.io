@@ -8,9 +8,11 @@ import FooterAdmin from './FooterAdmin';
 import SectionAdmin from './SectionAdmin';
 import ChatAdmin from './ChatAdmin';
 import AboutAdmin from './AboutAdmin';
+import BlogAdmin from './BlogAdmin';
 
 import '../styles/AdminPanel.css';
 import '../styles/AdminPanel-Modern.css';
+import '../styles/blogAdmin.css';
 
 const TABS = [
   { id: 'chat', label: 'Chat', icon: '' },
@@ -18,6 +20,7 @@ const TABS = [
   { id: 'sections', label: 'Secciones', icon: '' },
   { id: 'about', label: 'Acerca de', icon: '' },
   { id: 'news', label: 'Noticias', icon: '' },
+  { id: 'blog', label: 'Blog', icon: '' },
   { id: 'extra-news', label: 'Extra', icon: '' },
   { id: 'footer', label: 'Footer', icon: '' },
   { id: 'donation', label: 'Donaciones', icon: '' },
@@ -59,6 +62,8 @@ export default function AdminPanel() {
         return <AboutAdmin />;
       case 'news':
         return <NewsAdmin />;
+      case 'blog':
+        return <BlogAdmin />;
       case 'extra-news':
         return <ExtraNewsAdmin />;
       case 'footer':

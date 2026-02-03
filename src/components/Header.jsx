@@ -18,13 +18,36 @@ export default function Header() {
     e.preventDefault();
     closeMenu();
     
-    const element = document.querySelector(targetId);
-    if (element) {
-      element.scrollIntoView({ 
-        behavior: 'smooth', 
-        block: 'start' 
-      });
+    // Si estamos en la página del blog, volver a la principal primero
+    const currentPath = window.location.hash;
+    if (currentPath.includes('/blog')) {
+      // Ir a la página principal con el hash de la sección
+      window.location.hash = '#/' + targetId;
+      setTimeout(() => {
+        const element = document.querySelector(targetId);
+        if (element) {
+          element.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'start' 
+          });
+        }
+      }, 100);
+    } else {
+      // Ya estamos en la página principal, solo hacer scroll
+      const element = document.querySelector(targetId);
+      if (element) {
+        element.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'start' 
+        });
+      }
     }
+  };
+
+  const handleBlogClick = (e) => {
+    e.preventDefault();
+    closeMenu();
+    window.location.hash = '#/blog';
   };
 
   return (
@@ -51,6 +74,7 @@ export default function Header() {
           <a href="#music" onClick={(e) => handleNavClick(e, '#music')}>Música</a>
           <a href="#news" onClick={(e) => handleNavClick(e, '#news')}>Noticias</a>
           <a href="#contact" onClick={(e) => handleNavClick(e, '#contact')}>Contacto</a>
+          <a href="/blog" onClick={handleBlogClick}>Blog</a>
         </nav>
       </div>
       

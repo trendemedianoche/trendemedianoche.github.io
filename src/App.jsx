@@ -12,6 +12,7 @@ const About = React.lazy(() => import('./components/About.jsx'));
 const Music = React.lazy(() => import('./components/Music.jsx'));
 const Footer = React.lazy(() => import('./components/Footer.jsx'));
 const News = React.lazy(() => import('./features/news/News.jsx'));
+const BlogPage = React.lazy(() => import('./components/BlogPage.jsx'));
 const ChatWidget = React.lazy(() => import('./components/ChatWidget.jsx'));
 
 // Admin
@@ -60,6 +61,8 @@ export default function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/blog" element={<BlogPage />} />
+
 
             <Route
               path="/admin"
