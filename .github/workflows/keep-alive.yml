@@ -1,0 +1,17 @@
+# .github/workflows/keep-alive.yml
+name: Keep Supabase Alive
+on:
+  schedule:
+    - cron: '0 6 */3 * *'   # cada 3 días a las 06:00 UTC
+  workflow_dispatch:        # permite ejecutarlo manualmente
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase - tabla songs
+        run: |
+          curl -sS -o /dev/null -w "HTTP %{http_code}\n" \
+            "https://gleaiedraisdtoyrnbmq.supabase.co/rest/v1/songs?select=id&limit=1" \
+            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}"
