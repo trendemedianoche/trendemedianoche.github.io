@@ -6,6 +6,8 @@ export default function ChatWidget() {
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({ name: '', email: '', message: '' });
   const [sent, setSent] = useState(false);
+  const [error, setError] = useState('');
+  const [sending, setSending] = useState(false);
   const chatWidgetRef = useRef(null);
   const fabRef = useRef(null);
 
@@ -30,9 +32,18 @@ export default function ChatWidget() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await sendChatMessage(form);
-    setSent(true);
-    setForm({ name: '', email: '', message: '' });
+    setSending(true);
+    setError('');
+    try {
+      await sendChatMessage(form);
+      setSent(true);
+      setForm({ name: '', email: '', message: '' });
+    } catch (err) {
+      console.error('Error enviando mensaje:', err);
+      setError('No se pudo enviar el mensaje. Intenta de nuevo.');
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -75,7 +86,11 @@ export default function ChatWidget() {
                 required
               />
 
-              <button type="submit">Enviar</button>
+              {error && <p className="chat-error">{error}</p>}
+
+              <button type="submit" disabled={sending}>
+                {sending ? 'Enviando…' : 'Enviar'}
+              </button>
             </form>
           )}
         </div>

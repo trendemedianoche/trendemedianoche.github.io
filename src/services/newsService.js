@@ -1,14 +1,18 @@
 import { supabase } from '../lib/supabase';
 
-/* OBTENER */
+/* OBTENER (solo activas: el borrado es soft-delete active=false) */
 export async function getNews() {
   const { data, error } = await supabase
     .from('news')
     .select('*')
+    .eq('active', true)
     .order('id', { ascending: false });
 
-  if (error) throw error;
-  return data;
+  if (error) {
+    console.error('Error cargando noticias:', error);
+    return [];
+  }
+  return data || [];
 }
 
 /* CREAR */

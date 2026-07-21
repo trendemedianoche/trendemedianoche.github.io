@@ -4,6 +4,7 @@ import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import { getSiteSections } from './services/siteSectionsService';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
+import ErrorBoundary from './components/ErrorBoundary';
 
 // Lazy loading secciones
 const Header = React.lazy(() => import('./components/Header.jsx'));
@@ -35,10 +36,17 @@ function Home() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getSiteSections().then(data => {
-      setSections(data);
-      setLoading(false);
-    });
+    getSiteSections()
+      .then(data => {
+        setSections(data);
+      })
+      .catch(err => {
+        console.error('Error cargando secciones del sitio:', err);
+        setSections([]);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
 
   if (loading) return <div>Cargando sitio...</div>;
@@ -57,6 +65,7 @@ export default function App() {
   return (
     <AuthProvider>
       <Router>
+        <ErrorBoundary>
         <Suspense fallback={<div>Cargando...</div>}>
           <Routes>
             <Route path="/" element={<Home />} />
@@ -74,6 +83,7 @@ export default function App() {
             />
           </Routes>
         </Suspense>
+        </ErrorBoundary>
       </Router>
     </AuthProvider>
   );

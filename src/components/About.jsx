@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import DOMPurify from 'dompurify';
 import { getAbout } from '../services/aboutService';
 
 export default function About() {
@@ -12,7 +13,7 @@ export default function About() {
     <section id="about" className="about-section">
       <div
         className="about-container"
-        dangerouslySetInnerHTML={{ __html: content }}
+        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content) }}
       />
     </section>
   );

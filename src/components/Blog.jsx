@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import DOMPurify from 'dompurify';
 import { getBlogPosts } from '../services/blogService';
 import { getComments, createComment, getCommentsCount } from '../services/commentsService';
 
@@ -103,7 +104,7 @@ export default function Blog() {
             </div>
             <div 
               className="post-content"
-              dangerouslySetInnerHTML={{ __html: selectedPost.content }}
+              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(selectedPost.content) }}
             />
           </article>
 
@@ -200,8 +201,8 @@ export default function Blog() {
                 </div>
                 <div 
                   className="post-card-excerpt"
-                  dangerouslySetInnerHTML={{ 
-                    __html: post.content.substring(0, 200) + '...' 
+                  dangerouslySetInnerHTML={{
+                    __html: DOMPurify.sanitize(post.content.substring(0, 200) + '...')
                   }}
                 />
                 <div className="post-card-footer">
