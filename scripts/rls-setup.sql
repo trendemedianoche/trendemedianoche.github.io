@@ -2,8 +2,9 @@
 -- ROW LEVEL SECURITY (RLS) PARA TODAS LAS TABLAS DEL SITIO
 -- =====================================================
 -- El blog (blog_posts, blog_comments) ya está cubierto en
--- scripts/blog-database-setup.sql. Este script cubre las 12
--- tablas restantes que usa el frontend.
+-- scripts/blog-database-setup.sql. Este script cubre las demás
+-- tablas que usa el frontend. Las tablas que no existan se omiten
+-- automáticamente (no falla el script).
 --
 -- REGLA GENERAL:
 --   * SELECT (lectura): público (anon + authenticated) para el
@@ -34,13 +35,17 @@ DECLARE
     'songs',
     'donation_methods',
     'donation_transfer_data',
-    'section_descriptions',
-    'section_dividers',
     'site_sections',
     'social_networks'
   ];
 BEGIN
   FOREACH t IN ARRAY content_tables LOOP
+    -- Saltar tablas que no existan en la base
+    IF to_regclass(format('public.%I', t)) IS NULL THEN
+      RAISE NOTICE 'Tabla % no existe, se omite.', t;
+      CONTINUE;
+    END IF;
+
     EXECUTE format('ALTER TABLE %I ENABLE ROW LEVEL SECURITY;', t);
 
     -- Lectura pública
@@ -74,31 +79,39 @@ END $$;
 -- =====================================================
 -- chat_messages: contacto público, lectura solo admin
 -- =====================================================
-ALTER TABLE chat_messages ENABLE ROW LEVEL SECURITY;
+DO $$
+BEGIN
+  IF to_regclass('public.chat_messages') IS NULL THEN
+    RAISE NOTICE 'Tabla chat_messages no existe, se omite.';
+    RETURN;
+  END IF;
 
-DROP POLICY IF EXISTS "anyone_insert_chat_messages" ON chat_messages;
-CREATE POLICY "anyone_insert_chat_messages"
-ON chat_messages FOR INSERT
-TO anon, authenticated
-WITH CHECK (true);
+  ALTER TABLE chat_messages ENABLE ROW LEVEL SECURITY;
 
-DROP POLICY IF EXISTS "auth_select_chat_messages" ON chat_messages;
-CREATE POLICY "auth_select_chat_messages"
-ON chat_messages FOR SELECT
-TO authenticated
-USING (true);
+  DROP POLICY IF EXISTS "anyone_insert_chat_messages" ON chat_messages;
+  CREATE POLICY "anyone_insert_chat_messages"
+  ON chat_messages FOR INSERT
+  TO anon, authenticated
+  WITH CHECK (true);
 
-DROP POLICY IF EXISTS "auth_update_chat_messages" ON chat_messages;
-CREATE POLICY "auth_update_chat_messages"
-ON chat_messages FOR UPDATE
-TO authenticated
-USING (true) WITH CHECK (true);
+  DROP POLICY IF EXISTS "auth_select_chat_messages" ON chat_messages;
+  CREATE POLICY "auth_select_chat_messages"
+  ON chat_messages FOR SELECT
+  TO authenticated
+  USING (true);
 
-DROP POLICY IF EXISTS "auth_delete_chat_messages" ON chat_messages;
-CREATE POLICY "auth_delete_chat_messages"
-ON chat_messages FOR DELETE
-TO authenticated
-USING (true);
+  DROP POLICY IF EXISTS "auth_update_chat_messages" ON chat_messages;
+  CREATE POLICY "auth_update_chat_messages"
+  ON chat_messages FOR UPDATE
+  TO authenticated
+  USING (true) WITH CHECK (true);
+
+  DROP POLICY IF EXISTS "auth_delete_chat_messages" ON chat_messages;
+  CREATE POLICY "auth_delete_chat_messages"
+  ON chat_messages FOR DELETE
+  TO authenticated
+  USING (true);
+END $$;
 
 -- =====================================================
 -- VERIFICACIÓN (ejecuta después para confirmar)
