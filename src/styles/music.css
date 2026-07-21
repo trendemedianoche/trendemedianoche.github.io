@@ -233,7 +233,7 @@ audio {
   font-size: .7rem;
   letter-spacing: 2px;
   text-transform: uppercase;
-  color: #f5c400;
+  color: var(--accent);
   margin-bottom: .8rem;
   font-weight: 600;
   text-shadow: 0 0 10px rgba(245, 196, 0, 0.3);

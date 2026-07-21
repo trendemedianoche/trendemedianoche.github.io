@@ -85,7 +85,7 @@
 }
 
 .news-item-actions button:hover {
-  color: #f5c400;
+  color: var(--accent);
 }
 
 .news-item-actions button:last-child:hover {

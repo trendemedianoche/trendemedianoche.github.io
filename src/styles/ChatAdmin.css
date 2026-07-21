@@ -74,7 +74,7 @@
 }
 
 .chat-card.unread {
-  border-left: 4px solid #f5c400;
+  border-left: 4px solid var(--accent);
 }
 
 .chat-card.read {

@@ -164,7 +164,7 @@
 
   .nav a:hover {
     background: rgba(245, 196, 0, 0.1);
-    color: #f5c400 !important;
+    color: var(--accent) !important;
   }
 
   .nav a::before {

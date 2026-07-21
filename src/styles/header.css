@@ -113,7 +113,7 @@
 .hamburger span {
   width: 28px;
   height: 2px;
-  background: #f5c400;
+  background: var(--accent);
   transition: all 0.3s ease;
   border-radius: 1px;
 }

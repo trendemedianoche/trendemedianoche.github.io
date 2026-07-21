@@ -14,7 +14,7 @@
   margin-bottom: 1.2rem;
   font-size: 1.4rem;
   letter-spacing: 1px;
-  color: #f5c400;
+  color: var(--accent);
 }
 
 /* =========================
@@ -52,7 +52,7 @@
 
 .donation-admin-row input:focus {
   outline: none;
-  border-color: #f5c400;
+  border-color: var(--accent);
 }
 
 /* =========================
@@ -88,7 +88,7 @@
 
 /* Visibility */
 .donation-admin-row button:first-of-type {
-  color: #f5c400;
+  color: var(--accent);
 }
 
 /* Move */
@@ -126,7 +126,7 @@
 }
 
 .donation-admin-add button {
-  background: #f5c400;
+  background: var(--accent);
   color: #111;
   border: none;
   border-radius: 999px;
