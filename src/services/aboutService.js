@@ -1,30 +1,44 @@
 import { supabase } from '../lib/supabase';
 
 export async function getAbout() {
-  console.log('🔍 Intentando cargar contenido de About...');
-  
-  const { data, error } = await supabase
+  // Preferir la versión activa (puede haber versiones archivadas con active=false)
+  let { data, error } = await supabase
     .from('about')
     .select('content')
-    .single();
+    .eq('active', true)
+    .order('id', { ascending: false })
+    .limit(1)
+    .maybeSingle();
 
+  // Fallback si la columna 'active' aún no existe
   if (error) {
-    console.error('❌ Error loading about:', error);
-    return '';
+    ({ data } = await supabase
+      .from('about')
+      .select('content')
+      .limit(1)
+      .maybeSingle());
   }
 
-  console.log(' Contenido cargado:', data);
-  return data.content || '';
+  return data?.content || '';
 }
 
 export async function updateAbout(content) {
   console.log('💾 Intentando guardar contenido...', { contentLength: content.length });
   
-  // Primero verificar si existe un registro
-  const { data: existing, error: selectError } = await supabase
+  // Editar siempre la versión ACTIVA (hay versiones archivadas con active=false)
+  let { data: existing, error: selectError } = await supabase
     .from('about')
     .select('id')
+    .eq('active', true)
     .limit(1);
+
+  // Fallback si la columna 'active' aún no existe
+  if (selectError) {
+    ({ data: existing, error: selectError } = await supabase
+      .from('about')
+      .select('id')
+      .limit(1));
+  }
 
   if (selectError) {
     console.error('❌ Error checking about:', selectError);

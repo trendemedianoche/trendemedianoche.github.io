@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import DOMPurify from 'dompurify';
 import {
   Instagram,
@@ -8,8 +8,12 @@ import {
   MessageCircle,
   Calendar,
   MapPin,
-  ArrowUpRight
+  ArrowUpRight,
+  Play,
+  Pause
 } from 'lucide-react';
+import SiteNav from './SiteNav.jsx';
+import SiteFooter from './SiteFooter.jsx';
 
 import { getGalleryImages } from '../services/galleryService';
 import { getAbout } from '../services/aboutService';
@@ -36,6 +40,7 @@ import bandBar2 from '../assets/band-bar-2.png';
 import bandTracks from '../assets/band-tracks.png';
 import logoText from '../assets/logo-text.png';
 import logoMark from '../assets/logo-mark.png';
+import sientesComoMp3 from '../assets/sientes_como.mp3';
 
 /* ------------------------------ DATOS FIJOS ------------------------------ */
 /* Enlaces y contenido sin backend (discografía, integrantes, fechas).       */
@@ -47,6 +52,7 @@ const SPOTIFY_ARTIST_EMBED =
 const SPOTIFY_TRACK_EMBED =
   'https://open.spotify.com/embed/track/4GZ6PL2ci4VAUgGAlQ4qoo?utm_source=generator&theme=0';
 const YOUTUBE_URL = 'https://www.youtube.com/watch?v=P55OqqhOlTE';
+
 
 const LATEST_FALLBACK = {
   title: 'Sientes Cómo',
@@ -142,6 +148,14 @@ function stripHtml(html = '') {
     .replace(/<[^>]*>/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
+}
+
+const DEFAULT_TRACK_ID = '4GZ6PL2ci4VAUgGAlQ4qoo'; // Sientes Cómo
+
+function extractSpotifyId(url) {
+  if (!url) return null;
+  const m = String(url).match(/track\/([A-Za-z0-9]+)/);
+  return m ? m[1] : null;
 }
 
 function formatDate(value) {
@@ -290,6 +304,88 @@ function ContactForm() {
 export default function LandingHome() {
   const [slide, setSlide] = useState(0);
 
+  // Al volver del blog u otra ruta con un destino de sección, desplazar
+  useEffect(() => {
+    const target = sessionStorage.getItem('scrollTarget');
+    if (target) {
+      sessionStorage.removeItem('scrollTarget');
+      setTimeout(() => {
+        document.getElementById(target)?.scrollIntoView({ behavior: 'smooth' });
+      }, 300);
+    }
+  }, []);
+
+  // Reproductor de Spotify embebido (IFrame API) para el Top 10
+  const spotifyEmbedRef = useRef(null);
+  const spotifyControllerRef = useRef(null);
+  const [playing, setPlaying] = useState({ key: null, paused: false });
+
+  useEffect(() => {
+    const setup = (IFrameAPI) => {
+      if (!spotifyEmbedRef.current || spotifyControllerRef.current) return;
+      IFrameAPI.createController(
+        spotifyEmbedRef.current,
+        { width: '100%', height: 80, uri: `spotify:track:${DEFAULT_TRACK_ID}` },
+        (controller) => {
+          spotifyControllerRef.current = controller;
+        }
+      );
+    };
+
+    if (window.__spotifyIframeAPI) {
+      setup(window.__spotifyIframeAPI);
+    } else {
+      window.onSpotifyIframeApiReady = (IFrameAPI) => {
+        window.__spotifyIframeAPI = IFrameAPI;
+        setup(IFrameAPI);
+      };
+      if (!document.getElementById('spotify-iframe-api')) {
+        const s = document.createElement('script');
+        s.id = 'spotify-iframe-api';
+        s.src = 'https://open.spotify.com/embed/iframe-api/v1';
+        document.body.appendChild(s);
+      }
+    }
+  }, []);
+
+  const playTrack = (track) => {
+    const controller = spotifyControllerRef.current;
+    if (!controller) return;
+    const key = track.id ?? track.title;
+
+    // Mismo track: alternar play/pausa
+    if (playing.key === key) {
+      controller.togglePlay();
+      setPlaying((p) => ({ key, paused: !p.paused }));
+      return;
+    }
+
+    // Track distinto: cargar y reproducir
+    const id = extractSpotifyId(track.spotify_url);
+    if (id) controller.loadUri(`spotify:track:${id}`);
+    controller.play();
+    setPlaying({ key, paused: false });
+  };
+
+  // Arrastrar con el mouse la línea de tiempo (click + drag)
+  const timelineRef = useRef(null);
+  const dragRef = useRef({ down: false, startX: 0, scrollLeft: 0 });
+
+  const onDragStart = (e) => {
+    const el = timelineRef.current;
+    if (!el) return;
+    dragRef.current = { down: true, startX: e.pageX, scrollLeft: el.scrollLeft };
+  };
+  const onDragMove = (e) => {
+    const el = timelineRef.current;
+    if (!el || !dragRef.current.down) return;
+    e.preventDefault();
+    el.scrollLeft = dragRef.current.scrollLeft - (e.pageX - dragRef.current.startX);
+  };
+  const onDragEnd = () => {
+    dragRef.current.down = false;
+  };
+
   // Datos dinámicos desde Supabase
   const [gallery, setGallery] = useState([]);
   const [aboutHtml, setAboutHtml] = useState('');
@@ -374,7 +470,8 @@ export default function LandingHome() {
     : LATEST_FALLBACK.note;
   const songSpotify = song?.spotify_url || SPOTIFY_URL;
   const songYoutube = song?.youtube_url || YOUTUBE_URL;
-  const currentSlide = slides[slide] || slides[0];
+  const songAudio = song?.audioUrl || sientesComoMp3;
+  const songCover = song?.coverUrl || null;
 
   const visibleDonation = donationFields.filter((f) => f.visible !== false);
   const copyDonation = () => {
@@ -390,33 +487,7 @@ export default function LandingHome() {
   return (
     <main className="lovable-root relative overflow-hidden" onClick={handleAnchorClick}>
       {/* NAV */}
-      <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-background/70 border-b border-border/40">
-        <div className="max-w-7xl mx-auto px-6 md:px-10 h-16 flex items-center justify-between">
-          <a href="#top" className="flex items-center gap-3">
-            <img src={logoMark} alt="Tren de Medianoche" className="w-8 h-8 invert opacity-90" />
-            <span className="text-display text-lg tracking-wide hidden sm:inline">
-              Tren de Medianoche
-            </span>
-          </a>
-          <div className="hidden lg:flex items-center gap-8 text-xs uppercase tracking-[0.25em] text-muted-foreground">
-            <a href="#lanzamiento" className="hover:text-primary transition">Nuevo</a>
-            <a href="#historia" className="hover:text-primary transition">Historia</a>
-            <a href="#musica" className="hover:text-primary transition">Música</a>
-            <a href="#banda" className="hover:text-primary transition">Banda</a>
-            <a href="#fechas" className="hover:text-primary transition">Fechas</a>
-            <a href="#blog" className="hover:text-primary transition">Blog</a>
-            <a href="#contacto" className="hover:text-primary transition">Contacto</a>
-          </div>
-          <a
-            href={SPOTIFY_URL}
-            target="_blank"
-            rel="noreferrer"
-            className="text-eyebrow px-3 py-2 border border-primary/50 text-primary hover:bg-primary hover:text-primary-foreground transition"
-          >
-            Spotify
-          </a>
-        </div>
-      </nav>
+      <SiteNav />
 
       {/* HERO */}
       <section id="top" className="relative min-h-screen flex items-end">
@@ -426,7 +497,7 @@ export default function LandingHome() {
               key={(s.src || '') + i}
               src={s.src}
               alt={s.alt}
-              className={`absolute inset-0 w-full h-full object-cover animate-slow-pan transition-opacity duration-[1600ms] ease-in-out ${
+              className={`absolute inset-0 w-full h-full object-cover object-[center_30%] animate-slow-pan transition-opacity duration-[1600ms] ease-in-out ${
                 i === slide ? 'opacity-100' : 'opacity-0'
               }`}
             />
@@ -437,7 +508,7 @@ export default function LandingHome() {
 
         <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-10 pb-24 pt-40 w-full">
           <div className="text-eyebrow mb-8 animate-flicker">Est. 2017 · Blues Chileno</div>
-          <div className="mb-6 max-w-[260px] md:max-w-xs flex flex-col items-center drop-shadow-[0_10px_30px_rgba(0,0,0,0.6)]">
+          <div className="mb-6 max-w-[150px] sm:max-w-[210px] md:max-w-xs flex flex-col items-center drop-shadow-[0_10px_30px_rgba(0,0,0,0.6)]">
             <img src={logoMark} alt="" className="w-2/3 h-auto invert opacity-95" />
             <img src={logoText} alt="Tren de Medianoche" className="w-full h-auto invert opacity-95 mt-3" />
           </div>
@@ -453,13 +524,10 @@ export default function LandingHome() {
                 }`}
               />
             ))}
-            <span className="font-mono text-xs text-muted-foreground ml-2">
-              {currentSlide?.caption}
-            </span>
           </div>
 
           <div className="mt-10 grid md:grid-cols-3 gap-8 items-end">
-            <p className="md:col-span-2 text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed">
+            <p className="md:col-span-2 text-base md:text-xl text-muted-foreground max-w-2xl leading-relaxed">
               Composición original e improvisación en español. Blues electroacústico que conecta al
               ser humano con su entorno, su ciudad y la vida cotidiana.
             </p>
@@ -533,17 +601,23 @@ export default function LandingHome() {
             </div>
           </div>
           <div className="lg:col-span-7">
-            <div className="relative shadow-deep">
+            <div className="relative shadow-deep rounded-md border border-border/60 bg-card/40 p-5 md:p-6">
               <div className="absolute -inset-3 bg-ember-gradient opacity-20 blur-2xl -z-10" />
-              <iframe
-                title="Sientes Cómo — Tren de Medianoche"
-                src={SPOTIFY_TRACK_EMBED}
-                width="100%"
-                height="152"
-                loading="lazy"
-                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                className="rounded-md border border-border/60 relative"
-              />
+              <div className="flex flex-col sm:flex-row gap-5 items-center">
+                {songCover && (
+                  <img
+                    src={songCover}
+                    alt={latestTitle}
+                    className="w-36 h-36 md:w-40 md:h-40 object-cover shrink-0"
+                  />
+                )}
+                <div className="flex-1 w-full min-w-0">
+                  <div className="text-eyebrow mb-2">Reproduce el single</div>
+                  <h3 className="text-display text-3xl md:text-4xl mb-1 truncate">{latestTitle}</h3>
+                  <p className="font-mono text-xs text-muted-foreground mb-4">{latestSubtitle}</p>
+                  <audio controls preload="metadata" src={songAudio} className="w-full" />
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -557,7 +631,7 @@ export default function LandingHome() {
               src={slides[1]?.src || trainNight}
               alt="Tren de Medianoche"
               loading="lazy"
-              className="w-full aspect-square object-cover shadow-deep"
+              className="w-full aspect-square object-cover object-top shadow-deep"
             />
           </div>
           <div className="md:col-span-7">
@@ -606,51 +680,51 @@ export default function LandingHome() {
           </div>
 
           <div className="grid lg:grid-cols-5 gap-8">
-            <div className="lg:col-span-2">
-              <div className="text-eyebrow mb-4">▶ Top tracks — Spotify</div>
-              <iframe
-                title="Tren de Medianoche en Spotify"
-                src={SPOTIFY_ARTIST_EMBED}
-                width="100%"
-                height="520"
+            <div className="lg:col-span-2 min-h-[420px]">
+              <img
+                src={slides[1]?.src || slides[0]?.src || guitarImg}
+                alt="Tren de Medianoche"
                 loading="lazy"
-                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                className="rounded-md border border-border/60"
+                className="w-full h-full object-cover object-top shadow-deep"
               />
             </div>
 
             <div className="lg:col-span-3">
-              <div className="text-eyebrow mb-4">Top 10 · escuchados</div>
+              <div className="text-eyebrow mb-4">Canciones · escúchalas</div>
               <ol className="divide-y divide-border/60 border-y border-border/60">
                 {trackList.map((t, i) => {
                   const num = String(t.position ?? t.n ?? i + 1).padStart(2, '0');
                   const time = t.duration ?? t.time;
-                  const row = (
-                    <>
-                      <span className="col-span-2 font-mono text-xs text-primary">{num}</span>
-                      <span className="col-span-8 text-display text-xl md:text-2xl">{t.title}</span>
-                      <span className="col-span-2 text-right font-mono text-xs text-muted-foreground">
-                        {time}
-                      </span>
-                    </>
-                  );
+                  const key = t.id ?? t.title;
+                  const isPlaying = playing.key === key && !playing.paused;
                   return (
                     <li
                       key={t.id ?? t.title}
-                      className="grid grid-cols-12 items-center py-4 px-2 group hover:bg-primary/5 transition-colors"
+                      className="flex items-center gap-3 py-4 px-2 group hover:bg-primary/5 transition-colors"
                     >
-                      {t.spotify_url ? (
-                        <a
-                          href={t.spotify_url}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="col-span-12 grid grid-cols-12 items-center"
-                        >
-                          {row}
-                        </a>
-                      ) : (
-                        row
-                      )}
+                      <button
+                        type="button"
+                        onClick={() => playTrack(t)}
+                        aria-label={`${isPlaying ? 'Pausar' : 'Reproducir'} ${t.title}`}
+                        className={`shrink-0 flex items-center justify-center w-9 h-9 rounded-full border transition ${
+                          isPlaying
+                            ? 'bg-primary text-primary-foreground border-primary'
+                            : 'border-border/60 text-primary hover:bg-primary hover:text-primary-foreground'
+                        }`}
+                      >
+                        {isPlaying ? (
+                          <Pause size={14} fill="currentColor" />
+                        ) : (
+                          <Play size={14} fill="currentColor" />
+                        )}
+                      </button>
+                      <span className="shrink-0 w-6 font-mono text-xs text-primary">{num}</span>
+                      <span className="flex-1 min-w-0 text-display text-xl md:text-2xl truncate">
+                        {t.title}
+                      </span>
+                      <span className="shrink-0 font-mono text-xs text-muted-foreground">
+                        {time}
+                      </span>
                     </li>
                   );
                 })}
@@ -658,27 +732,74 @@ export default function LandingHome() {
             </div>
           </div>
 
+          {/* Reproductor Spotify OCULTO pero DENTRO del viewport (Spotify pausa
+              si el iframe queda fuera de pantalla; con opacity 0 sigue sonando) */}
+          <div
+            aria-hidden="true"
+            style={{
+              position: 'fixed',
+              right: 0,
+              bottom: 0,
+              width: '320px',
+              height: '80px',
+              opacity: 0,
+              pointerEvents: 'none',
+              zIndex: -1
+            }}
+          >
+            <div ref={spotifyEmbedRef} />
+          </div>
+
           <div className="mt-24">
-            <div className="text-eyebrow mb-10">Línea de tiempo</div>
-            <div className="overflow-x-auto pb-4 -mx-6 px-6 md:mx-0 md:px-0">
-              <div className="relative flex gap-6 min-w-max border-t border-border/60">
-                {releaseList.map((r) => (
-                  <div
-                    key={r.id ?? r.title}
-                    className="relative w-52 md:w-60 shrink-0 pt-8 group"
-                  >
-                    <span className="absolute top-0 left-0 -translate-y-1/2 w-3 h-3 rounded-full bg-primary shadow-ember" />
-                    <div className="flex items-baseline gap-3 flex-wrap">
-                      <span className="font-mono text-sm text-primary">{r.year}</span>
-                      <span className="text-eyebrow">{r.type}</span>
-                    </div>
-                    <h3 className="text-display text-2xl mt-1 group-hover:text-primary transition-colors">
-                      {r.title}
-                    </h3>
-                    <p className="text-sm text-muted-foreground mt-1">{r.note}</p>
+            <div className="flex items-center justify-between gap-4 mb-10">
+              <div className="text-eyebrow">Línea de tiempo</div>
+              <div className="text-eyebrow text-muted-foreground hidden md:block">desliza →</div>
+            </div>
+
+            {/* Móvil: línea de tiempo VERTICAL */}
+            <div className="md:hidden relative border-l border-border/60 ml-1.5">
+              {releaseList.map((r) => (
+                <div key={r.id ?? r.title} className="relative pl-6 pb-8 last:pb-0">
+                  <span className="absolute left-0 top-2 -translate-x-1/2 w-3 h-3 rounded-full bg-primary shadow-ember" />
+                  <div className="flex items-baseline gap-3 flex-wrap">
+                    <span className="font-mono text-sm text-primary">{r.year}</span>
+                    <span className="text-eyebrow">{r.type}</span>
                   </div>
-                ))}
+                  <h3 className="text-display text-2xl mt-1">{r.title}</h3>
+                  <p className="text-sm text-muted-foreground mt-1">{r.note}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop: línea de tiempo HORIZONTAL (arrastrable) */}
+            <div className="relative hidden md:block">
+              <div
+                ref={timelineRef}
+                onMouseDown={onDragStart}
+                onMouseMove={onDragMove}
+                onMouseUp={onDragEnd}
+                onMouseLeave={onDragEnd}
+                className="overflow-x-auto pt-4 pb-4 cursor-grab active:cursor-grabbing select-none"
+              >
+                <div className="relative flex gap-6 min-w-max pr-10">
+                  {/* Línea horizontal continua */}
+                  <div className="absolute left-0 right-0 top-0 h-px bg-border/60" />
+                  {releaseList.map((r) => (
+                    <div key={r.id ?? r.title} className="relative w-60 shrink-0 pt-8 group">
+                      <span className="absolute top-0 left-0 -translate-y-1/2 w-3 h-3 rounded-full bg-primary shadow-ember" />
+                      <div className="flex items-baseline gap-3 flex-wrap">
+                        <span className="font-mono text-sm text-primary">{r.year}</span>
+                        <span className="text-eyebrow">{r.type}</span>
+                      </div>
+                      <h3 className="text-display text-2xl mt-1 group-hover:text-primary transition-colors">
+                        {r.title}
+                      </h3>
+                      <p className="text-sm text-muted-foreground mt-1">{r.note}</p>
+                    </div>
+                  ))}
+                </div>
               </div>
+              <div className="pointer-events-none absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-background to-transparent" />
             </div>
           </div>
         </div>
@@ -699,13 +820,13 @@ export default function LandingHome() {
                 src={slides[0]?.src || guitarImg}
                 alt="Tren de Medianoche"
                 loading="lazy"
-                className="w-full aspect-square object-cover shadow-deep"
+                className="w-full aspect-square object-cover object-top shadow-deep"
               />
               <img
                 src={slides[2]?.src || harmonicaImg}
                 alt="Tren de Medianoche"
                 loading="lazy"
-                className="w-full aspect-square object-cover shadow-deep translate-y-8"
+                className="w-full aspect-square object-cover object-top shadow-deep translate-y-8"
               />
             </div>
           </div>
@@ -872,7 +993,7 @@ export default function LandingHome() {
                   key={(s.src || '') + 'm' + i}
                   className="relative w-[280px] md:w-[360px] aspect-[4/5] shrink-0 shadow-deep"
                 >
-                  <img src={s.src} alt={s.alt} className="w-full h-full object-cover" loading="lazy" />
+                  <img src={s.src} alt={s.alt} className="w-full h-full object-cover object-top" loading="lazy" />
                   <div className="absolute inset-0 bg-gradient-to-t from-background/70 to-transparent" />
                   <div className="absolute bottom-3 left-3 font-mono text-[10px] text-primary uppercase tracking-[0.25em]">
                     {s.caption}
@@ -996,26 +1117,7 @@ export default function LandingHome() {
       </section>
 
       {/* FOOTER */}
-      <footer className="border-t border-border/40 py-12 bg-background">
-        <div className="max-w-7xl mx-auto px-6 md:px-10 grid md:grid-cols-3 gap-8 items-center">
-          <div className="flex items-center gap-3">
-            <img src={logoMark} alt="" className="w-10 h-10 invert opacity-90" />
-            <div className="font-mono text-xs text-muted-foreground">
-              © 2025 Tren de Medianoche
-              <br />
-              <span className="text-primary">Blues chileno desde 2017</span>
-            </div>
-          </div>
-          <div className="flex md:justify-center">
-            <SocialRow links={socialLinks} variant="solid" />
-          </div>
-          <div className="flex md:justify-end gap-6 text-xs font-mono uppercase tracking-[0.25em] text-muted-foreground">
-            <a href="#musica" className="hover:text-primary transition">Música</a>
-            <a href="#fechas" className="hover:text-primary transition">Fechas</a>
-            <a href="#contacto" className="hover:text-primary transition">Contacto</a>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </main>
   );
 }

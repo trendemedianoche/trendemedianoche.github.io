@@ -4,6 +4,7 @@ import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import ErrorBoundary from './components/ErrorBoundary';
+import LoadingScreen from './components/LoadingScreen';
 
 // Nueva landing pública (diseño Lovable)
 const LandingHome = React.lazy(() => import('./components/LandingHome.jsx'));
@@ -18,7 +19,7 @@ export default function App() {
     <AuthProvider>
       <Router>
         <ErrorBoundary>
-        <Suspense fallback={<div>Cargando...</div>}>
+        <Suspense fallback={<LoadingScreen />}>
           <Routes>
             <Route path="/" element={<LandingHome />} />
             <Route path="/login" element={<Login />} />
