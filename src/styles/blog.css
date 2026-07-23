@@ -416,30 +416,3 @@
     gap: 5px;
   }
 }
-
-  .blog-post-detail {
-    padding: 30px 20px;
-  }
-
-  .post-title {
-    font-size: 1.8rem;
-  }
-
-  .post-meta {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .comments-section {
-    padding: 25px 20px;
-  }
-
-  .comment {
-    padding: 15px;
-  }
-
-  .comment-header {
-    flex-direction: column;
-    gap: 5px;
-  }
-}

@@ -1,13 +1,7 @@
-import './styles/base.css';
-import './styles/header.css';
-import './styles/newsbar.css';
-import './styles/gallery.css';
-import './styles/about.css';
-import './styles/music.css';
-import './styles/news.css';
-import './styles/blog.css';
-import './styles/responsive.css';
-import './styles/footer.css';
+// Tema nuevo (Tailwind 4 + diseño Lovable) para la landing pública.
+// El CSS antiguo del sitio se importa en las rutas que aún lo usan
+// (/blog y /admin) para no contaminar la nueva home.
+import './styles/lovable-theme.css';
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';

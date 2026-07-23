@@ -1,5 +1,12 @@
 import { Suspense, lazy } from 'react';
 
+// El blog usa los estilos originales del sitio (no el tema Lovable)
+import '../styles/base.css';
+import '../styles/header.css';
+import '../styles/footer.css';
+import '../styles/blog.css';
+import '../styles/responsive.css';
+
 const Header = lazy(() => import('./Header.jsx'));
 const BlogContent = lazy(() => import('./Blog.jsx'));
 const Footer = lazy(() => import('./Footer.jsx'));

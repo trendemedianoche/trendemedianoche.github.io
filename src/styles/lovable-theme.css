@@ -1,0 +1,182 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-display: 'Cormorant Garamond', ui-serif, Georgia, serif;
+  --font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+  --color-smoke: var(--smoke);
+  --color-ember: var(--ember);
+  --color-brass: var(--brass);
+}
+
+:root {
+  /* Deep smoky midnight with warm amber/ember accents — Chicago blues club at 2am */
+  --background: oklch(0.14 0.012 40);
+  --foreground: oklch(0.94 0.02 70);
+  --card: oklch(0.18 0.015 40);
+  --card-foreground: oklch(0.94 0.02 70);
+  --primary: oklch(0.72 0.16 55); /* burnt amber */
+  --primary-foreground: oklch(0.14 0.012 40);
+  --secondary: oklch(0.22 0.02 40);
+  --secondary-foreground: oklch(0.94 0.02 70);
+  --muted: oklch(0.22 0.015 40);
+  --muted-foreground: oklch(0.65 0.03 60);
+  --accent: oklch(0.55 0.18 30); /* rust red */
+  --accent-foreground: oklch(0.98 0.01 70);
+  --border: oklch(0.28 0.02 45 / 60%);
+  --ring: oklch(0.72 0.16 55);
+  --smoke: oklch(0.2 0.015 40);
+  --ember: oklch(0.68 0.19 45);
+  --brass: oklch(0.78 0.13 80);
+
+  --gradient-smoke: radial-gradient(
+    ellipse at top,
+    oklch(0.24 0.03 45 / 0.9),
+    oklch(0.1 0.01 40) 70%
+  );
+  --gradient-ember: linear-gradient(
+    135deg,
+    oklch(0.72 0.16 55),
+    oklch(0.55 0.18 30)
+  );
+  --gradient-spotlight: radial-gradient(
+    ellipse at 50% 0%,
+    oklch(0.72 0.16 55 / 0.35),
+    transparent 60%
+  );
+
+  --shadow-ember: 0 20px 60px -20px oklch(0.55 0.18 30 / 0.6);
+  --shadow-deep: 0 30px 80px -30px oklch(0 0 0 / 0.9);
+
+  --grain: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.15 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-body);
+    font-feature-settings: 'ss01', 'ss02';
+    -webkit-font-smoothing: antialiased;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+  }
+}
+
+/* El grano de film solo sobre la landing (no en admin/blog) */
+.lovable-root::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: var(--grain);
+  opacity: 0.35;
+  pointer-events: none;
+  z-index: 100;
+  mix-blend-mode: overlay;
+}
+
+@utility text-display {
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 0.95;
+}
+
+@utility text-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.28em;
+  color: var(--color-primary);
+}
+
+@utility bg-smoke-gradient {
+  background: var(--gradient-smoke);
+}
+@utility bg-ember-gradient {
+  background: var(--gradient-ember);
+}
+@utility bg-spotlight {
+  background: var(--gradient-spotlight);
+}
+@utility shadow-ember {
+  box-shadow: var(--shadow-ember);
+}
+@utility shadow-deep {
+  box-shadow: var(--shadow-deep);
+}
+
+@keyframes flicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  45% {
+    opacity: 0.92;
+  }
+  47% {
+    opacity: 0.65;
+  }
+  49% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 0.88;
+  }
+}
+@utility animate-flicker {
+  animation: flicker 5s ease-in-out infinite;
+}
+
+@keyframes slow-pan {
+  from {
+    transform: scale(1.08) translateX(-1%);
+  }
+  to {
+    transform: scale(1.12) translateX(1%);
+  }
+}
+@utility animate-slow-pan {
+  animation: slow-pan 20s ease-in-out infinite alternate;
+}
+
+@keyframes marquee-x {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+@utility animate-marquee {
+  animation: marquee-x 90s linear infinite;
+}

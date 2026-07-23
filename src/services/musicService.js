@@ -2,6 +2,27 @@ import { supabase } from '../lib/supabase';
 
 const BUCKET = 'trendemedianoche_assets';
 
+// Canción activa para editar en el admin (sin URLs firmadas)
+export async function getActiveSong() {
+  const { data, error } = await supabase
+    .from('songs')
+    .select('*')
+    .eq('is_active', true)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (error) {
+    console.error('Error cargando canción:', error);
+    return null;
+  }
+  return data;
+}
+
+export async function updateSong(id, updates) {
+  const { error } = await supabase.from('songs').update(updates).eq('id', id);
+  if (error) throw error;
+}
+
 export async function getLatestSong() {
   try {
     const { data, error } = await supabase

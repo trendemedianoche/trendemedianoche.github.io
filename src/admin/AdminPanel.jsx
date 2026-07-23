@@ -9,7 +9,12 @@ import SectionAdmin from './SectionAdmin';
 import ChatAdmin from './ChatAdmin';
 import AboutAdmin from './AboutAdmin';
 import BlogAdmin from './BlogAdmin';
+import MusicAdmin from './MusicAdmin';
+import ReleasesAdmin from './ReleasesAdmin';
+import TopTracksAdmin from './TopTracksAdmin';
+import BandMembersAdmin from './BandMembersAdmin';
 
+import '../styles/base.css';
 import '../styles/AdminPanel.css';
 import '../styles/AdminPanel-Modern.css';
 import '../styles/blogAdmin.css';
@@ -19,6 +24,10 @@ const TABS = [
   { id: 'photos', label: 'Fotos', icon: '' },
   { id: 'sections', label: 'Secciones', icon: '' },
   { id: 'about', label: 'Acerca de', icon: '' },
+  { id: 'music', label: 'Música', icon: '' },
+  { id: 'releases', label: 'Discografía', icon: '' },
+  { id: 'tracks', label: 'Top tracks', icon: '' },
+  { id: 'members', label: 'Integrantes', icon: '' },
   { id: 'news', label: 'Noticias', icon: '' },
   { id: 'blog', label: 'Blog', icon: '' },
   { id: 'extra-news', label: 'Extra', icon: '' },
@@ -60,6 +69,14 @@ export default function AdminPanel() {
         return <SectionAdmin />;
       case 'about':
         return <AboutAdmin />;
+      case 'music':
+        return <MusicAdmin />;
+      case 'releases':
+        return <ReleasesAdmin />;
+      case 'tracks':
+        return <TopTracksAdmin />;
+      case 'members':
+        return <BandMembersAdmin />;
       case 'news':
         return <NewsAdmin />;
       case 'blog':
