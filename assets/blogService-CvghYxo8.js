@@ -1,4 +1,4 @@
-import{s as e}from"./index-mfpO8gAU.js";async function s(){const{data:o,error:r}=await e.from("donation_methods").select(`
+import{s as e}from"./index-5pHyTBuq.js";async function s(){const{data:o,error:r}=await e.from("donation_methods").select(`
       id,
       type,
       donation_transfer_data (
