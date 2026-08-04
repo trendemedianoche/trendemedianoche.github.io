@@ -1,17 +1,36 @@
 # .github/workflows/keep-alive.yml
+
 name: Keep Supabase Alive
+
 on:
   schedule:
-    - cron: '0 6 */3 * *'   # cada 3 días a las 06:00 UTC
-  workflow_dispatch:        # permite ejecutarlo manualmente
+    - cron: '17 */6 * * *' # cada 6 horas, en el minuto 17
+  workflow_dispatch:       # permite ejecutarlo manualmente
 
 jobs:
   ping:
     runs-on: ubuntu-latest
+
     steps:
       - name: Ping Supabase - tabla songs
+        env:
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+
         run: |
-          curl -sS -o /dev/null -w "HTTP %{http_code}\n" \
+          HTTP_CODE=$(curl -sS \
+            -o response.json \
+            -w "%{http_code}" \
             "https://gleaiedraisdtoyrnbmq.supabase.co/rest/v1/songs?select=id&limit=1" \
-            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
-            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}"
+            -H "apikey: $SUPABASE_ANON_KEY" \
+            -H "Authorization: Bearer $SUPABASE_ANON_KEY")
+
+          echo "Supabase respondió HTTP $HTTP_CODE"
+
+          cat response.json
+
+          if [ "$HTTP_CODE" -lt 200 ] || [ "$HTTP_CODE" -ge 300 ]; then
+            echo "Error al consultar Supabase"
+            exit 1
+          fi
+
+          echo "Supabase respondió correctamente"
