@@ -109,8 +109,16 @@ const escapeHtml = (s) =>
 function makeTitle(item) {
   const firstLine = item.text
     .split('\n')
-    .map((l) => l.replace(/[#@]\S+/g, '').trim())
-    .find(Boolean);
+    .map((l) =>
+      l
+        .replace(/#\S+/g, '')
+        .replace(/@([\w.]+)/g, '$1')
+        .replace(/\s+/g, ' ')
+        .trim()
+    )
+    .find(Boolean)
+    // Se queda con la primera frase si es suficientemente larga
+    ?.replace(/^(.{20,90}?[.!?…])\s.*$/, '$1');
   if (!firstLine) {
     const date = new Date(item.created_at).toLocaleDateString('es-CL', {
       day: 'numeric',
@@ -181,11 +189,17 @@ async function main() {
   }
   if (!items.length) return;
 
-  // Lo publicado en Instagram y en Facebook a la vez se importa solo una vez (desde Instagram)
+  // Lo publicado en Instagram y en Facebook a la vez se importa solo una vez (desde Instagram):
+  // mismo texto, o publicado con menos de 15 minutos de diferencia
   const normalize = (t) => t.toLowerCase().replace(/\s+/g, ' ').trim().slice(0, 120);
-  const igTexts = new Set(items.filter((i) => i.source === 'instagram' && i.text).map((i) => normalize(i.text)));
+  const igItems = items.filter((i) => i.source === 'instagram');
+  const igTexts = new Set(igItems.filter((i) => i.text).map((i) => normalize(i.text)));
+  const igTimes = igItems.map((i) => new Date(i.created_at).getTime());
   items = items.filter((i) => {
-    const duplicated = i.source === 'facebook' && i.text && igTexts.has(normalize(i.text));
+    if (i.source !== 'facebook') return true;
+    const time = new Date(i.created_at).getTime();
+    const duplicated =
+      (i.text && igTexts.has(normalize(i.text))) || igTimes.some((t) => Math.abs(t - time) < 15 * 60 * 1000);
     if (duplicated) console.log(`↩️  ${i.source_id} omitido: ya está en Instagram`);
     return !duplicated;
   });
