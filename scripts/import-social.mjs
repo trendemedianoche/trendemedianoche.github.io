@@ -16,6 +16,7 @@
 // =====================================================
 
 import { createClient } from '@supabase/supabase-js';
+import { detectEvents, eventsDetectionEnabled } from './detect-events.mjs';
 
 const GRAPH = `https://graph.facebook.com/${process.env.META_GRAPH_VERSION || 'v23.0'}`;
 const BUCKET = 'social_media';
@@ -227,6 +228,115 @@ async function cleanupStories() {
   console.log(`🧹 ${old.length} historias de más de ${STORIES_KEEP_DAYS} días eliminadas`);
 }
 
+/* ------------------------------- FECHAS ------------------------------- */
+
+const MAX_SCANS_PER_RUN = 25;
+
+const normalizeVenue = (v = '') =>
+  v
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/\b(bar|el|la|los|las|de|del|club|pub)\b/g, '')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim();
+
+// ¿Ya existe una fecha ese día en el mismo lugar (o sin lugar)?
+async function eventExists(event) {
+  const { data, error } = await supabase.from('events').select('venue').eq('event_date', event.event_date);
+  if (error) throw error;
+  const venue = normalizeVenue(event.venue);
+  return data.some((e) => {
+    const other = normalizeVenue(e.venue || '');
+    return !venue || !other || other.includes(venue) || venue.includes(other);
+  });
+}
+
+// Analiza con IA las publicaciones e historias aún no revisadas y crea fechas "por revisar"
+async function scanForEvents(items) {
+  if (!eventsDetectionEnabled()) {
+    console.log('ℹ️  Sin ANTHROPIC_API_KEY: no se detectan fechas');
+    return;
+  }
+
+  const since = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString();
+  const { data: stories, error: storiesError } = await supabase
+    .from('instagram_stories')
+    .select('source_id, media_type, media_url, thumbnail_url, permalink, taken_at')
+    .gte('taken_at', since);
+  if (storiesError) console.error('❌ No se pudieron leer las historias:', storiesError.message);
+
+  // Portadas ya copiadas a Supabase (las URLs de Meta caducan)
+  const { data: covers } = await supabase
+    .from('blog_posts')
+    .select('source_id, cover_image')
+    .in('source_id', items.map((i) => i.source_id));
+  const coverBySource = new Map((covers || []).map((c) => [c.source_id, c.cover_image]));
+
+  const candidates = [
+    ...items.map((i) => ({
+      source_id: i.source_id,
+      source: i.source,
+      source_url: i.source_url,
+      kind: `publicación de ${i.source === 'instagram' ? 'Instagram' : 'Facebook'}`,
+      text: i.text,
+      imageUrl: coverBySource.get(i.source_id) || i.images[0],
+      flyerUrl: coverBySource.get(i.source_id) || null,
+      publishedAt: i.created_at
+    })),
+    ...(stories || []).map((s) => {
+      const image = s.media_type === 'VIDEO' ? s.thumbnail_url : s.media_url;
+      return {
+        source_id: `story_${s.source_id}`,
+        source: 'story',
+        source_url: s.permalink,
+        kind: 'historia de Instagram',
+        text: '',
+        imageUrl: image,
+        flyerUrl: image,
+        publishedAt: s.taken_at
+      };
+    })
+  ].filter((c) => c.text || c.imageUrl);
+
+  const { data: scanned, error } = await supabase
+    .from('social_scans')
+    .select('source_id')
+    .in('source_id', candidates.map((c) => c.source_id));
+  if (error) throw error;
+  const done = new Set(scanned.map((s) => s.source_id));
+  const pending = candidates.filter((c) => !done.has(c.source_id)).slice(0, MAX_SCANS_PER_RUN);
+  console.log(`🗓️  Buscando fechas en ${pending.length} publicaciones/historias`);
+
+  for (const item of pending) {
+    try {
+      const events = await detectEvents(item);
+      let created = 0;
+      for (const event of events) {
+        if (await eventExists(event)) continue;
+        const { certainty, ...fields } = event;
+        const { error: insertError } = await supabase.from('events').insert({
+          ...Object.fromEntries(Object.entries(fields).map(([k, v]) => [k, v || null])),
+          title: fields.title || fields.venue || 'Presentación en vivo',
+          notes: [fields.notes, certainty !== 'alta' ? `Certeza ${certainty}` : ''].filter(Boolean).join(' · ') || null,
+          image_url: item.flyerUrl,
+          source: item.source,
+          source_id: item.source_id,
+          source_url: item.source_url,
+          status: 'pending'
+        });
+        if (insertError) throw insertError;
+        created++;
+        console.log(`📅 ${event.event_date} · ${event.venue || event.title} (desde ${item.source_id})`);
+      }
+      await supabase.from('social_scans').upsert({ source_id: item.source_id, found: created });
+    } catch (err) {
+      console.error(`❌ Fechas en ${item.source_id}:`, err.message);
+      process.exitCode = 1;
+    }
+  }
+}
+
 /* ------------------------------ GALERÍA ------------------------------ */
 
 const GALLERY_BUCKET = 'trendemedianoche_assets';
@@ -301,7 +411,7 @@ async function main() {
       process.exitCode = 1;
     }
   }
-  if (!items.length) return;
+  if (!items.length) return scanForEvents([]);
 
   // Lo publicado en Instagram y en Facebook a la vez se importa solo una vez (desde Instagram):
   // mismo texto, o publicado con menos de 15 minutos de diferencia
@@ -371,6 +481,8 @@ async function main() {
       process.exitCode = 1;
     }
   }
+
+  await scanForEvents(items);
 }
 
 main().catch((err) => {

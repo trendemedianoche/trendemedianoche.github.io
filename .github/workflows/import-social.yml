@@ -25,6 +25,7 @@ jobs:
           SUPABASE_URL: https://gleaiedraisdtoyrnbmq.supabase.co
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           META_ACCESS_TOKEN: ${{ secrets.META_ACCESS_TOKEN }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           IG_USER_ID: ${{ vars.IG_USER_ID }}
           FB_PAGE_ID: ${{ vars.FB_PAGE_ID }}
           SOCIAL_AUTO_PUBLISH: ${{ vars.SOCIAL_AUTO_PUBLISH }}

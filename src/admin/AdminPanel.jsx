@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import {
   BookOpen,
+  CalendarDays,
   CircleDot,
   Disc3,
   HandHeart,
@@ -25,6 +26,7 @@ import SectionAdmin from './SectionAdmin';
 import ChatAdmin from './ChatAdmin';
 import AboutAdmin from './AboutAdmin';
 import BlogAdmin from './BlogAdmin';
+import AgendaAdmin from './AgendaAdmin';
 import StoriesAdmin from './StoriesAdmin';
 import MusicAdmin from './MusicAdmin';
 import ReleasesAdmin from './ReleasesAdmin';
@@ -45,9 +47,10 @@ const NAV_GROUPS = [
   {
     label: 'Contenido',
     tabs: [
+      { id: 'agenda', label: 'Agenda', icon: CalendarDays, title: 'Agenda', description: 'Próximas fechas y tocatas pasadas. Las detectadas en redes quedan por revisar.', component: AgendaAdmin },
       { id: 'sections', label: 'Secciones', icon: LayoutTemplate, title: 'Secciones', description: 'Textos principales de cada sección de la portada.', component: SectionAdmin },
       { id: 'about', label: 'Historia', icon: Info, title: 'Historia', description: 'El relato de la banda en la sección "Acerca de".', component: AboutAdmin },
-      { id: 'news', label: 'Fechas y noticias', icon: Newspaper, title: 'Fechas y noticias', description: 'Próximas tocatas y novedades.', component: NewsAdmin },
+      { id: 'news', label: 'Noticias', icon: Newspaper, title: 'Noticias', description: 'Novedades de la banda.', component: NewsAdmin },
       { id: 'extra-news', label: 'Barra de avisos', icon: Megaphone, title: 'Barra de avisos', description: 'Mensajes cortos que corren en la barra superior.', component: ExtraNewsAdmin },
       { id: 'photos', label: 'Galería', icon: Images, title: 'Galería', description: 'Fotos de la banda en el sitio.', component: PhotoAdmin }
     ]

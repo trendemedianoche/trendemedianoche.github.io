@@ -23,6 +23,7 @@ import { getExtraNewsItems } from '../services/extraNewsService';
 import { getBlogPosts } from '../services/blogService';
 import { sendChatMessage } from '../services/chatService';
 import { getNews } from '../services/newsService';
+import { getPublishedEvents } from '../services/eventsService';
 import { getTransferData } from '../services/donationService';
 import { getReleases } from '../services/releasesService';
 import { getTopTracks } from '../services/topTracksService';
@@ -111,8 +112,6 @@ const topTracks = [
   { n: '10', title: 'Sientes Cómo', time: '04:31' }
 ];
 
-const shows = [];
-
 const FALLBACK_SLIDES = [
   { src: bandBar1, alt: 'Tren de Medianoche en la barra', caption: 'En la barra · Santiago' },
   { src: bandBar2, alt: 'Tren de Medianoche sentados en el bar', caption: 'Antes del show' },
@@ -165,6 +164,12 @@ function extractSpotifyId(url) {
   if (!url) return null;
   const m = String(url).match(/track\/([A-Za-z0-9]+)/);
   return m ? m[1] : null;
+}
+
+// 'YYYY-MM-DD' como fecha local (new Date('2026-11-07') la tomaría en UTC y mostraría el día anterior)
+function parseEventDate(value) {
+  const [y, m, d] = value.split('-').map(Number);
+  return new Date(y, m - 1, d);
 }
 
 function formatDate(value) {
@@ -312,6 +317,7 @@ function ContactForm() {
 
 export default function LandingHome() {
   const [slide, setSlide] = useState(0);
+  const [events, setEvents] = useState({ upcoming: [], past: [] });
 
   // Al volver del blog u otra ruta con un destino de sección, desplazar
   useEffect(() => {
@@ -412,6 +418,7 @@ export default function LandingHome() {
   useEffect(() => {
     getGalleryImages().then(setGallery).catch(() => {});
     getNews().then(setNewsItems).catch(() => {});
+    getPublishedEvents().then(setEvents).catch(() => {});
     getTransferData().then(setDonationFields).catch(() => {});
     getAbout().then(setAboutHtml).catch(() => {});
     getLatestSong().then(setSong).catch(() => {});
@@ -885,7 +892,7 @@ export default function LandingHome() {
             </div>
           </div>
 
-          {shows.length === 0 ? (
+          {events.upcoming.length === 0 ? (
             <div className="border border-dashed border-border/60 p-12 md:p-16 text-center">
               <Calendar className="mx-auto mb-6 text-primary" size={40} strokeWidth={1.2} />
               <h3 className="text-display text-3xl md:text-4xl mb-3">
@@ -907,19 +914,71 @@ export default function LandingHome() {
             </div>
           ) : (
             <ul className="divide-y divide-border/60 border-y border-border/60">
-              {shows.map((s, i) => (
-                <li
-                  key={i}
-                  className="grid md:grid-cols-12 gap-4 items-center py-6 px-2 hover:bg-primary/5 transition"
-                >
-                  <div className="md:col-span-3 font-mono text-xs text-primary">{s.date}</div>
-                  <div className="md:col-span-5 text-display text-2xl md:text-3xl">{s.venue}</div>
-                  <div className="md:col-span-3 text-muted-foreground text-sm inline-flex items-center gap-2">
-                    <MapPin size={14} /> {s.city}
-                  </div>
-                </li>
-              ))}
+              {events.upcoming.map((e) => {
+                const d = parseEventDate(e.event_date);
+                return (
+                  <li
+                    key={e.id}
+                    className="grid grid-cols-[4.5rem_1fr] md:grid-cols-12 gap-x-5 gap-y-2 items-center py-6 px-2 hover:bg-primary/5 transition"
+                  >
+                    <div className="row-span-2 md:row-span-1 md:col-span-2 text-center md:text-left">
+                      <div className="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-primary">
+                        {d.toLocaleDateString('es-CL', { weekday: 'short' })}
+                      </div>
+                      <div className="text-display text-4xl md:text-5xl leading-none">{d.getDate()}</div>
+                      <div className="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-muted-foreground">
+                        {d.toLocaleDateString('es-CL', { month: 'short' })}
+                      </div>
+                    </div>
+                    <div className="md:col-span-6">
+                      <div className="text-display text-2xl md:text-3xl leading-tight">{e.title}</div>
+                      {e.venue && e.venue !== e.title && (
+                        <div className="text-muted-foreground mt-1">{e.venue}</div>
+                      )}
+                    </div>
+                    <div className="md:col-span-4 flex flex-wrap gap-x-5 gap-y-1 text-sm text-muted-foreground">
+                      {(e.city || e.address) && (
+                        <span className="inline-flex items-center gap-1.5">
+                          <MapPin size={14} className="text-primary" /> {[e.address, e.city].filter(Boolean).join(', ')}
+                        </span>
+                      )}
+                      {e.event_time && <span className="font-mono text-xs">{e.event_time} h</span>}
+                      {e.price && <span className="font-mono text-xs">{e.price}</span>}
+                      {(e.ticket_url || e.source_url) && (
+                        <a
+                          href={e.ticket_url || e.source_url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-eyebrow text-primary hover:underline inline-flex items-center gap-1"
+                        >
+                          {e.ticket_url ? 'Entradas' : 'Más info'} <ArrowUpRight size={12} />
+                        </a>
+                      )}
+                    </div>
+                  </li>
+                );
+              })}
             </ul>
+          )}
+
+          {events.past.length > 0 && (
+            <div className="mt-16">
+              <div className="text-eyebrow mb-5">Ya pasamos por aquí</div>
+              <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8">
+                {events.past.slice(0, 9).map((e) => (
+                  <li key={e.id} className="flex items-baseline gap-4 py-3 border-b border-border/40">
+                    <span className="font-mono text-xs text-muted-foreground shrink-0 w-20">
+                      {parseEventDate(e.event_date).toLocaleDateString('es-CL', {
+                        day: 'numeric',
+                        month: 'short',
+                        year: 'numeric'
+                      })}
+                    </span>
+                    <span className="text-foreground/90 truncate">{e.venue || e.title}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           )}
         </div>
       </section>
