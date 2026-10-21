@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import {
   BookOpen,
+  CircleDot,
   Disc3,
   HandHeart,
   Images,
@@ -24,6 +25,7 @@ import SectionAdmin from './SectionAdmin';
 import ChatAdmin from './ChatAdmin';
 import AboutAdmin from './AboutAdmin';
 import BlogAdmin from './BlogAdmin';
+import StoriesAdmin from './StoriesAdmin';
 import MusicAdmin from './MusicAdmin';
 import ReleasesAdmin from './ReleasesAdmin';
 import TopTracksAdmin from './TopTracksAdmin';
@@ -36,6 +38,7 @@ const NAV_GROUPS = [
     label: 'Comunidad',
     tabs: [
       { id: 'blog', label: 'Blog', icon: BookOpen, title: 'Bitácora', description: 'Publicaciones, entradas importadas desde redes y comentarios.', component: BlogAdmin },
+      { id: 'stories', label: 'Historias', icon: CircleDot, title: 'Historias', description: 'Historias de Instagram capturadas para la franja de la portada.', component: StoriesAdmin },
       { id: 'chat', label: 'Mensajes', icon: MessageSquare, title: 'Mensajes', description: 'Lo que escriben los visitantes desde el chat del sitio.', component: ChatAdmin }
     ]
   },

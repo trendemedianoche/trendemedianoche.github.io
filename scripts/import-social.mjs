@@ -151,10 +151,14 @@ function makeContent(item, imageUrls) {
 
 // Las URLs del CDN de Meta caducan: se copian al bucket de Supabase
 async function copyImage(url, path) {
+  return copyMedia(url, path);
+}
+
+async function copyMedia(url, path, forcedExt = null) {
   const res = await fetch(url);
   if (!res.ok) throw new Error(`No se pudo descargar ${url}: ${res.status}`);
-  const contentType = res.headers.get('content-type') || 'image/jpeg';
-  const ext = contentType.includes('png') ? 'png' : contentType.includes('webp') ? 'webp' : 'jpg';
+  const contentType = res.headers.get('content-type') || (forcedExt === 'mp4' ? 'video/mp4' : 'image/jpeg');
+  const ext = forcedExt || (contentType.includes('png') ? 'png' : contentType.includes('webp') ? 'webp' : 'jpg');
   const fullPath = `${path}.${ext}`;
 
   const { error } = await supabase.storage
@@ -163,6 +167,64 @@ async function copyImage(url, path) {
   if (error) throw error;
 
   return supabase.storage.from(BUCKET).getPublicUrl(fullPath).data.publicUrl;
+}
+
+/* ----------------------------- HISTORIAS ----------------------------- */
+
+const STORIES_KEEP_DAYS = 30;
+
+// Las historias duran 24 h en Instagram: se copian para mostrarlas en la franja de la portada
+async function importStories() {
+  const { data } = await graph(`${IG_USER_ID}/stories`, {
+    fields: 'id,media_type,media_url,thumbnail_url,permalink,timestamp'
+  });
+  console.log(`🔍 Historias activas: ${data.length}`);
+  if (!data.length) return;
+
+  const { data: existing, error } = await supabase
+    .from('instagram_stories')
+    .select('source_id')
+    .in('source_id', data.map((s) => s.id));
+  if (error) throw error;
+  const known = new Set(existing.map((e) => e.source_id));
+
+  for (const story of data.filter((s) => !known.has(s.id) && s.media_url)) {
+    const isVideo = story.media_type === 'VIDEO';
+    const mediaUrl = await copyMedia(story.media_url, `stories/${story.id}`, isVideo ? 'mp4' : null);
+    const thumbnailUrl = story.thumbnail_url ? await copyImage(story.thumbnail_url, `stories/${story.id}_thumb`) : null;
+
+    const { error: insertError } = await supabase.from('instagram_stories').insert({
+      source_id: story.id,
+      media_type: story.media_type,
+      media_url: mediaUrl,
+      thumbnail_url: thumbnailUrl,
+      permalink: story.permalink,
+      taken_at: new Date(story.timestamp).toISOString()
+    });
+    if (insertError) throw insertError;
+    console.log(`📸 Historia ${story.id} guardada (${story.media_type})`);
+  }
+}
+
+// Borra las historias antiguas y sus archivos
+async function cleanupStories() {
+  const limit = new Date(Date.now() - STORIES_KEEP_DAYS * 24 * 60 * 60 * 1000).toISOString();
+  const { data: old, error } = await supabase
+    .from('instagram_stories')
+    .select('id, media_url, thumbnail_url')
+    .lt('taken_at', limit);
+  if (error) throw error;
+  if (!old.length) return;
+
+  const marker = `/object/public/${BUCKET}/`;
+  const paths = old
+    .flatMap((s) => [s.media_url, s.thumbnail_url])
+    .filter(Boolean)
+    .map((url) => url.split(marker)[1])
+    .filter(Boolean);
+  if (paths.length) await supabase.storage.from(BUCKET).remove(paths);
+  await supabase.from('instagram_stories').delete().in('id', old.map((s) => s.id));
+  console.log(`🧹 ${old.length} historias de más de ${STORIES_KEEP_DAYS} días eliminadas`);
 }
 
 /* ------------------------------ GALERÍA ------------------------------ */
@@ -216,6 +278,16 @@ async function main() {
   if (!sources.length) {
     console.error('❌ Define IG_USER_ID y/o FB_PAGE_ID');
     process.exit(1);
+  }
+
+  if (IG_USER_ID) {
+    try {
+      await importStories();
+      await cleanupStories();
+    } catch (err) {
+      console.error('❌ Error con las historias:', err.message);
+      process.exitCode = 1;
+    }
   }
 
   let items = [];

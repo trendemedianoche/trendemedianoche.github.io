@@ -62,3 +62,14 @@ SUPABASE_URL=... SUPABASE_SERVICE_ROLE_KEY=... META_ACCESS_TOKEN=... IG_USER_ID=
 - **`Error validating access token`**: el token caducó o cambiaste la contraseña de Facebook. Repite el paso 3.
 - **`(#10) Application does not have permission`**: falta algún permiso del paso 3, o la cuenta de Instagram no está vinculada a la página.
 - **No aparecen imágenes**: revisa que el bucket `social_media` exista y sea público.
+
+## Historias de Instagram
+
+El mismo importador guarda las historias **activas** de la cuenta (las de las últimas 24 h; como corre cada 3 horas, alcanza a capturarlas todas) en la tabla `instagram_stories`, con la imagen o el video copiados al bucket `social_media`.
+
+- La portada muestra una franja "En la ruta · Historias" con las de los últimos 7 días, un círculo por día. Al tocarla se abre un visor a pantalla completa.
+- En **Admin → Historias** puedes ocultar o eliminar cualquiera.
+- Las de más de 30 días se borran solas (registro y archivos).
+- Las historias de otras cuentas donde etiquetan a la banda no llegan por la API: hay que compartirlas en la historia propia.
+
+Configuración: ejecutar `scripts/instagram-stories-setup.sql` una vez en Supabase.
