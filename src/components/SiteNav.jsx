@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { ArrowUpRight, Menu, X } from 'lucide-react';
 import logoMark from '../assets/logo-mark.png';
 import logoText from '../assets/logo-text.png';
+import NewsTicker from './NewsTicker.jsx';
 
 const SPOTIFY_URL = 'https://open.spotify.com/artist/2ZRyGZfKgNjNKbry4Aqv7J';
 
@@ -15,7 +16,7 @@ const NAV_LINKS = [
   ['contacto', 'Contacto']
 ];
 
-export default function SiteNav() {
+export default function SiteNav({ ticker = [] }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const goToSection = (e, id) => {
@@ -84,6 +85,9 @@ export default function SiteNav() {
           {menuOpen ? <X size={26} /> : <Menu size={26} />}
         </button>
       </div>
+
+      {/* Barra de avisos fija bajo el menú (solo escritorio) */}
+      {ticker.length > 0 && <NewsTicker items={ticker} className="hidden lg:block py-2 bg-background/60" />}
 
       {/* Menú móvil */}
       {menuOpen && (

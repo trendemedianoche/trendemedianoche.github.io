@@ -15,6 +15,7 @@ import {
 import SiteNav from './SiteNav.jsx';
 import SiteFooter from './SiteFooter.jsx';
 import StoriesStrip from './StoriesStrip.jsx';
+import NewsTicker from './NewsTicker.jsx';
 
 import { getGalleryImages } from '../services/galleryService';
 import { getAbout } from '../services/aboutService';
@@ -503,7 +504,7 @@ export default function LandingHome() {
   return (
     <main className="lovable-root relative overflow-hidden" onClick={handleAnchorClick}>
       {/* NAV */}
-      <SiteNav />
+      <SiteNav ticker={ticker} />
 
       {/* HERO */}
       <section id="top" className="relative min-h-screen flex items-end">
@@ -565,22 +566,8 @@ export default function LandingHome() {
           </div>
         </div>
 
-        <div className="absolute bottom-0 left-0 right-0 border-t border-border/40 bg-background/70 backdrop-blur-sm py-3 overflow-hidden">
-          <div className="flex gap-12 text-eyebrow whitespace-nowrap animate-marquee w-max">
-            {[0, 1, 2, 3].map((rep) => (
-              <span key={rep} className="flex gap-12 shrink-0">
-                {ticker.map((item, i) => (
-                  <span
-                    key={rep + '-' + i}
-                    dangerouslySetInnerHTML={{
-                      __html: DOMPurify.sanitize(`${item.icon || '★'} ${item.content || ''}`)
-                    }}
-                  />
-                ))}
-              </span>
-            ))}
-          </div>
-        </div>
+        {/* En escritorio la barra va fija bajo el menú (SiteNav) */}
+        <NewsTicker items={ticker} className="absolute bottom-0 left-0 right-0 py-3 bg-background/70 lg:hidden" />
       </section>
 
       {/* ÚLTIMO LANZAMIENTO — destacado */}
