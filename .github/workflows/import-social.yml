@@ -4,6 +4,11 @@ on:
   schedule:
     - cron: '40 */3 * * *' # cada 3 horas
   workflow_dispatch:       # permite ejecutarlo manualmente
+    inputs:
+      rescan:
+        description: 'Volver a buscar fechas en todo (reemplaza las fechas por revisar)'
+        type: boolean
+        default: false
 
 jobs:
   import:
@@ -29,4 +34,5 @@ jobs:
           IG_USER_ID: ${{ vars.IG_USER_ID }}
           FB_PAGE_ID: ${{ vars.FB_PAGE_ID }}
           SOCIAL_AUTO_PUBLISH: ${{ vars.SOCIAL_AUTO_PUBLISH }}
+          EVENTS_RESCAN: ${{ inputs.rescan }}
         run: node scripts/import-social.mjs

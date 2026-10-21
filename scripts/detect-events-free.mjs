@@ -10,6 +10,7 @@
 
 import Tesseract from 'tesseract.js';
 import sharp from 'sharp';
+import os from 'node:os';
 
 const MONTHS = {
   enero: 1, febrero: 2, marzo: 3, abril: 4, mayo: 5, junio: 6, julio: 7, agosto: 8,
@@ -40,19 +41,44 @@ const DAY = 24 * 60 * 60 * 1000;
 
 let worker = null;
 
+// Lee el flyer de varias formas: las tipografías de afiche se leen mejor ampliadas
+// y por mitades. Devuelve un texto por variante.
 async function ocr(imageUrl) {
   const res = await fetch(imageUrl);
-  if (!res.ok) return '';
+  if (!res.ok) return [];
   const original = Buffer.from(await res.arrayBuffer());
-  // Ampliada y en gris lee mejor las tipografías de afiche; la original lee mejor otros detalles
-  const enhanced = await sharp(original).resize({ width: 2000 }).grayscale().normalize().png().toBuffer();
-  worker ??= await Tesseract.createWorker('spa');
+  const { width, height } = await sharp(original).metadata();
+  const half = Math.round(width / 2);
+  const variants = [
+    original,
+    await sharp(original).resize({ width: 2000 }).grayscale().normalize().png().toBuffer(),
+    await sharp(original).extract({ left: 0, top: 0, width: half, height }).resize({ width: 1600 }).grayscale().normalize().png().toBuffer(),
+    await sharp(original).extract({ left: half, top: 0, width: width - half, height }).resize({ width: 1600 }).grayscale().normalize().png().toBuffer()
+  ];
+  worker ??= await Tesseract.createWorker('spa', 1, { cachePath: os.tmpdir() });
   const texts = [];
-  for (const img of [original, enhanced]) {
+  for (const img of variants) {
     const { data } = await worker.recognize(img);
     texts.push(data.text);
   }
-  return texts.join('\n');
+  return texts;
+}
+
+// La fecha que más se repite entre las lecturas del flyer
+function voteDate(texts, published) {
+  const votes = new Map();
+  const monthNames = Object.keys(MONTHS).join('|');
+  // Una lectura limpia ("19 de Agosto", sin ruido entre día y mes) vale más
+  const clean = new RegExp(`\\b(\\d{1,2})\\s*de[\\s|]*(${monthNames})\\b`, 'g');
+  for (const t of texts) {
+    for (const d of findDates(t, published, { relative: false })) votes.set(d, (votes.get(d) || 0) + 1);
+    for (const m of strip(t).matchAll(clean)) {
+      const date = withYear(MONTHS[m[2]], Number(m[1]), published);
+      if (date) votes.set(toISO(date), (votes.get(toISO(date)) || 0) + 0.5);
+    }
+  }
+  const [best] = [...votes.entries()].sort((a, b) => b[1] - a[1]);
+  return best ? { date: best[0], votes: best[1] } : null;
 }
 
 export async function closeOcr() {
@@ -82,7 +108,7 @@ function withYear(month, day, published) {
   return options[0] || null;
 }
 
-function findDates(text, published) {
+function findDates(text, published, { relative = true } = {}) {
   const t = strip(text);
   const found = [];
   const monthNames = Object.keys(MONTHS).join('|');
@@ -108,7 +134,7 @@ function findDates(text, published) {
   }
 
   // Relativas a la fecha de publicación
-  if (!found.length) {
+  if (relative && !found.length) {
     if (/\bpasado manana\b/.test(t)) found.push(new Date(published.getTime() + 2 * DAY));
     else if (/\bmanana\b/.test(t)) found.push(new Date(published.getTime() + DAY));
     else if (/\b(hoy|esta noche)\b/.test(t)) found.push(published);
@@ -154,11 +180,22 @@ const CONNECTOR = '(?:\\s+(?:de|del|la|el|los|las|y))?';
 
 function findVenue(text) {
   const kind = text.match(
-    new RegExp(`\\b((?:Bar|Pub|Club|Teatro|Sala|Centro Cultural|Restobar|Café|Cafe|Galpón|Parque|Universidad)\\s+${WORD}(?:${CONNECTOR}\\s+${WORD}){0,4})`)
+    new RegExp(`\\b((?:Bar|Pub|Club|Teatro|Sala|Centro Cultural|Restobar|Café|Cafe|Galpón|Parque|Universidad)[ \\t]+${WORD}(?:${CONNECTOR}[ \\t]+${WORD}){0,4})`)
   );
   if (kind) return kind[1].trim();
   const en = text.match(new RegExp(`\\ben\\s+(?:(?:el|la|los|las)\\s+)?((?:(?:La|El|Los|Las)\\s+)?${WORD}(?:${CONNECTOR}\\s+${WORD}){0,4})`));
   if (en && !PLACES.some((p) => strip(p) === strip(en[1])) && !/^\\d/.test(en[1])) return en[1].trim();
+  return '';
+}
+
+// En un flyer, una línea tipo "La Puerta Amarilla" (que no sea una comuna ni la banda)
+function findFlyerVenue(texts) {
+  for (const t of texts) {
+    for (const line of t.split('\n')) {
+      const m = line.match(/((?:La|El|Los|Las)\s+[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+(?:\s+[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+){0,3})\s*$/);
+      if (m && !PLACES.some((p) => strip(p) === strip(m[1])) && !/medianoche/i.test(m[1])) return m[1];
+    }
+  }
   return '';
 }
 
@@ -183,24 +220,31 @@ function findCity(text) {
  * Misma forma de salida que detectEvents (Claude), para usarlas indistintamente.
  */
 export async function detectEventsFree({ text = '', imageUrl, publishedAt }) {
-  let flyer = '';
+  let flyerTexts = [];
   if (imageUrl) {
     try {
-      flyer = await ocr(imageUrl);
+      flyerTexts = await ocr(imageUrl);
     } catch (err) {
       console.warn(`⚠️  OCR falló en ${imageUrl}: ${err.message}`);
     }
   }
+  const flyer = flyerTexts.join('\n');
   const all = `${text}\n${flyer}`;
   const normalized = strip(all);
 
   const gig = GIG_WORDS.some((w) => normalized.includes(w));
   const release = RELEASE_WORDS.some((w) => normalized.includes(w));
   const published = chileDate(publishedAt);
-  const dates = findDates(all, published);
+  // La fecha escrita en el texto manda; si no hay, se vota entre las lecturas del flyer
+  let dates = findDates(text, published);
+  let flyerVotes = null;
+  if (!dates.length && flyerTexts.length) {
+    flyerVotes = voteDate(flyerTexts, published);
+    if (flyerVotes) dates = [flyerVotes.date];
+  }
   const time = findTime(all);
   // El lugar se busca primero en el texto escrito (el OCR trae ruido)
-  const venue = findVenue(text) || findVenue(flyer);
+  const venue = findVenue(text) || findFlyerVenue(flyerTexts) || findVenue(flyer);
   const name = findEventName(text) || findEventName(flyer);
 
   // Hace falta una fecha y señales de tocata; un lanzamiento sin señales de show no cuenta
@@ -217,7 +261,9 @@ export async function detectEventsFree({ text = '', imageUrl, publishedAt }) {
     city: findCity(all),
     address: findAddress(all),
     price: findPrice(all),
-    notes: 'Detectada automáticamente (texto/OCR): revisa los datos',
-    certainty: venue && time ? 'media' : 'baja'
+    notes: flyerVotes
+      ? `Fecha leída del flyer: confírmala`
+      : 'Detectada automáticamente: revisa los datos',
+    certainty: venue && time && (!flyerVotes || flyerVotes.votes >= 1.5) ? 'media' : 'baja'
   }));
 }

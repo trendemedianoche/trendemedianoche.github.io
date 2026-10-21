@@ -304,13 +304,18 @@ async function scanForEvents(items) {
     .select('source_id')
     .in('source_id', candidates.map((c) => c.source_id));
   if (error) throw error;
-  const done = new Set(scanned.map((s) => s.source_id));
+  // EVENTS_RESCAN=true vuelve a analizar todo y reemplaza las fechas aún por revisar
+  const rescan = process.env.EVENTS_RESCAN === 'true';
+  const done = new Set(rescan ? [] : scanned.map((s) => s.source_id));
   const pending = candidates.filter((c) => !done.has(c.source_id)).slice(0, MAX_SCANS_PER_RUN);
   console.log(`🗓️  Buscando fechas en ${pending.length} publicaciones/historias (${useClaude ? 'Claude' : 'texto + OCR'})`);
 
   for (const item of pending) {
     try {
       const events = await detect(item);
+      if (rescan) {
+        await supabase.from('events').delete().eq('source_id', item.source_id).eq('status', 'pending');
+      }
       let created = 0;
       for (const event of events) {
         if (await eventExists(event)) continue;
