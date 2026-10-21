@@ -6,7 +6,7 @@ import logoText from '../assets/logo-text.png';
 const SPOTIFY_URL = 'https://open.spotify.com/artist/2ZRyGZfKgNjNKbry4Aqv7J';
 
 const NAV_LINKS = [
-  ['lanzamiento', 'Nuevo'],
+  ['top', 'Inicio'],
   ['historia', 'Historia'],
   ['musica', 'Música'],
   ['banda', 'Banda'],
