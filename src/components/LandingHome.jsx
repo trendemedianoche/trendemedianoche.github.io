@@ -144,10 +144,18 @@ const SOCIAL_ICONS = {
 };
 
 function stripHtml(html = '') {
-  return html
-    .replace(/<[^>]*>/g, ' ')
+  // DOMParser también decodifica entidades como &quot;
+  return (new DOMParser().parseFromString(html, 'text/html').body.textContent || '')
     .replace(/\s+/g, ' ')
     .trim();
+}
+
+// Resumen sin repetir el título al comienzo
+function postExcerpt(post) {
+  const text = stripHtml(post.content);
+  return !post.title.endsWith('…') && text.startsWith(post.title)
+    ? text.slice(post.title.length).trim()
+    : text;
 }
 
 const DEFAULT_TRACK_ID = '4GZ6PL2ci4VAUgGAlQ4qoo'; // Sientes Cómo
@@ -955,16 +963,18 @@ export default function LandingHome() {
                 <a
                   key={p.id}
                   href="#/blog"
-                  className="border border-border/60 p-8 hover:border-primary/60 hover:bg-primary/5 transition group flex flex-col"
+                  className="h-[13.5rem] overflow-hidden border border-border/60 p-6 hover:border-primary/60 hover:bg-primary/5 transition group flex flex-col"
                 >
-                  <div className="font-mono text-xs text-primary mb-4">
+                  <div className="font-mono text-xs text-primary mb-2">
                     {formatDate(p.created_at)}
                   </div>
-                  <h3 className="text-display text-2xl md:text-3xl mb-3">{p.title}</h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed line-clamp-4">
-                    {stripHtml(p.content).slice(0, 160)}…
+                  <h3 className="text-display text-xl md:text-2xl leading-tight line-clamp-2 mb-2">
+                    {p.title}
+                  </h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed line-clamp-2">
+                    {postExcerpt(p)}
                   </p>
-                  <span className="mt-6 inline-flex items-center gap-2 text-eyebrow text-primary group-hover:underline">
+                  <span className="mt-auto pt-3 inline-flex items-center gap-2 text-eyebrow text-primary group-hover:underline">
                     Leer más <ArrowUpRight size={14} />
                   </span>
                 </a>
