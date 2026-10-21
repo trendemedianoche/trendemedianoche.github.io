@@ -480,6 +480,29 @@ export default function LandingHome() {
   // Ticker del hero desde extra_news_items (o respaldo)
   const ticker = extraNews.length > 0 ? extraNews : FALLBACK_TICKER;
 
+  // Novedades: próximas fechas confirmadas primero, luego noticias de los últimos 6 meses
+  const sixMonthsAgo = new Date(Date.now() - 183 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  const novedades = [
+    ...events.upcoming.slice(0, 2).map((e) => ({
+      key: `event-${e.id}`,
+      event: e,
+      eyebrow: 'Nueva fecha',
+      title: e.title,
+      content: [e.venue !== e.title ? e.venue : '', e.city, e.event_time && `${e.event_time} h`]
+        .filter(Boolean)
+        .join(' · ')
+    })),
+    ...newsItems
+      .filter((n) => !n.date || n.date >= sixMonthsAgo)
+      .sort((a, b) => (b.date || '').localeCompare(a.date || ''))
+      .map((n) => ({
+        key: `news-${n.id}`,
+        eyebrow: n.date ? formatDate(n.date) : 'Novedad',
+        title: n.title,
+        content: n.content
+      }))
+  ].slice(0, 4);
+
   // Último lanzamiento (canción real o respaldo)
   const latestTitle = song?.title || LATEST_FALLBACK.title;
   const latestSubtitle = song
@@ -1065,8 +1088,8 @@ export default function LandingHome() {
         </div>
       </section>
 
-      {/* NOTICIAS (solo si hay) */}
-      {newsItems.length > 0 && (
+      {/* NOVEDADES: fechas confirmadas que vienen + noticias recientes (solo si hay) */}
+      {novedades.length > 0 && (
         <section id="noticias" className="relative py-32 md:py-40 border-t border-border/40">
           <div className="max-w-6xl mx-auto px-6 md:px-10">
             <div className="mb-14">
@@ -1076,16 +1099,34 @@ export default function LandingHome() {
               </h2>
             </div>
             <div className="grid md:grid-cols-2 gap-4">
-              {newsItems.map((n) => (
+              {novedades.map((n) => (
                 <article
-                  key={n.id}
-                  className="border border-border/60 p-6 md:p-8 hover:border-primary/60 hover:bg-primary/5 transition-all"
+                  key={n.key}
+                  className="border border-border/60 p-6 md:p-8 hover:border-primary/60 hover:bg-primary/5 transition-all flex gap-5"
                 >
-                  {n.date && (
-                    <div className="font-mono text-xs text-primary mb-3">{formatDate(n.date)}</div>
+                  {n.event && (
+                    <div className="shrink-0 w-16 text-center border-r border-border/60 pr-5">
+                      <div className="font-mono text-[0.62rem] uppercase tracking-[0.2em] text-primary">
+                        {parseEventDate(n.event.event_date).toLocaleDateString('es-CL', { weekday: 'short' })}
+                      </div>
+                      <div className="text-display text-4xl leading-none">
+                        {parseEventDate(n.event.event_date).getDate()}
+                      </div>
+                      <div className="font-mono text-[0.62rem] uppercase tracking-[0.2em] text-muted-foreground">
+                        {parseEventDate(n.event.event_date).toLocaleDateString('es-CL', { month: 'short' })}
+                      </div>
+                    </div>
                   )}
-                  <h3 className="text-display text-2xl md:text-3xl mb-2">{n.title}</h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed">{n.content}</p>
+                  <div className="min-w-0">
+                    <div className="font-mono text-xs text-primary mb-3">{n.eyebrow}</div>
+                    <h3 className="text-display text-2xl md:text-3xl mb-2">{n.title}</h3>
+                    {n.content && <p className="text-muted-foreground text-sm leading-relaxed">{n.content}</p>}
+                    {n.event && (
+                      <a href="#fechas" className="mt-3 inline-flex items-center gap-1 text-eyebrow text-primary hover:underline">
+                        Ver agenda <ArrowUpRight size={12} />
+                      </a>
+                    )}
+                  </div>
                 </article>
               ))}
             </div>
