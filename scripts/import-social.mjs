@@ -165,6 +165,48 @@ async function copyImage(url, path) {
   return supabase.storage.from(BUCKET).getPublicUrl(fullPath).data.publicUrl;
 }
 
+/* ------------------------------ GALERÍA ------------------------------ */
+
+const GALLERY_BUCKET = 'trendemedianoche_assets';
+
+const hasText = (item) => item.text.replace(/#\S+/g, '').trim().length > 0;
+
+// Agrega las imágenes a gallery_images ocultas (active=false) para decidir en Admin → Fotos
+async function addToGallery(item) {
+  const prefix = `images/social-${item.source_id}`;
+  const { data: existing, error } = await supabase
+    .from('gallery_images')
+    .select('path')
+    .like('path', `${prefix}%`);
+  if (error) throw error;
+  if (existing.length) return;
+
+  const { data: last } = await supabase
+    .from('gallery_images')
+    .select('position')
+    .order('position', { ascending: false })
+    .limit(1);
+  let position = last?.[0]?.position || 0;
+
+  for (const [idx, url] of item.images.entries()) {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`No se pudo descargar ${url}: ${res.status}`);
+    const contentType = res.headers.get('content-type') || 'image/jpeg';
+    const path = `${prefix}_${idx}.${contentType.includes('png') ? 'png' : 'jpg'}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from(GALLERY_BUCKET)
+      .upload(path, Buffer.from(await res.arrayBuffer()), { contentType, upsert: true });
+    if (uploadError) throw uploadError;
+
+    const { error: insertError } = await supabase
+      .from('gallery_images')
+      .insert({ path, position: ++position, active: false });
+    if (insertError) throw insertError;
+  }
+  console.log(`🖼️  ${item.source_id} → galería (oculta, revisar en Admin → Fotos)`);
+}
+
 /* ------------------------------- MAIN ------------------------------- */
 
 async function main() {
@@ -211,7 +253,24 @@ async function main() {
   if (error) throw error;
 
   const known = new Set(existing.map((e) => e.source_id));
-  const pending = items.filter((i) => !known.has(i.source_id));
+
+  // Sin texto (p. ej. un cambio de foto) no es una entrada del blog: va a la galería, oculta
+  const imageOnly = items.filter((i) => !hasText(i));
+  for (const item of imageOnly) {
+    try {
+      if (known.has(item.source_id)) {
+        const { error: deleteError } = await supabase.from('blog_posts').delete().eq('source_id', item.source_id);
+        if (deleteError) throw deleteError;
+        console.log(`🧹 ${item.source_id} retirado del blog (solo imagen)`);
+      }
+      await addToGallery(item);
+    } catch (err) {
+      console.error(`❌ ${item.source_id}:`, err.message);
+      process.exitCode = 1;
+    }
+  }
+
+  const pending = items.filter((i) => hasText(i) && !known.has(i.source_id));
   console.log(`🆕 ${pending.length} publicaciones nuevas`);
 
   for (const item of pending) {

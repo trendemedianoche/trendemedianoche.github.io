@@ -80,6 +80,82 @@ export default function Blog() {
     }
   };
 
+  // Texto plano del contenido, sin repetir el título al comienzo
+  const getExcerpt = (post) => {
+    const text = (new DOMParser().parseFromString(post.content, 'text/html').body.textContent || '')
+      .replace(/\s+/g, ' ')
+      .trim();
+    return !post.title.endsWith('…') && text.startsWith(post.title)
+      ? text.slice(post.title.length).trim()
+      : text;
+  };
+
+  // Agrupa las entradas: las con imagen van solas y las de solo texto de a dos
+  const groupPosts = (list) => {
+    const slots = [];
+    let openStack = null;
+    for (const post of list) {
+      if (post.cover_image) {
+        slots.push([post]);
+      } else if (openStack && openStack.length < 2) {
+        openStack.push(post);
+      } else {
+        openStack = [post];
+        slots.push(openStack);
+      }
+    }
+    return slots;
+  };
+
+  const renderCard = (post) => {
+    const excerpt = getExcerpt(post);
+    return (
+      <article
+        key={post.id}
+        onClick={() => handlePostClick(post)}
+        className={`group cursor-pointer border border-border/60 hover:border-primary/60 hover:bg-primary/5 transition-all flex flex-col overflow-hidden ${
+          post.cover_image ? 'h-[28.5rem]' : 'flex-1 min-h-[13.5rem] max-h-[13.5rem]'
+        }`}
+      >
+        {post.cover_image && (
+          <div className="h-48 shrink-0 overflow-hidden">
+            <img
+              src={post.cover_image}
+              alt=""
+              loading="lazy"
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+            />
+          </div>
+        )}
+        <div className="flex-1 min-h-0 flex flex-col p-6">
+          <div className="font-mono text-xs text-primary mb-2">
+            {formatDate(post.created_at)}
+            {post.source && (
+              <span className="text-muted-foreground">
+                {' · '}
+                {post.source === 'instagram' ? 'Instagram' : 'Facebook'}
+              </span>
+            )}
+          </div>
+          <h2 className="text-display text-xl md:text-2xl leading-tight line-clamp-2 mb-2">
+            {post.title}
+          </h2>
+          {excerpt && (
+            <p className="text-muted-foreground text-sm leading-relaxed line-clamp-2">{excerpt}</p>
+          )}
+          <div className="mt-auto pt-3 flex items-center justify-between">
+            <span className="text-eyebrow text-primary inline-flex items-center gap-1">
+              Leer más <ArrowUpRight size={14} />
+            </span>
+            <span className="font-mono text-xs text-muted-foreground inline-flex items-center gap-1">
+              <MessageCircle size={13} /> {commentsCount[post.id] || 0}
+            </span>
+          </div>
+        </div>
+      </article>
+    );
+  };
+
   const inputCls =
     'w-full bg-transparent border border-border/70 focus:border-primary outline-none px-4 py-3 font-mono text-sm transition';
 
@@ -210,48 +286,16 @@ export default function Blog() {
           <p className="text-muted-foreground">No hay publicaciones disponibles.</p>
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {posts.map((post) => (
-              <article
-                key={post.id}
-                onClick={() => handlePostClick(post)}
-                className="cursor-pointer border border-border/60 p-8 hover:border-primary/60 hover:bg-primary/5 transition-all flex flex-col min-h-[280px]"
-              >
-                {post.cover_image && (
-                  <img
-                    src={post.cover_image}
-                    alt=""
-                    loading="lazy"
-                    className="-mx-8 -mt-8 mb-6 w-[calc(100%+4rem)] max-w-none aspect-square object-cover"
-                  />
-                )}
-                <div className="font-mono text-xs text-primary mb-4">
-                  {formatDate(post.created_at)}
-                  {post.source && (
-                    <span className="text-muted-foreground">
-                      {' · '}
-                      {post.source === 'instagram' ? 'Instagram' : 'Facebook'}
-                    </span>
-                  )}
+            {groupPosts(posts).map((slot) =>
+              slot.length === 1 && slot[0].cover_image ? (
+                renderCard(slot[0])
+              ) : (
+                // Dos entradas de solo texto se apilan en el alto de una con imagen
+                <div key={slot[0].id} className="h-[28.5rem] flex flex-col gap-6">
+                  {slot.map(renderCard)}
                 </div>
-                <h2 className="text-display text-2xl md:text-3xl mb-3">{post.title}</h2>
-                <div
-                  className="text-muted-foreground text-sm leading-relaxed line-clamp-4 flex-1"
-                  dangerouslySetInnerHTML={{
-                    __html: DOMPurify.sanitize(post.content.substring(0, 200) + '…', {
-                      FORBID_TAGS: ['img']
-                    })
-                  }}
-                />
-                <div className="mt-6 flex items-center justify-between">
-                  <span className="text-eyebrow text-primary inline-flex items-center gap-1">
-                    Leer más <ArrowUpRight size={14} />
-                  </span>
-                  <span className="font-mono text-xs text-muted-foreground inline-flex items-center gap-1">
-                    <MessageCircle size={13} /> {commentsCount[post.id] || 0}
-                  </span>
-                </div>
-              </article>
-            ))}
+              )
+            )}
           </div>
         )}
       </div>
