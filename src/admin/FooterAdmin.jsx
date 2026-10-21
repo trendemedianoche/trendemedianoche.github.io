@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
+import { ArrowDown, ArrowUp, Eye, EyeOff, Pencil, Save } from 'lucide-react';
 import {
   getSocialNetworksAdmin,
   updateSocialNetwork,
   toggleSocialNetworkActive,
   reorderSocialNetworks
 } from '../services/donationService';
-import '../styles/AdminComponents.css';
 
 export default function FooterAdmin() {
   const [contactData, setContactData] = useState([]);
@@ -118,7 +118,7 @@ export default function FooterAdmin() {
   return (
     <div className="admin-card">
       <div className="admin-card-header">
-        <h2 className="admin-card-title">⚙️ Configuración del Footer</h2>
+        <h2 className="admin-card-title">Configuración del Footer</h2>
       </div>
 
       {loading ? (
@@ -132,22 +132,22 @@ export default function FooterAdmin() {
           {/* SECCIÓN DATOS DE CONTACTO */}
           <div style={{ marginBottom: '2rem' }}>
             <h3 style={{ 
-              color: '#f5c400', 
+              color: 'var(--primary)', 
               fontSize: '1.1rem', 
               marginBottom: '1rem',
-              borderBottom: '1px solid #333',
+              borderBottom: '1px solid var(--border)',
               paddingBottom: '0.5rem'
             }}>
-              📧 Datos de Contacto ({contactData.length})
+              Datos de Contacto ({contactData.length})
             </h3>
             
             {contactData.length === 0 ? (
-              <p style={{ color: '#888', fontSize: '0.9rem' }}>No hay datos de contacto configurados</p>
+              <p style={{ color: 'var(--muted-foreground)', fontSize: '0.9rem' }}>No hay datos de contacto configurados</p>
             ) : (
               contactData.map((item, i) => (
                 <div key={item.id} className="item-card" style={{ marginBottom: '1rem' }}>
                   <div style={{ marginBottom: '1rem' }}>
-                    <label style={{ display: 'block', marginBottom: '0.5rem', color: '#f5c400', fontSize: '0.9rem' }}>
+                    <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--primary)', fontSize: '0.9rem' }}>
                       {item.name}
                     </label>
                     <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
@@ -160,10 +160,10 @@ export default function FooterAdmin() {
                         style={{
                           flex: 1,
                           padding: '0.6rem',
-                          border: '1px solid #333',
-                          background: editingId === item.id ? '#1a1a1a' : '#0d0d0d',
-                          color: '#f5f5f5',
-                          borderRadius: '4px',
+                          border: '1px solid var(--border)',
+                          background: editingId === item.id ? 'var(--smoke)' : 'var(--background)',
+                          color: 'var(--foreground)',
+                          borderRadius: 0,
                           fontSize: '0.95rem',
                           opacity: editingId === item.id ? 1 : 0.7
                         }}
@@ -176,7 +176,7 @@ export default function FooterAdmin() {
                             disabled={loading}
                             title="Guardar"
                           >
-                            💾
+                            <Save size={14} />
                           </button>
                           <button
                             className="btn btn-secondary btn-small"
@@ -194,7 +194,7 @@ export default function FooterAdmin() {
                           disabled={loading || editingId !== null}
                           title="Editar"
                         >
-                          ✏️
+                          <Pencil size={14} />
                         </button>
                       )}
                     </div>
@@ -207,7 +207,7 @@ export default function FooterAdmin() {
                       disabled={loading || i === 0}
                       title="Mover arriba"
                     >
-                      ⬆
+                      <ArrowUp size={14} />
                     </button>
                     <button
                       className="btn btn-secondary btn-small"
@@ -215,7 +215,7 @@ export default function FooterAdmin() {
                       disabled={loading || i === contactData.length - 1}
                       title="Mover abajo"
                     >
-                      ⬇
+                      <ArrowDown size={14} />
                     </button>
                     <button
                       className="btn btn-success btn-small"
@@ -223,7 +223,7 @@ export default function FooterAdmin() {
                       disabled={loading}
                       title={item.active ? 'Visible en footer' : 'Oculto en footer'}
                     >
-                      {item.active ? '👁' : '🔒'}
+                      {item.active ? <Eye size={14} /> : <EyeOff size={14} />}
                     </button>
                   </div>
                 </div>
@@ -234,22 +234,22 @@ export default function FooterAdmin() {
           {/* SECCIÓN REDES SOCIALES */}
           <div>
             <h3 style={{ 
-              color: '#f5c400', 
+              color: 'var(--primary)', 
               fontSize: '1.1rem', 
               marginBottom: '1rem',
-              borderBottom: '1px solid #333',
+              borderBottom: '1px solid var(--border)',
               paddingBottom: '0.5rem'
             }}>
-              🌐 Redes Sociales ({socialNetworks.length})
+              Redes Sociales ({socialNetworks.length})
             </h3>
             
             {socialNetworks.length === 0 ? (
-              <p style={{ color: '#888', fontSize: '0.9rem' }}>No hay redes sociales configuradas</p>
+              <p style={{ color: 'var(--muted-foreground)', fontSize: '0.9rem' }}>No hay redes sociales configuradas</p>
             ) : (
               socialNetworks.map((social, i) => (
                 <div key={social.id} className="item-card" style={{ marginBottom: '1rem' }}>
                   <div style={{ marginBottom: '1rem' }}>
-                    <label style={{ display: 'block', marginBottom: '0.5rem', color: '#f5c400', fontSize: '0.9rem' }}>
+                    <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--primary)', fontSize: '0.9rem' }}>
                       {social.name}
                     </label>
                     <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
@@ -262,10 +262,10 @@ export default function FooterAdmin() {
                         style={{
                           flex: 1,
                           padding: '0.6rem',
-                          border: '1px solid #333',
-                          background: editingSocialId === social.id ? '#1a1a1a' : '#0d0d0d',
-                          color: '#f5f5f5',
-                          borderRadius: '4px',
+                          border: '1px solid var(--border)',
+                          background: editingSocialId === social.id ? 'var(--smoke)' : 'var(--background)',
+                          color: 'var(--foreground)',
+                          borderRadius: 0,
                           fontSize: '0.95rem',
                           opacity: editingSocialId === social.id ? 1 : 0.7
                         }}
@@ -278,7 +278,7 @@ export default function FooterAdmin() {
                             disabled={loading}
                             title="Guardar"
                           >
-                            💾
+                            <Save size={14} />
                           </button>
                           <button
                             className="btn btn-danger btn-small"
@@ -296,7 +296,7 @@ export default function FooterAdmin() {
                           disabled={loading || editingSocialId !== null}
                           title="Editar"
                         >
-                          ✏️
+                          <Pencil size={14} />
                         </button>
                       )}
                     </div>
@@ -309,7 +309,7 @@ export default function FooterAdmin() {
                       disabled={loading || i === 0}
                       title="Mover arriba"
                     >
-                      ⬆
+                      <ArrowUp size={14} />
                     </button>
                     <button
                       className="btn btn-secondary btn-small"
@@ -317,7 +317,7 @@ export default function FooterAdmin() {
                       disabled={loading || i === socialNetworks.length - 1}
                       title="Mover abajo"
                     >
-                      ⬇
+                      <ArrowDown size={14} />
                     </button>
                     <button
                       className="btn btn-success btn-small"
@@ -325,7 +325,7 @@ export default function FooterAdmin() {
                       disabled={loading}
                       title={social.active ? 'Activa' : 'Inactiva'}
                     >
-                      {social.active ? '👁' : '🔒'}
+                      {social.active ? <Eye size={14} /> : <EyeOff size={14} />}
                     </button>
                   </div>
                 </div>

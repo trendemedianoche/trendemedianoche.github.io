@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
+import { Eye, EyeOff, Trash2 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
-import '../styles/AdminComponents.css';
 import visible from '../assets/visible.png';
 import no_visible from '../assets/no_visible.svg';
 
@@ -79,7 +79,7 @@ export default function PhotoAdmin() {
     });
 
     setFile(null);
-    setMessage('✓ Imagen subida correctamente');
+    setMessage('Imagen subida correctamente');
     setMessageType('success');
     if (fileInputRef.current) fileInputRef.current.value = '';
     loadImages();
@@ -113,7 +113,7 @@ export default function PhotoAdmin() {
     setLoading(true);
     await supabase.storage.from(BUCKET).remove([img.path]);
     await supabase.from('gallery_images').delete().eq('id', img.id);
-    setMessage('✓ Imagen eliminada');
+    setMessage('Imagen eliminada');
     setMessageType('success');
     loadImages();
   };
@@ -146,7 +146,7 @@ export default function PhotoAdmin() {
             </div>
 
             {file && (
-              <div className="item-card" style={{ borderLeft: '4px solid #00a300' }}>
+              <div className="item-card" style={{ borderLeft: '4px solid var(--primary)' }}>
                 <strong>Archivo seleccionado:</strong>
                 <p>{shortName(file.name)}</p>
               </div>
@@ -157,7 +157,7 @@ export default function PhotoAdmin() {
               onClick={handleUpload}
               disabled={!file || loading}
             >
-              {loading ? '⏳ Subiendo...' : '📤 Subir Imagen'}
+              {loading ? 'Subiendo...' : 'Subir Imagen'}
             </button>
           </div>
         </div>
@@ -185,9 +185,9 @@ export default function PhotoAdmin() {
                 display: 'flex', 
                 flexDirection: 'column',
                 padding: '1rem',
-                background: 'linear-gradient(180deg, #1a1a1a, #0f0f0f)',
-                border: '1px solid #333',
-                borderRadius: '8px'
+                background: 'var(--card)',
+                border: '1px solid var(--border)',
+                borderRadius: 0
               }}>
                 {img.url && (
                   <img
@@ -197,25 +197,25 @@ export default function PhotoAdmin() {
                       width: '100%',
                       height: '180px',
                       objectFit: 'cover',
-                      borderRadius: '6px',
+                      borderRadius: 0,
                       marginBottom: '1rem',
                       opacity: img.active ? 1 : 0.5,
-                      border: img.active ? '2px solid #f5c400' : '2px solid #555'
+                      border: img.active ? '2px solid var(--primary)' : '2px solid var(--muted-foreground)'
                     }}
                   />
                 )}
                 <div style={{ marginBottom: '0.8rem' }}>
-                  <strong style={{ fontSize: '0.9rem', color: '#f5f5f5' }}>{shortName(img.path)}</strong>
+                  <strong style={{ fontSize: '0.9rem', color: 'var(--foreground)' }}>{shortName(img.path)}</strong>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.3rem' }}>
-                    <span style={{ fontSize: '0.75rem', color: '#aaa' }}>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
                       {new Date(img.created_at).toLocaleDateString()}
                     </span>
                     {!img.active && <span className="badge badge-inactive" style={{
                       fontSize: '0.7rem',
                       padding: '0.2rem 0.5rem',
-                      background: 'rgba(255,0,0,0.2)',
-                      color: '#ff6b6b',
-                      borderRadius: '4px'
+                      background: 'color-mix(in oklch, var(--accent) 20%, transparent)',
+                      color: 'var(--accent)',
+                      borderRadius: 0
                     }}>Inactiva</span>}
                   </div>
                 </div>
@@ -269,7 +269,7 @@ export default function PhotoAdmin() {
                       justifyContent: 'center'
                     }}
                   >
-                    {img.active ? '👁' : '🚫'}
+                    {img.active ? <Eye size={14} /> : <EyeOff size={14} />}
                   </button>
                   <button
                     className="btn btn-danger btn-small"
@@ -284,7 +284,7 @@ export default function PhotoAdmin() {
                       justifyContent: 'center'
                     }}
                   >
-                    🗑
+                    <Trash2 size={14} />
                   </button>
                 </div>
               </div>

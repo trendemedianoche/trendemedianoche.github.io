@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { ExternalLink, Facebook, ImageOff, Instagram, Plus } from 'lucide-react';
 import { 
   getAllBlogPosts, 
   createBlogPost, 
@@ -13,6 +14,22 @@ import {
   deleteComment 
 } from '../services/commentsService';
 
+const POST_FILTERS = [
+  ['all', 'Todas'],
+  ['draft', 'Borradores'],
+  ['published', 'Publicadas'],
+  ['instagram', 'Instagram'],
+  ['facebook', 'Facebook']
+];
+
+const FILTER_FNS = {
+  all: () => true,
+  draft: (p) => !p.published,
+  published: (p) => p.published,
+  instagram: (p) => p.source === 'instagram',
+  facebook: (p) => p.source === 'facebook'
+};
+
 export default function BlogAdmin() {
   const [activeTab, setActiveTab] = useState('posts');
   const [posts, setPosts] = useState([]);
@@ -26,6 +43,8 @@ export default function BlogAdmin() {
     published: false
   });
   const [message, setMessage] = useState('');
+  const [showForm, setShowForm] = useState(false);
+  const [filter, setFilter] = useState('all');
   const textareaRef = useRef(null);
 
   useEffect(() => {
@@ -56,19 +75,20 @@ export default function BlogAdmin() {
     try {
       if (editingPost) {
         await updateBlogPost(editingPost.id, formData);
-        setMessage('✅ Post actualizado correctamente');
+        setMessage('Post actualizado correctamente');
       } else {
         await createBlogPost(formData);
-        setMessage('✅ Post creado correctamente');
+        setMessage('Post creado correctamente');
       }
       
       setFormData({ title: '', content: '', author: '', published: false });
       setEditingPost(null);
+      setShowForm(false);
       loadPosts();
       
       setTimeout(() => setMessage(''), 3000);
     } catch (error) {
-      setMessage('❌ Error al guardar el post');
+      setMessage('Error al guardar el post');
       console.error(error);
     }
   };
@@ -89,11 +109,11 @@ export default function BlogAdmin() {
     
     try {
       await deleteBlogPost(id);
-      setMessage('✅ Post eliminado');
+      setMessage('Post eliminado');
       loadPosts();
       setTimeout(() => setMessage(''), 3000);
     } catch (error) {
-      setMessage('❌ Error al eliminar el post');
+      setMessage('Error al eliminar el post');
       console.error(error);
     }
   };
@@ -101,11 +121,11 @@ export default function BlogAdmin() {
   const handleTogglePublish = async (id, currentStatus) => {
     try {
       await togglePublishPost(id, !currentStatus);
-      setMessage(`✅ Post ${!currentStatus ? 'publicado' : 'despublicado'}`);
+      setMessage(`Post ${!currentStatus ? 'publicado' : 'despublicado'}`);
       loadPosts();
       setTimeout(() => setMessage(''), 3000);
     } catch (error) {
-      setMessage('❌ Error al cambiar estado');
+      setMessage('Error al cambiar estado');
       console.error(error);
     }
   };
@@ -113,12 +133,12 @@ export default function BlogAdmin() {
   const handleApproveComment = async (id) => {
     try {
       await approveComment(id);
-      setMessage('✅ Comentario aprobado');
+      setMessage('Comentario aprobado');
       loadComments();
       loadPendingComments();
       setTimeout(() => setMessage(''), 3000);
     } catch (error) {
-      setMessage('❌ Error al aprobar comentario');
+      setMessage('Error al aprobar comentario');
       console.error(error);
     }
   };
@@ -128,12 +148,12 @@ export default function BlogAdmin() {
     
     try {
       await deleteComment(id);
-      setMessage('✅ Comentario eliminado');
+      setMessage('Comentario eliminado');
       loadComments();
       loadPendingComments();
       setTimeout(() => setMessage(''), 3000);
     } catch (error) {
-      setMessage('❌ Error al eliminar comentario');
+      setMessage('Error al eliminar comentario');
       console.error(error);
     }
   };
@@ -191,10 +211,8 @@ export default function BlogAdmin() {
 
   return (
     <div className="blog-admin">
-      <h2>Gestión del Blog</h2>
-      
       {message && (
-        <div className={`admin-message ${message.includes('❌') ? 'error' : 'success'}`}>
+        <div className={`admin-message ${message.startsWith('Error') ? 'error' : 'success'}`}>
           {message}
         </div>
       )}
@@ -204,7 +222,7 @@ export default function BlogAdmin() {
           className={activeTab === 'posts' ? 'active' : ''}
           onClick={() => setActiveTab('posts')}
         >
-          Publicaciones ({posts?.length || 0})
+          Entradas ({posts?.length || 0})
         </button>
         <button 
           className={activeTab === 'comments' ? 'active' : ''}
@@ -216,15 +234,18 @@ export default function BlogAdmin() {
           className={activeTab === 'pending' ? 'active' : ''}
           onClick={() => setActiveTab('pending')}
         >
-          Pendientes ({pendingComments?.length || 0})
+          Por aprobar ({pendingComments?.length || 0})
         </button>
       </div>
 
       {activeTab === 'posts' && (
         <div className="posts-tab">
-          <div className="post-form-section">
-            <h3>{editingPost ? 'Editar Post' : 'Nuevo Post'}</h3>
-            
+          {(showForm || editingPost) && (
+          <div className="post-form-section admin-card">
+            <div className="admin-card-header">
+              <h2 className="admin-card-title">{editingPost ? 'Editar entrada' : 'Nueva entrada'}</h2>
+            </div>
+
             {formData.content && (
               <div className="admin-preview">
                 <h4>Vista Previa</h4>
@@ -317,14 +338,15 @@ export default function BlogAdmin() {
 
               <div className="form-actions">
                 <button type="submit" className="btn-primary">
-                  {editingPost ? 'Actualizar' : 'Crear'} Post
+                  {editingPost ? 'Guardar cambios' : 'Crear entrada'}
                 </button>
-                {editingPost && (
+                {(editingPost || showForm) && (
                   <button 
                     type="button" 
                     className="btn-secondary"
                     onClick={() => {
                       setEditingPost(null);
+                      setShowForm(false);
                       setFormData({ title: '', content: '', author: '', published: false });
                     }}
                   >
@@ -334,44 +356,83 @@ export default function BlogAdmin() {
               </div>
             </form>
           </div>
+          )}
 
-          <div className="posts-list-section">
-            <h3>Todos los Posts</h3>
+          <div className="posts-list-section admin-card">
+            <div className="admin-card-header">
+              <div className="post-filters">
+                {POST_FILTERS.map(([id, label]) => (
+                  <button
+                    key={id}
+                    type="button"
+                    className={filter === id ? 'active' : ''}
+                    onClick={() => setFilter(id)}
+                  >
+                    {label} ({posts.filter(FILTER_FNS[id]).length})
+                  </button>
+                ))}
+              </div>
+              {!showForm && !editingPost && (
+                <button type="button" className="btn btn-primary btn-small" onClick={() => setShowForm(true)}>
+                  <Plus size={14} /> Nueva entrada
+                </button>
+              )}
+            </div>
+            {posts.filter(FILTER_FNS[filter]).length === 0 ? (
+              <p className="no-items">No hay entradas en esta vista</p>
+            ) : (
             <div className="posts-list">
-              {posts.map(post => (
+              {posts.filter(FILTER_FNS[filter]).map(post => (
                 <div key={post.id} className="post-item">
-                  <div className="post-item-header">
-                    <h4>{post.title}</h4>
-                    <span className={`status-badge ${post.published ? 'published' : 'draft'}`}>
-                      {post.published ? '✓ Publicado' : '○ Borrador'}
-                    </span>
-                  </div>
-                  <div className="post-item-meta">
-                    <span>Por {post.author}</span>
-                    <span>{formatDate(post.created_at)}</span>
-                    {post.source && (
-                      <a href={post.source_url} target="_blank" rel="noopener noreferrer">
-                        {post.source === 'instagram' ? '📷 Instagram' : '📘 Facebook'}
-                      </a>
-                    )}
-                  </div>
-                  <div className="post-item-actions">
-                    <button onClick={() => handleEdit(post)} className="btn-edit">
-                      ✏️ Editar
-                    </button>
-                    <button 
-                      onClick={() => handleTogglePublish(post.id, post.published)}
-                      className="btn-toggle"
-                    >
-                      {post.published ? '👁️ Despublicar' : '✓ Publicar'}
-                    </button>
-                    <button onClick={() => handleDelete(post.id)} className="btn-delete">
-                      🗑️ Eliminar
-                    </button>
+                  {post.cover_image ? (
+                    <img src={post.cover_image} alt="" loading="lazy" className="post-thumb" />
+                  ) : (
+                    <div className="post-thumb post-thumb-empty">
+                      <ImageOff size={20} strokeWidth={1.4} />
+                    </div>
+                  )}
+                  <div>
+                    <div className="post-item-header">
+                      <h4>{post.title}</h4>
+                      <span className={`status-badge ${post.published ? 'published' : 'draft'}`}>
+                        {post.published ? 'Publicado' : 'Borrador'}
+                      </span>
+                    </div>
+                    <div className="post-item-meta">
+                      <span>{formatDate(post.created_at)}</span>
+                      <span>{post.author}</span>
+                      {post.source && (
+                        <a
+                          href={post.source_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="source-chip"
+                        >
+                          {post.source === 'instagram' ? <Instagram size={12} /> : <Facebook size={12} />}
+                          {post.source === 'instagram' ? 'Instagram' : 'Facebook'}
+                          <ExternalLink size={11} />
+                        </a>
+                      )}
+                    </div>
+                    <div className="post-item-actions">
+                      <button
+                        onClick={() => handleTogglePublish(post.id, post.published)}
+                        className={post.published ? 'btn-toggle' : 'btn-approve'}
+                      >
+                        {post.published ? 'Despublicar' : 'Publicar'}
+                      </button>
+                      <button onClick={() => handleEdit(post)} className="btn-edit">
+                        Editar
+                      </button>
+                      <button onClick={() => handleDelete(post.id)} className="btn-delete">
+                        Eliminar
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))}
             </div>
+            )}
           </div>
         </div>
       )}
@@ -399,13 +460,13 @@ export default function BlogAdmin() {
                       onClick={() => handleApproveComment(comment.id)}
                       className="btn-approve"
                     >
-                      ✓ Aprobar
+                      Aprobar
                     </button>
                     <button 
                       onClick={() => handleDeleteComment(comment.id)}
                       className="btn-reject"
                     >
-                      ✗ Rechazar
+                      Rechazar
                     </button>
                   </div>
                 </div>
@@ -432,7 +493,7 @@ export default function BlogAdmin() {
                     {comment.author_email && <span>({comment.author_email})</span>}
                     <span className="comment-date">{formatDate(comment.created_at)}</span>
                     <span className={`status-badge ${comment.approved ? 'approved' : 'pending'}`}>
-                      {comment.approved ? '✓ Aprobado' : '⏳ Pendiente'}
+                      {comment.approved ? 'Aprobado' : 'Pendiente'}
                     </span>
                   </div>
                   <div className="comment-post-title">
@@ -445,14 +506,14 @@ export default function BlogAdmin() {
                         onClick={() => handleApproveComment(comment.id)}
                         className="btn-approve"
                       >
-                        ✓ Aprobar
+                        Aprobar
                       </button>
                     )}
                     <button 
                       onClick={() => handleDeleteComment(comment.id)}
                       className="btn-delete"
                     >
-                      🗑️ Eliminar
+                      Eliminar
                     </button>
                   </div>
                 </div>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
+import { ArrowDown, ArrowUp, Eye, EyeOff } from 'lucide-react';
 import { supabase } from '../lib/supabase';
-import '../styles/AdminComponents.css';
 
 export default function SectionAdmin() {
   const [sections, setSections] = useState([]);
@@ -88,10 +88,10 @@ export default function SectionAdmin() {
               className="item-card"
             >
               <div>
-                <strong style={{ color: '#f5c400', fontSize: '1.05rem' }}>
+                <strong style={{ fontSize: '1.05rem' }}>
                   {section.label}
                 </strong>
-                <p style={{ color: '#999', fontSize: '0.85rem', margin: '0.3rem 0 0 0' }}>
+                <p style={{ color: 'var(--muted-foreground)', fontSize: '0.85rem', margin: '0.3rem 0 0 0' }}>
                   {section.key}
                 </p>
                 {!section.active && <span className="badge badge-inactive">Inactivo</span>}
@@ -104,7 +104,7 @@ export default function SectionAdmin() {
                   disabled={loading || i === 0}
                   title="Subir"
                 >
-                  ⬆
+                  <ArrowUp size={14} />
                 </button>
 
                 <button
@@ -113,7 +113,7 @@ export default function SectionAdmin() {
                   disabled={loading || i === sections.length - 1}
                   title="Bajar"
                 >
-                  ⬇
+                  <ArrowDown size={14} />
                 </button>
 
                 <button
@@ -121,7 +121,7 @@ export default function SectionAdmin() {
                   onClick={() => toggleActive(section)}
                   disabled={loading}
                 >
-                  {section.active ? '👁' : '🚫'}
+                  {section.active ? <Eye size={14} /> : <EyeOff size={14} />}
                 </button>
               </div>
             </div>

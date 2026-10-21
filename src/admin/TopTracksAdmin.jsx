@@ -5,7 +5,6 @@ import {
   updateTopTrack,
   deleteTopTrack
 } from '../services/topTracksService';
-import '../styles/AdminComponents.css';
 
 const EMPTY = { position: 0, title: '', duration: '', spotify_url: '', active: true };
 
@@ -70,7 +69,7 @@ export default function TopTracksAdmin() {
     <div className="news-admin-container">
       <div className="admin-card">
         <div className="admin-card-header">
-          <h2 className="admin-card-title">{editing ? '✏️ Editar' : 'Nuevo track'}</h2>
+          <h2 className="admin-card-title">{editing ? 'Editar' : 'Nuevo track'}</h2>
         </div>
         <form className="admin-form" onSubmit={handleSubmit}>
           <div className="form-group">
@@ -96,7 +95,7 @@ export default function TopTracksAdmin() {
           </div>
           <div className="form-actions">
             <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
-              {loading ? '⏳...' : editing ? '✓ Actualizar' : '✓ Crear'}
+              {loading ? '...' : editing ? 'Actualizar' : 'Crear'}
             </button>
             {editing && (
               <button type="button" className="btn btn-secondary btn-block" onClick={reset}>✕ Cancelar</button>
@@ -114,17 +113,17 @@ export default function TopTracksAdmin() {
             <div key={item.id} className="item-card">
               <div className="item-header">
                 <div>
-                  <strong style={{ color: '#f5c400' }}>
+                  <strong>
                     {String(item.position).padStart(2, '0')} · {item.title}
                   </strong>
-                  <p style={{ margin: '0.4rem 0 0', color: '#bbb', fontSize: '0.85rem' }}>
+                  <p style={{ margin: '0.4rem 0 0', color: 'var(--muted-foreground)', fontSize: '0.85rem' }}>
                     {item.duration} {item.active ? '' : '(oculto)'}
                   </p>
                 </div>
               </div>
               <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
-                <button className="btn btn-secondary btn-small" onClick={() => handleEdit(item)}>✏️ Editar</button>
-                <button className="btn btn-danger btn-small" onClick={() => handleDelete(item.id)}>🗑 Eliminar</button>
+                <button className="btn btn-secondary btn-small" onClick={() => handleEdit(item)}>Editar</button>
+                <button className="btn btn-danger btn-small" onClick={() => handleDelete(item.id)}>Eliminar</button>
               </div>
             </div>
           ))}

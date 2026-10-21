@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { getActiveSong, updateSong } from '../services/musicService';
-import '../styles/AdminComponents.css';
 
 export default function MusicAdmin() {
   const [song, setSong] = useState(null);
@@ -36,7 +35,7 @@ export default function MusicAdmin() {
     setStatus('Guardando...');
     try {
       await updateSong(song.id, form);
-      setStatus('✓ Guardado');
+      setStatus('Guardado');
     } catch (err) {
       setStatus('Error: ' + err.message);
     }
@@ -59,7 +58,7 @@ export default function MusicAdmin() {
         <div className="admin-card-header">
           <h2 className="admin-card-title">Música</h2>
         </div>
-        <p style={{ padding: '1rem', color: '#bbb' }}>
+        <p style={{ padding: '1rem', color: 'var(--muted-foreground)' }}>
           No hay una canción activa. Crea una en la tabla <code>songs</code> de Supabase (con su
           archivo mp3 y carátula) y aquí podrás editar sus datos y enlaces.
         </p>
@@ -94,9 +93,9 @@ export default function MusicAdmin() {
           <input value={form.youtube_url} onChange={(e) => setForm({ ...form, youtube_url: e.target.value })} placeholder="https://www.youtube.com/watch?v=..." />
         </div>
         <div className="form-actions">
-          <button type="submit" className="btn btn-primary btn-block">✓ Guardar</button>
+          <button type="submit" className="btn btn-primary btn-block">Guardar</button>
         </div>
-        {status && <p style={{ marginTop: '0.5rem', color: '#f5c400' }}>{status}</p>}
+        {status && <p style={{ marginTop: '0.5rem', color: 'var(--primary)' }}>{status}</p>}
       </form>
     </div>
   );

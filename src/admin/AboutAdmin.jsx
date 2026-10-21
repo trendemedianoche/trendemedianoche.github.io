@@ -21,7 +21,7 @@ export default function AboutAdmin() {
       setContent(data);
     } catch (error) {
       console.error('📖 AboutAdmin: Error al cargar:', error);
-      setMessage('❌ Error al cargar el contenido: ' + error.message);
+      setMessage('Error al cargar el contenido: ' + error.message);
     } finally {
       setLoading(false);
     }
@@ -36,11 +36,11 @@ export default function AboutAdmin() {
       console.log('💾 AboutAdmin: Guardando contenido...', { length: content.length });
       await updateAbout(content);
       console.log('💾 AboutAdmin: Guardado exitoso');
-      setMessage(' Contenido actualizado correctamente');
+      setMessage('Contenido actualizado correctamente');
       setTimeout(() => setMessage(''), 3000);
     } catch (error) {
       console.error('💾 AboutAdmin: Error al guardar:', error);
-      setMessage('❌ Error al guardar: ' + error.message);
+      setMessage('Error al guardar: ' + error.message);
     } finally {
       setSaving(false);
     }
@@ -153,7 +153,7 @@ export default function AboutAdmin() {
         </div>
 
         {message && (
-          <div className={`admin-message ${message.includes('') ? 'success' : 'error'}`}>
+          <div className={`admin-message ${message.startsWith('Error') ? 'error' : 'success'}`}>
             {message}
           </div>
         )}
@@ -164,7 +164,7 @@ export default function AboutAdmin() {
             className="btn btn-primary"
             disabled={saving}
           >
-            {saving ? 'Guardando...' : '💾 Guardar Cambios'}
+            {saving ? 'Guardando...' : 'Guardar Cambios'}
           </button>
           <button
             type="button"
@@ -172,7 +172,7 @@ export default function AboutAdmin() {
             onClick={loadContent}
             disabled={saving}
           >
-            🔄 Recargar
+            Recargar
           </button>
         </div>
       </form>

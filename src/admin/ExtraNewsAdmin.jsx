@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { ArrowDown, ArrowUp, Eye, EyeOff, Pencil, Trash2 } from 'lucide-react';
 import {
   getExtraNewsItems,
   createExtraNewsItem,
@@ -6,7 +7,6 @@ import {
   deleteExtraNewsItem
 } from '../services/extraNewsService';
 
-import '../styles/AdminComponents.css';
 
 export default function ExtraNewsAdmin() {
   const [items, setItems] = useState([]);
@@ -94,7 +94,7 @@ export default function ExtraNewsAdmin() {
       <div className="admin-card">
         <div className="admin-card-header">
           <h2 className="admin-card-title">
-            {editing ? '✏️ Editar' : ' Nueva Extra'}
+            {editing ? 'Editar' : ' Nueva Extra'}
           </h2>
         </div>
 
@@ -123,7 +123,7 @@ export default function ExtraNewsAdmin() {
             />
           </div>
 
-          <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.95rem', color: '#f5c400', cursor: 'pointer' }}>
+          <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.95rem', color: 'var(--primary)', cursor: 'pointer' }}>
             <input
               type="checkbox"
               checked={form.active}
@@ -134,7 +134,7 @@ export default function ExtraNewsAdmin() {
 
           <div className="form-actions">
             <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
-              {loading ? '⏳ Guardando...' : editing ? '✓ Actualizar' : '✓ Crear'}
+              {loading ? 'Guardando...' : editing ? 'Actualizar' : 'Crear'}
             </button>
             {editing && (
               <button
@@ -174,7 +174,7 @@ export default function ExtraNewsAdmin() {
               <div key={item.id} className="item-card">
                 <div className="item-header">
                   <div>
-                    <strong style={{ color: '#f5c400', fontSize: '1.1rem' }}>
+                    <strong style={{ fontSize: '1.1rem' }}>
                       {item.icon} {item.content.substring(0, 40)}...
                     </strong>
                     {!item.active && <span className="badge badge-inactive">Inactivo</span>}
@@ -187,7 +187,7 @@ export default function ExtraNewsAdmin() {
                     disabled={loading || i === 0}
                     title="Subir"
                   >
-                    ⬆
+                    <ArrowUp size={14} />
                   </button>
                   <button
                     className="btn btn-secondary btn-small"
@@ -195,28 +195,28 @@ export default function ExtraNewsAdmin() {
                     disabled={loading || i === items.length - 1}
                     title="Bajar"
                   >
-                    ⬇
+                    <ArrowDown size={14} />
                   </button>
                   <button
                     className="btn btn-success btn-small"
                     onClick={() => toggleActive(item)}
                     disabled={loading}
                   >
-                    {item.active ? '👁' : '🚫'}
+                    {item.active ? <Eye size={14} /> : <EyeOff size={14} />}
                   </button>
                   <button
                     className="btn btn-secondary btn-small"
                     onClick={() => handleEdit(item)}
                     disabled={loading}
                   >
-                    ✏️
+                    <Pencil size={14} />
                   </button>
                   <button
                     className="btn btn-danger btn-small"
                     onClick={() => handleDelete(item.id)}
                     disabled={loading}
                   >
-                    🗑
+                    <Trash2 size={14} />
                   </button>
                 </div>
               </div>

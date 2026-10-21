@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
+import { ArrowDown, ArrowUp, Eye, EyeOff, Pencil, Save, Trash2 } from 'lucide-react';
 import {
   getTransferDataAdmin,
   updateTransferField,
   deleteTransferField,
   reorderTransferFields
 } from '../services/donationService';
-import '../styles/AdminComponents.css';
 
 
 export default function DonationAdmin() {
@@ -95,7 +95,7 @@ export default function DonationAdmin() {
           {fields.map((f, i) => (
             <div key={f.id} className="item-card">
               <div style={{ marginBottom: '1rem' }}>
-                <label style={{ display: 'block', marginBottom: '0.5rem', color: '#f5c400', fontSize: '0.9rem' }}>
+                <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--primary)', fontSize: '0.9rem' }}>
                   {f.field_key}
                 </label>
                 <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
@@ -107,10 +107,10 @@ export default function DonationAdmin() {
                     style={{
                       flex: 1,
                       padding: '0.6rem',
-                      border: '1px solid #333',
-                      background: editingId === f.id ? '#1a1a1a' : '#0d0d0d',
-                      color: '#f5f5f5',
-                      borderRadius: '4px',
+                      border: '1px solid var(--border)',
+                      background: editingId === f.id ? 'var(--smoke)' : 'var(--background)',
+                      color: 'var(--foreground)',
+                      borderRadius: 0,
                       fontSize: '0.95rem',
                       opacity: editingId === f.id ? 1 : 0.7
                     }}
@@ -123,7 +123,7 @@ export default function DonationAdmin() {
                         disabled={loading}
                         title="Guardar"
                       >
-                        💾
+                        <Save size={14} />
                       </button>
                       <button
                         className="btn btn-secondary btn-small"
@@ -141,7 +141,7 @@ export default function DonationAdmin() {
                       disabled={loading || editingId !== null}
                       title="Editar"
                     >
-                      ✏️
+                      <Pencil size={14} />
                     </button>
                   )}
                 </div>
@@ -154,7 +154,7 @@ export default function DonationAdmin() {
                   disabled={loading || i === 0}
                   title="Subir"
                 >
-                  ⬆
+                  <ArrowUp size={14} />
                 </button>
                 <button
                   className="btn btn-secondary btn-small"
@@ -162,7 +162,7 @@ export default function DonationAdmin() {
                   disabled={loading || i === fields.length - 1}
                   title="Bajar"
                 >
-                  ⬇
+                  <ArrowDown size={14} />
                 </button>
                 <button
                   className="btn btn-success btn-small"
@@ -170,7 +170,7 @@ export default function DonationAdmin() {
                   disabled={loading}
                   title={f.visible ? 'Visible' : 'Oculto'}
                 >
-                  {f.visible ? '👁' : '🚫'}
+                  {f.visible ? <Eye size={14} /> : <EyeOff size={14} />}
                 </button>
                 <button
                   className="btn btn-danger btn-small"
@@ -178,7 +178,7 @@ export default function DonationAdmin() {
                   disabled={loading}
                   title="Eliminar"
                 >
-                  🗑
+                  <Trash2 size={14} />
                 </button>
               </div>
             </div>

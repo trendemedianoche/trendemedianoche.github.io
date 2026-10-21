@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { getNews, createNews, updateNews, deleteNews } from '../services/newsService';
-import '../styles/AdminComponents.css';
 
 export default function NewsAdmin() {
   const [news, setNews] = useState([]);
@@ -64,7 +63,7 @@ export default function NewsAdmin() {
       <div className="admin-card">
         <div className="admin-card-header">
           <h2 className="admin-card-title">
-            {editing ? '✏️ Editar' : ' Nueva Noticia'}
+            {editing ? 'Editar' : ' Nueva Noticia'}
           </h2>
         </div>
 
@@ -106,7 +105,7 @@ export default function NewsAdmin() {
 
           <div className="form-actions">
             <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
-              {loading ? '⏳ Guardando...' : editing ? '✓ Actualizar' : '✓ Crear'}
+              {loading ? 'Guardando...' : editing ? 'Actualizar' : 'Crear'}
             </button>
             {editing && (
               <button
@@ -143,13 +142,13 @@ export default function NewsAdmin() {
               <div key={item.id} className="item-card">
                 <div className="item-header">
                   <div>
-                    <strong style={{ color: '#f5c400' }}>{item.title}</strong>
-                    <p style={{ margin: '0.4rem 0 0 0', color: '#bbb', fontSize: '0.85rem' }}>
+                    <strong>{item.title}</strong>
+                    <p style={{ margin: '0.4rem 0 0 0', color: 'var(--muted-foreground)', fontSize: '0.85rem' }}>
                       {item.date}
                     </p>
                   </div>
                 </div>
-                <p style={{ margin: '0.8rem 0', fontSize: '0.9rem', color: '#ddd', lineHeight: '1.5' }}>
+                <p style={{ margin: '0.8rem 0', fontSize: '0.9rem', color: 'var(--foreground)', lineHeight: '1.5' }}>
                   {item.content.substring(0, 100)}...
                 </p>
                 <div style={{ display: 'flex', gap: '0.5rem' }}>
@@ -158,14 +157,14 @@ export default function NewsAdmin() {
                     onClick={() => handleEdit(item)}
                     disabled={loading}
                   >
-                    ✏️ Editar
+                    Editar
                   </button>
                   <button
                     className="btn btn-danger btn-small"
                     onClick={() => handleDelete(item.id)}
                     disabled={loading}
                   >
-                    🗑 Eliminar
+                    Eliminar
                   </button>
                 </div>
               </div>

@@ -5,7 +5,6 @@ import {
   updateRelease,
   deleteRelease
 } from '../services/releasesService';
-import '../styles/AdminComponents.css';
 
 const EMPTY = { year: '', title: '', type: 'Single', note: '', position: 0, active: true };
 
@@ -71,7 +70,7 @@ export default function ReleasesAdmin() {
     <div className="news-admin-container">
       <div className="admin-card">
         <div className="admin-card-header">
-          <h2 className="admin-card-title">{editing ? '✏️ Editar' : 'Nuevo lanzamiento'}</h2>
+          <h2 className="admin-card-title">{editing ? 'Editar' : 'Nuevo lanzamiento'}</h2>
         </div>
         <form className="admin-form" onSubmit={handleSubmit}>
           <div className="form-group">
@@ -102,7 +101,7 @@ export default function ReleasesAdmin() {
           </div>
           <div className="form-actions">
             <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
-              {loading ? '⏳...' : editing ? '✓ Actualizar' : '✓ Crear'}
+              {loading ? '...' : editing ? 'Actualizar' : 'Crear'}
             </button>
             {editing && (
               <button type="button" className="btn btn-secondary btn-block" onClick={reset}>
@@ -122,17 +121,17 @@ export default function ReleasesAdmin() {
             <div key={item.id} className="item-card">
               <div className="item-header">
                 <div>
-                  <strong style={{ color: '#f5c400' }}>
+                  <strong>
                     {item.year} · {item.title}
                   </strong>
-                  <p style={{ margin: '0.4rem 0 0', color: '#bbb', fontSize: '0.85rem' }}>
+                  <p style={{ margin: '0.4rem 0 0', color: 'var(--muted-foreground)', fontSize: '0.85rem' }}>
                     {item.type} — {item.note} {item.active ? '' : '(oculto)'}
                   </p>
                 </div>
               </div>
               <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
-                <button className="btn btn-secondary btn-small" onClick={() => handleEdit(item)}>✏️ Editar</button>
-                <button className="btn btn-danger btn-small" onClick={() => handleDelete(item.id)}>🗑 Eliminar</button>
+                <button className="btn btn-secondary btn-small" onClick={() => handleEdit(item)}>Editar</button>
+                <button className="btn btn-danger btn-small" onClick={() => handleDelete(item.id)}>Eliminar</button>
               </div>
             </div>
           ))}

@@ -4,7 +4,6 @@ import {
   markChatAsRead,
   deleteChatMessage
 } from '../services/chatService';
-import '../styles/AdminComponents.css';
 
 
 export default function ChatAdmin() {
@@ -56,8 +55,8 @@ export default function ChatAdmin() {
             {messages.map(msg => (
               <div key={msg.id} className="message-item">
                 <div className="message-header">
-                  <strong style={{ color: '#f5c400' }}>{msg.name}</strong>
-                  <span style={{ fontSize: '0.85rem', color: '#bbb' }}>
+                  <strong>{msg.name}</strong>
+                  <span style={{ fontSize: '0.85rem', color: 'var(--muted-foreground)' }}>
                     {msg.email}
                   </span>
                 </div>
@@ -70,7 +69,7 @@ export default function ChatAdmin() {
                       className="btn btn-success btn-small"
                       onClick={() => handleMarkAsRead(msg.id)}
                     >
-                      ✓ Marcar leído
+                      Marcar leído
                     </button>
                   )}
                   {msg.read && (
@@ -80,7 +79,7 @@ export default function ChatAdmin() {
                     className="btn btn-danger btn-small"
                     onClick={() => handleDelete(msg.id)}
                   >
-                    🗑 Eliminar
+                    Eliminar
                   </button>
                 </div>
               </div>

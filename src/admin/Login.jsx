@@ -4,9 +4,8 @@ import { supabase } from '../lib/supabase';
 
 import logoIcon from '../assets/logo.png';
 import logoText from '../assets/letters.png';
+import '../styles/admin.css';
 
-import '../styles/base.css';
-import '../styles/Login.css';
 
 export default function Login() {
   const [email, setEmail] = useState('');

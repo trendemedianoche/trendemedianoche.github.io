@@ -16,6 +16,16 @@ export default function Blog() {
   });
   const [submitStatus, setSubmitStatus] = useState('');
 
+  // Columnas de la grilla según el ancho (igual que md:grid-cols-2 / lg:grid-cols-3)
+  const getColumns = () => (window.innerWidth >= 1024 ? 3 : window.innerWidth >= 768 ? 2 : 1);
+  const [columns, setColumns] = useState(getColumns);
+
+  useEffect(() => {
+    const onResize = () => setColumns(getColumns());
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
+
   useEffect(() => {
     loadPosts();
   }, []);
@@ -90,6 +100,11 @@ export default function Blog() {
       : text;
   };
 
+  const isImageSlot = (slot) => slot.length === 1 && Boolean(slot[0].cover_image);
+  const chunk = (list, size) =>
+    Array.from({ length: Math.ceil(list.length / size) }, (_, i) => list.slice(i * size, (i + 1) * size));
+  const gridCls = 'grid md:grid-cols-2 lg:grid-cols-3 gap-6';
+
   // Agrupa las entradas: las con imagen van solas y las de solo texto de a dos
   const groupPosts = (list) => {
     const slots = [];
@@ -114,7 +129,7 @@ export default function Blog() {
         key={post.id}
         onClick={() => handlePostClick(post)}
         className={`group cursor-pointer border border-border/60 hover:border-primary/60 hover:bg-primary/5 transition-all flex flex-col overflow-hidden ${
-          post.cover_image ? 'h-[28.5rem]' : 'flex-1 min-h-[13.5rem] max-h-[13.5rem]'
+          post.cover_image ? 'h-[28.5rem]' : 'h-[13.5rem] shrink-0'
         }`}
       >
         {post.cover_image && (
@@ -285,14 +300,25 @@ export default function Blog() {
         {posts.length === 0 ? (
           <p className="text-muted-foreground">No hay publicaciones disponibles.</p>
         ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {groupPosts(posts).map((slot) =>
-              slot.length === 1 && slot[0].cover_image ? (
-                renderCard(slot[0])
+          <div className="flex flex-col gap-6">
+            {chunk(groupPosts(posts), columns).map((row) =>
+              row.some(isImageSlot) ? (
+                <div key={row[0][0].id} className={gridCls}>
+                  {row.map((slot) =>
+                    isImageSlot(slot) ? (
+                      renderCard(slot[0])
+                    ) : (
+                      // Junto a una con imagen, dos de solo texto se apilan en su mismo alto
+                      <div key={slot[0].id} className="h-[28.5rem] flex flex-col gap-6">
+                        {slot.map(renderCard)}
+                      </div>
+                    )
+                  )}
+                </div>
               ) : (
-                // Dos entradas de solo texto se apilan en el alto de una con imagen
-                <div key={slot[0].id} className="h-[28.5rem] flex flex-col gap-6">
-                  {slot.map(renderCard)}
+                // Fila sin imágenes: las de solo texto van una al lado de la otra
+                <div key={row[0][0].id} className={gridCls}>
+                  {row.flat().map(renderCard)}
                 </div>
               )
             )}
