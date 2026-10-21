@@ -4,7 +4,7 @@
 // Recibe el texto y/o la imagen de una publicación o historia
 // y devuelve las presentaciones en vivo de la banda que
 // anuncia o relata, con fecha, hora, lugar, etc.
-// Requiere ANTHROPIC_API_KEY.
+// Requiere ANTHROPIC_API_KEY; sin ella el importador usa detect-events-free.mjs.
 // =====================================================
 
 import Anthropic from '@anthropic-ai/sdk';

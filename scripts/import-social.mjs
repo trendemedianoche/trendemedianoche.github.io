@@ -17,6 +17,7 @@
 
 import { createClient } from '@supabase/supabase-js';
 import { detectEvents, eventsDetectionEnabled } from './detect-events.mjs';
+import { detectEventsFree, closeOcr } from './detect-events-free.mjs';
 
 const GRAPH = `https://graph.facebook.com/${process.env.META_GRAPH_VERSION || 'v23.0'}`;
 const BUCKET = 'social_media';
@@ -254,10 +255,9 @@ async function eventExists(event) {
 
 // Analiza con IA las publicaciones e historias aún no revisadas y crea fechas "por revisar"
 async function scanForEvents(items) {
-  if (!eventsDetectionEnabled()) {
-    console.log('ℹ️  Sin ANTHROPIC_API_KEY: no se detectan fechas');
-    return;
-  }
+  // Con ANTHROPIC_API_KEY usa Claude; sin ella, reglas + OCR (gratis)
+  const useClaude = eventsDetectionEnabled();
+  const detect = useClaude ? detectEvents : detectEventsFree;
 
   const since = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString();
   const { data: stories, error: storiesError } = await supabase
@@ -306,11 +306,11 @@ async function scanForEvents(items) {
   if (error) throw error;
   const done = new Set(scanned.map((s) => s.source_id));
   const pending = candidates.filter((c) => !done.has(c.source_id)).slice(0, MAX_SCANS_PER_RUN);
-  console.log(`🗓️  Buscando fechas en ${pending.length} publicaciones/historias`);
+  console.log(`🗓️  Buscando fechas en ${pending.length} publicaciones/historias (${useClaude ? 'Claude' : 'texto + OCR'})`);
 
   for (const item of pending) {
     try {
-      const events = await detectEvents(item);
+      const events = await detect(item);
       let created = 0;
       for (const event of events) {
         if (await eventExists(event)) continue;
@@ -335,6 +335,7 @@ async function scanForEvents(items) {
       process.exitCode = 1;
     }
   }
+  await closeOcr();
 }
 
 /* ------------------------------ GALERÍA ------------------------------ */
