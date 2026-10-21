@@ -103,7 +103,7 @@ export default function Blog() {
               {selectedPost.title}
             </h1>
             <div
-              className="text-muted-foreground leading-relaxed [&_p]:mb-4 [&_a]:text-primary [&_h2]:text-foreground [&_h2]:text-display [&_h2]:text-3xl [&_h2]:mt-8 [&_h2]:mb-3"
+              className="text-muted-foreground leading-relaxed [&_p]:mb-4 [&_a]:text-primary [&_img]:w-full [&_img]:h-auto [&_h2]:text-foreground [&_h2]:text-display [&_h2]:text-3xl [&_h2]:mt-8 [&_h2]:mb-3"
               dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(selectedPost.content) }}
             />
           </article>
@@ -216,14 +216,30 @@ export default function Blog() {
                 onClick={() => handlePostClick(post)}
                 className="cursor-pointer border border-border/60 p-8 hover:border-primary/60 hover:bg-primary/5 transition-all flex flex-col min-h-[280px]"
               >
+                {post.cover_image && (
+                  <img
+                    src={post.cover_image}
+                    alt=""
+                    loading="lazy"
+                    className="-mx-8 -mt-8 mb-6 w-[calc(100%+4rem)] max-w-none aspect-square object-cover"
+                  />
+                )}
                 <div className="font-mono text-xs text-primary mb-4">
                   {formatDate(post.created_at)}
+                  {post.source && (
+                    <span className="text-muted-foreground">
+                      {' · '}
+                      {post.source === 'instagram' ? 'Instagram' : 'Facebook'}
+                    </span>
+                  )}
                 </div>
                 <h2 className="text-display text-2xl md:text-3xl mb-3">{post.title}</h2>
                 <div
                   className="text-muted-foreground text-sm leading-relaxed line-clamp-4 flex-1"
                   dangerouslySetInnerHTML={{
-                    __html: DOMPurify.sanitize(post.content.substring(0, 200) + '…')
+                    __html: DOMPurify.sanitize(post.content.substring(0, 200) + '…', {
+                      FORBID_TAGS: ['img']
+                    })
                   }}
                 />
                 <div className="mt-6 flex items-center justify-between">

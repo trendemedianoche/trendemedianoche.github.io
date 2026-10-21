@@ -349,6 +349,11 @@ export default function BlogAdmin() {
                   <div className="post-item-meta">
                     <span>Por {post.author}</span>
                     <span>{formatDate(post.created_at)}</span>
+                    {post.source && (
+                      <a href={post.source_url} target="_blank" rel="noopener noreferrer">
+                        {post.source === 'instagram' ? '📷 Instagram' : '📘 Facebook'}
+                      </a>
+                    )}
                   </div>
                   <div className="post-item-actions">
                     <button onClick={() => handleEdit(post)} className="btn-edit">

@@ -1,0 +1,31 @@
+name: Importar Instagram y Facebook al blog
+
+on:
+  schedule:
+    - cron: '40 */3 * * *' # cada 3 horas
+  workflow_dispatch:       # permite ejecutarlo manualmente
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci --omit=dev
+
+      - name: Importar publicaciones
+        env:
+          SUPABASE_URL: https://gleaiedraisdtoyrnbmq.supabase.co
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          META_ACCESS_TOKEN: ${{ secrets.META_ACCESS_TOKEN }}
+          IG_USER_ID: ${{ vars.IG_USER_ID }}
+          FB_PAGE_ID: ${{ vars.FB_PAGE_ID }}
+          SOCIAL_AUTO_PUBLISH: ${{ vars.SOCIAL_AUTO_PUBLISH }}
+        run: node scripts/import-social.mjs
