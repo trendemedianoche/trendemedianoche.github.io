@@ -67,7 +67,8 @@ SUPABASE_URL=... SUPABASE_SERVICE_ROLE_KEY=... META_ACCESS_TOKEN=... IG_USER_ID=
 
 El mismo importador guarda las historias **activas** de la cuenta (las de las últimas 24 h; como corre cada 3 horas, alcanza a capturarlas todas) en la tabla `instagram_stories`, con la imagen o el video copiados al bucket `social_media`.
 
-- La portada muestra una franja "En la ruta · Historias" con las de los últimos 7 días, un círculo por día. Al tocarla se abre un visor a pantalla completa.
+- Junto al logo del menú aparece un círculo con borde ámbar cuando hay historias de los últimos 7 días. Al tocarlo se abre un visor a pantalla completa.
+- Si una historia comparte un post (se sube hasta 6 h después de él), tocar la imagen abre ese post en Instagram.
 - En **Admin → Historias** puedes ocultar o eliminar cualquiera.
 - Las de más de 30 días se borran solas (registro y archivos).
 - Las historias de otras cuentas donde etiquetan a la banda no llegan por la API: hay que compartirlas en la historia propia.

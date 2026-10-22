@@ -45,3 +45,6 @@ CREATE POLICY "Admin elimina historias"
 ON instagram_stories FOR DELETE
 TO authenticated
 USING (true);
+
+-- Publicación de Instagram que comparte la historia (se asocia por horario)
+ALTER TABLE instagram_stories ADD COLUMN IF NOT EXISTS linked_url TEXT;

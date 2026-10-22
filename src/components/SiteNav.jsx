@@ -3,6 +3,7 @@ import { ArrowUpRight, Menu, X } from 'lucide-react';
 import logoMark from '../assets/logo-mark.png';
 import logoText from '../assets/logo-text.png';
 import NewsTicker from './NewsTicker.jsx';
+import StoriesButton from './StoriesButton.jsx';
 
 const SPOTIFY_URL = 'https://open.spotify.com/artist/2ZRyGZfKgNjNKbry4Aqv7J';
 
@@ -36,22 +37,25 @@ export default function SiteNav({ ticker = [] }) {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-background/70 border-b border-border/40">
       <div className="max-w-7xl mx-auto px-6 md:px-10 h-20 flex items-center justify-between">
-        <a
-          href="#/"
-          onClick={(e) => goToSection(e, 'top')}
-          className="flex items-center gap-2 md:gap-3"
-        >
-          <img
-            src={logoMark}
-            alt="Tren de Medianoche"
-            className="w-12 h-12 md:w-14 md:h-14 invert opacity-90"
-          />
-          <img
-            src={logoText}
-            alt="Tren de Medianoche"
-            className="h-7 md:h-9 w-auto invert opacity-90"
-          />
-        </a>
+        <div className="flex items-center gap-3 md:gap-4">
+          <StoriesButton />
+          <a
+            href="#/"
+            onClick={(e) => goToSection(e, 'top')}
+            className="flex items-center gap-2 md:gap-3"
+          >
+            <img
+              src={logoMark}
+              alt="Tren de Medianoche"
+              className="w-12 h-12 md:w-14 md:h-14 invert opacity-90"
+            />
+            <img
+              src={logoText}
+              alt="Tren de Medianoche"
+              className="h-7 md:h-9 w-auto invert opacity-90"
+            />
+          </a>
+        </div>
 
         {/* Desktop */}
         <div className="hidden lg:flex items-center gap-8 text-xs uppercase tracking-[0.25em] text-muted-foreground">
@@ -87,7 +91,12 @@ export default function SiteNav({ ticker = [] }) {
       </div>
 
       {/* Barra de avisos fija bajo el menú (solo escritorio) */}
-      {ticker.length > 0 && <NewsTicker items={ticker} className="hidden lg:block py-2 bg-background/60" />}
+      {ticker.length > 0 && (
+        <NewsTicker
+          items={ticker}
+          className="hidden lg:block py-2 bg-background/60"
+        />
+      )}
 
       {/* Menú móvil */}
       {menuOpen && (

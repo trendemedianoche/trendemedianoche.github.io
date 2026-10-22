@@ -144,9 +144,25 @@ function StoryViewer({ stories, startIndex, onClose }) {
           />
         )}
 
-        {/* Zonas táctiles: izquierda = anterior, derecha = siguiente */}
-        <button type="button" className="absolute inset-y-0 left-0 w-1/3" onClick={prev} aria-label="Anterior" />
-        <button type="button" className="absolute inset-y-0 right-0 w-2/3" onClick={next} aria-label="Siguiente" />
+        {/* Zonas táctiles: bordes = anterior/siguiente; si comparte un post, el centro lo abre en Instagram */}
+        {story.linked_url ? (
+          <>
+            <button type="button" className="absolute inset-y-0 left-0 w-1/4" onClick={prev} aria-label="Anterior" />
+            <a
+              href={story.linked_url}
+              target="_blank"
+              rel="noreferrer"
+              className="absolute inset-y-0 left-1/4 w-1/2 cursor-pointer"
+              aria-label="Ver la publicación en Instagram"
+            />
+            <button type="button" className="absolute inset-y-0 right-0 w-1/4" onClick={next} aria-label="Siguiente" />
+          </>
+        ) : (
+          <>
+            <button type="button" className="absolute inset-y-0 left-0 w-1/3" onClick={prev} aria-label="Anterior" />
+            <button type="button" className="absolute inset-y-0 right-0 w-2/3" onClick={next} aria-label="Siguiente" />
+          </>
+        )}
 
         <div className="absolute top-0 inset-x-0 p-3 bg-gradient-to-b from-black/70 to-transparent pointer-events-none">
           <div className="flex gap-1">
@@ -165,15 +181,15 @@ function StoryViewer({ stories, startIndex, onClose }) {
           </div>
         </div>
 
-        {isLive && story.permalink && (
+        {(story.linked_url || (isLive && story.permalink)) && (
           <a
-            href={story.permalink}
+            href={story.linked_url || story.permalink}
             target="_blank"
             rel="noreferrer"
             onClick={(e) => e.stopPropagation()}
             className="absolute bottom-5 left-1/2 -translate-x-1/2 whitespace-nowrap inline-flex items-center gap-1 px-4 py-2 border border-foreground/30 bg-black/50 backdrop-blur-sm text-eyebrow text-foreground hover:border-primary hover:text-primary transition"
           >
-            Ver en Instagram <ArrowUpRight size={13} />
+            {story.linked_url ? 'Ver publicación' : 'Ver en Instagram'} <ArrowUpRight size={13} />
           </a>
         )}
       </div>
@@ -182,9 +198,10 @@ function StoryViewer({ stories, startIndex, onClose }) {
   );
 }
 
-/* ------------------------------ FRANJA ------------------------------ */
+/* ------------------------------ BOTÓN ------------------------------ */
 
-export default function StoriesStrip() {
+// Círculo junto al logo del menú; solo aparece si hay historias recientes
+export default function StoriesButton() {
   const [stories, setStories] = useState([]);
   const [openAt, setOpenAt] = useState(null);
 
@@ -194,48 +211,29 @@ export default function StoriesStrip() {
 
   if (!stories.length) return null;
 
-  // Un círculo por día, el más reciente primero
-  const days = [];
-  stories.forEach((s, i) => {
-    const key = dayKey(s.taken_at);
-    const day = days.find((d) => d.key === key);
-    if (day) day.last = s;
-    else days.push({ key, firstIndex: i, last: s });
-  });
-  days.reverse();
+  // Empieza por la primera historia del día más reciente, como Instagram
+  const lastDay = dayKey(stories[stories.length - 1].taken_at);
+  const startIndex = stories.findIndex((s) => dayKey(s.taken_at) === lastDay);
+  const latest = stories[stories.length - 1];
+  const cover = latest.thumbnail_url || (latest.media_type === 'IMAGE' ? latest.media_url : null);
 
   return (
     <>
-      <div className="mb-10">
-        <div className="text-eyebrow mb-4">En la ruta · Historias</div>
-        <div className="flex gap-4 overflow-x-auto pb-1 -mx-1 px-1">
-          {days.map((day) => {
-            const cover = day.last.thumbnail_url || (day.last.media_type === 'IMAGE' ? day.last.media_url : null);
-            return (
-              <button
-                key={day.key}
-                type="button"
-                onClick={() => setOpenAt(day.firstIndex)}
-                className="group shrink-0 flex flex-col items-center gap-2"
-                aria-label={`Ver historias de ${dayLabel(day.last.taken_at)}`}
-              >
-                <span className="block p-[2px] rounded-full bg-ember-gradient shadow-ember transition-transform group-hover:scale-105">
-                  <span className="block p-[2px] rounded-full bg-background">
-                    {cover ? (
-                      <img src={cover} alt="" className="w-14 h-14 md:w-16 md:h-16 rounded-full object-cover" />
-                    ) : (
-                      <span className="block w-14 h-14 md:w-16 md:h-16 rounded-full bg-smoke" />
-                    )}
-                  </span>
-                </span>
-                <span className="font-mono text-[0.62rem] uppercase tracking-[0.18em] text-muted-foreground group-hover:text-foreground">
-                  {dayLabel(day.last.taken_at)}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
+      <button
+        type="button"
+        onClick={() => setOpenAt(startIndex)}
+        className="group shrink-0 block p-[2px] rounded-full bg-ember-gradient shadow-ember transition-transform hover:scale-105"
+        title={`Historias · ${dayLabel(latest.taken_at)}`}
+        aria-label="Ver historias de Instagram"
+      >
+        <span className="block p-[2px] rounded-full bg-background">
+          {cover ? (
+            <img src={cover} alt="" className="w-8 h-8 md:w-9 md:h-9 rounded-full object-cover" />
+          ) : (
+            <span className="block w-8 h-8 md:w-9 md:h-9 rounded-full bg-smoke" />
+          )}
+        </span>
+      </button>
 
       {openAt !== null && (
         <StoryViewer stories={stories} startIndex={openAt} onClose={() => setOpenAt(null)} />

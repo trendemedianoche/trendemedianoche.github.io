@@ -208,6 +208,32 @@ async function importStories() {
   }
 }
 
+// Una historia subida poco después de un post suele ser ese post compartido:
+// se enlaza al post de Instagram publicado hasta 6 h antes (o 10 min después)
+async function linkStories(igItems) {
+  if (!igItems.length) return;
+  const since = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+  const { data: stories, error } = await supabase
+    .from('instagram_stories')
+    .select('id, source_id, taken_at')
+    .is('linked_url', null)
+    .gte('taken_at', since);
+  if (error) throw error;
+
+  for (const story of stories) {
+    const t = new Date(story.taken_at).getTime();
+    const post = igItems
+      .map((i) => ({ url: i.source_url, diff: t - new Date(i.created_at).getTime() }))
+      // diff > 0: el post es anterior a la historia
+      .filter((p) => p.diff <= 6 * 60 * 60 * 1000 && p.diff >= -10 * 60 * 1000)
+      .sort((a, b) => Math.abs(a.diff) - Math.abs(b.diff))[0];
+    if (!post) continue;
+    const { error: updateError } = await supabase.from('instagram_stories').update({ linked_url: post.url }).eq('id', story.id);
+    if (updateError) throw updateError;
+    console.log(`🔗 Historia ${story.source_id} → ${post.url}`);
+  }
+}
+
 // Borra las historias antiguas y sus archivos
 async function cleanupStories() {
   const limit = new Date(Date.now() - STORIES_KEEP_DAYS * 24 * 60 * 60 * 1000).toISOString();
@@ -417,6 +443,12 @@ async function main() {
       process.exitCode = 1;
     }
   }
+  try {
+    await linkStories(items.filter((i) => i.source === 'instagram'));
+  } catch (err) {
+    console.warn('⚠️  No se pudieron enlazar historias:', err.message);
+  }
+
   if (!items.length) return scanForEvents([]);
 
   // Lo publicado en Instagram y en Facebook a la vez se importa solo una vez (desde Instagram):

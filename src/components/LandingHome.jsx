@@ -14,7 +14,6 @@ import {
 } from 'lucide-react';
 import SiteNav from './SiteNav.jsx';
 import SiteFooter from './SiteFooter.jsx';
-import StoriesStrip from './StoriesStrip.jsx';
 import NewsTicker from './NewsTicker.jsx';
 
 import { getGalleryImages } from '../services/galleryService';
@@ -547,7 +546,6 @@ export default function LandingHome() {
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-10 pb-24 pt-40 w-full">
-          <StoriesStrip />
           <div className="text-eyebrow mb-8 animate-flicker">Est. 2017 · Blues Chileno</div>
           <div className="mb-6 max-w-[150px] sm:max-w-[210px] md:max-w-xs flex flex-col items-center drop-shadow-[0_10px_30px_rgba(0,0,0,0.6)]">
             <img src={logoMark} alt="" className="w-2/3 h-auto invert opacity-95" />
