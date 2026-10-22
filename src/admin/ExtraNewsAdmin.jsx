@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
-import { ArrowDown, ArrowUp, Eye, EyeOff, Pencil, Trash2 } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import DOMPurify from 'dompurify';
+import { ArrowDown, ArrowUp, Bold, Eye, EyeOff, Pencil, Trash2 } from 'lucide-react';
 import {
   getExtraNewsItems,
   createExtraNewsItem,
@@ -12,6 +13,24 @@ export default function ExtraNewsAdmin() {
   const [items, setItems] = useState([]);
   const [editing, setEditing] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  const contentRef = useRef(null);
+
+  // Envuelve la selección en <strong> (o inserta un ejemplo si no hay selección)
+  const highlight = () => {
+    const el = contentRef.current;
+    if (!el) return;
+    const { selectionStart: start, selectionEnd: end } = el;
+    const selected = form.content.slice(start, end) || 'texto destacado';
+    const content = `${form.content.slice(0, start)}<strong>${selected}</strong>${form.content.slice(end)}`;
+    setForm({ ...form, content });
+    setTimeout(() => {
+      el.focus();
+      el.setSelectionRange(start + 8, start + 8 + selected.length);
+    }, 0);
+  };
+
+  const renderContent = (html) => ({ __html: DOMPurify.sanitize(html, { ALLOWED_TAGS: ['strong', 'b', 'em', 'i'] }) });
 
   const [form, setForm] = useState({
     icon: '',
@@ -104,23 +123,38 @@ export default function ExtraNewsAdmin() {
             <input
               id="icon"
               type="text"
-              placeholder="Ej: 🔥 📅 ⚡"
+              placeholder="Opcional (por defecto ★). Ej: 🔥 📅 ⚡"
               value={form.icon}
               onChange={(e) => setForm({ ...form, icon: e.target.value })}
-              required
             />
           </div>
 
           <div className="form-group">
             <label htmlFor="content">Contenido</label>
+            <div className="text-editor-toolbar">
+              <button type="button" className="toolbar-btn inline-flex items-center gap-1.5" onClick={highlight}>
+                <Bold size={13} /> Resaltar
+              </button>
+              <span className="form-hint ml-2">Selecciona una palabra y pulsa Resaltar</span>
+            </div>
             <textarea
               id="content"
-              placeholder="Contenido del anuncio"
+              ref={contentRef}
+              placeholder="Ej: Muy pronto: Príncipe Azul, nuevo single"
               value={form.content}
               onChange={(e) => setForm({ ...form, content: e.target.value })}
               required
               style={{ minHeight: '100px' }}
             />
+            {form.content && (
+              <div className="admin-preview" style={{ padding: '0.75rem 1rem' }}>
+                <h4 style={{ marginBottom: '0.5rem' }}>Así se verá</h4>
+                <div
+                  className="font-mono text-[0.72rem] uppercase tracking-[0.28em] text-muted-foreground [&_strong]:text-primary [&_strong]:font-semibold"
+                  dangerouslySetInnerHTML={renderContent(`${form.icon || '★'} ${form.content}`)}
+                />
+              </div>
+            )}
           </div>
 
           <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.95rem', color: 'var(--primary)', cursor: 'pointer' }}>
@@ -145,7 +179,7 @@ export default function ExtraNewsAdmin() {
                   setForm({ icon: '', content: '', active: true });
                 }}
               >
-                ✕ Cancelar
+                Cancelar
               </button>
             )}
           </div>
@@ -174,9 +208,10 @@ export default function ExtraNewsAdmin() {
               <div key={item.id} className="item-card">
                 <div className="item-header">
                   <div>
-                    <strong style={{ fontSize: '1.1rem' }}>
-                      {item.icon} {item.content.substring(0, 40)}...
-                    </strong>
+                    <p
+                      className="line-clamp-2 text-foreground [&_strong]:text-primary [&_strong]:font-semibold"
+                      dangerouslySetInnerHTML={renderContent(`${item.icon || '★'} ${item.content}`)}
+                    />
                     {!item.active && <span className="badge badge-inactive">Inactivo</span>}
                   </div>
                 </div>
