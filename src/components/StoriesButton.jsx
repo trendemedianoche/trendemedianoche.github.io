@@ -200,39 +200,60 @@ function StoryViewer({ stories, startIndex, onClose }) {
 
 /* ------------------------------ BOTÓN ------------------------------ */
 
-// Círculo junto al logo del menú; solo aparece si hay historias recientes
-export default function StoriesButton() {
+const SEEN_KEY = 'stories-seen';
+
+function readSeen() {
+  try {
+    return localStorage.getItem(SEEN_KEY);
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Envuelve el logo del menú: si hay historias recientes le pone un anillo
+ * (ámbar si hay alguna sin ver, gris si ya se vieron) y al tocarlo las abre.
+ * Sin historias muestra `fallback`.
+ */
+export default function StoriesButton({ children, fallback = null }) {
   const [stories, setStories] = useState([]);
   const [openAt, setOpenAt] = useState(null);
+  const [seen, setSeen] = useState(readSeen);
 
   useEffect(() => {
     getRecentStories().then(setStories);
   }, []);
 
-  if (!stories.length) return null;
+  if (!stories.length) return fallback;
 
   // Empieza por la primera historia del día más reciente, como Instagram
-  const lastDay = dayKey(stories[stories.length - 1].taken_at);
-  const startIndex = stories.findIndex((s) => dayKey(s.taken_at) === lastDay);
   const latest = stories[stories.length - 1];
-  const cover = latest.thumbnail_url || (latest.media_type === 'IMAGE' ? latest.media_url : null);
+  const lastDay = dayKey(latest.taken_at);
+  const startIndex = stories.findIndex((s) => dayKey(s.taken_at) === lastDay);
+  const unseen = seen !== latest.id;
+
+  const open = () => {
+    setOpenAt(startIndex);
+    setSeen(latest.id);
+    try {
+      localStorage.setItem(SEEN_KEY, latest.id);
+    } catch {
+      // sin almacenamiento: el anillo seguirá ámbar
+    }
+  };
 
   return (
     <>
       <button
         type="button"
-        onClick={() => setOpenAt(startIndex)}
-        className="group shrink-0 block p-[2px] rounded-full bg-ember-gradient shadow-ember transition-transform hover:scale-105"
+        onClick={open}
+        className={`shrink-0 block p-[2px] rounded-full transition-transform hover:scale-105 outline-none focus-visible:ring-2 focus-visible:ring-primary/50 ${
+          unseen ? 'bg-ember-gradient shadow-ember' : 'bg-border'
+        }`}
         title={`Historias · ${dayLabel(latest.taken_at)}`}
-        aria-label="Ver historias de Instagram"
+        aria-label={unseen ? 'Ver historias nuevas de Instagram' : 'Ver historias de Instagram'}
       >
-        <span className="block p-[2px] rounded-full bg-background">
-          {cover ? (
-            <img src={cover} alt="" className="w-8 h-8 md:w-9 md:h-9 rounded-full object-cover" />
-          ) : (
-            <span className="block w-8 h-8 md:w-9 md:h-9 rounded-full bg-smoke" />
-          )}
-        </span>
+        <span className="block p-[2px] rounded-full bg-background">{children}</span>
       </button>
 
       {openAt !== null && (
