@@ -304,7 +304,7 @@ function ContactForm() {
         <button
           type="submit"
           disabled={status === 'sending'}
-          className="w-full sm:w-auto px-8 py-4 bg-ember-gradient text-primary-foreground text-eyebrow shadow-ember hover:scale-[1.02] transition-transform disabled:opacity-60"
+          className="btn-shine w-full sm:w-auto px-8 py-4 bg-ember-gradient text-primary-foreground text-eyebrow shadow-ember hover:scale-[1.02] transition-transform disabled:opacity-60"
         >
           {status === 'sending' ? 'Enviando…' : 'Enviar mensaje →'}
         </button>
@@ -329,6 +329,43 @@ export default function LandingHome() {
       }, 300);
     }
   }, []);
+
+  // Aparición al hacer scroll: observa los .reveal, incluidos los que llegan
+  // después con los datos de Supabase (MutationObserver)
+  const rootRef = useRef(null);
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            io.unobserve(entry.target);
+          }
+        });
+      },
+      { rootMargin: '0px 0px -10% 0px', threshold: 0.1 }
+    );
+    const observeAll = () =>
+      root.querySelectorAll('.reveal:not(.is-visible)').forEach((el) => io.observe(el));
+    observeAll();
+    const mo = new MutationObserver(observeAll);
+    mo.observe(root, { childList: true, subtree: true });
+    return () => {
+      io.disconnect();
+      mo.disconnect();
+    };
+  }, []);
+
+  // Foco de luz de las tarjetas .spotlight: sigue al cursor
+  const handleSpotlight = (e) => {
+    const card = e.target.closest?.('.spotlight');
+    if (!card) return;
+    const r = card.getBoundingClientRect();
+    card.style.setProperty('--mx', `${e.clientX - r.left}px`);
+    card.style.setProperty('--my', `${e.clientY - r.top}px`);
+  };
 
   // Reproductor de Spotify embebido (IFrame API) para el Top 10
   const spotifyEmbedRef = useRef(null);
@@ -524,7 +561,12 @@ export default function LandingHome() {
     : 'https://api.whatsapp.com/send/?phone=56963223241';
 
   return (
-    <main className="lovable-root relative overflow-hidden" onClick={handleAnchorClick}>
+    <main
+      ref={rootRef}
+      className="lovable-root relative overflow-hidden"
+      onClick={handleAnchorClick}
+      onPointerMove={handleSpotlight}
+    >
       {/* NAV */}
       <SiteNav ticker={ticker} />
 
@@ -546,13 +588,21 @@ export default function LandingHome() {
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-10 pb-24 pt-40 w-full">
-          <div className="text-eyebrow mb-8 animate-flicker">Est. 2017 · Blues Chileno</div>
-          <div className="mb-6 max-w-[150px] sm:max-w-[210px] md:max-w-xs flex flex-col items-center drop-shadow-[0_10px_30px_rgba(0,0,0,0.6)]">
+          <div className="hero-in" style={{ '--d': '100ms' }}>
+            <div className="text-eyebrow mb-8 animate-flicker inline-flex items-center gap-3">
+              <span className="h-px w-8 bg-primary" />
+              Est. 2017 · Blues Chileno
+            </div>
+          </div>
+          <div
+            className="hero-in mb-6 max-w-[150px] sm:max-w-[210px] md:max-w-xs flex flex-col items-center drop-shadow-[0_10px_30px_rgba(0,0,0,0.6)]"
+            style={{ '--d': '250ms' }}
+          >
             <img src={logoMark} alt="" className="w-2/3 h-auto invert opacity-95" />
             <img src={logoText} alt="Tren de Medianoche" className="w-full h-auto invert opacity-95 mt-3" />
           </div>
 
-          <div className="flex items-center gap-3 mb-6">
+          <div className="hero-in flex items-center gap-3 mb-6" style={{ '--d': '450ms' }}>
             {slides.map((s, i) => (
               <button
                 key={(s.src || '') + 'dot' + i}
@@ -565,17 +615,18 @@ export default function LandingHome() {
             ))}
           </div>
 
-          <div className="mt-10 grid md:grid-cols-3 gap-8 items-end">
+          <div className="hero-in mt-10 grid md:grid-cols-3 gap-8 items-end" style={{ '--d': '600ms' }}>
             <p className="md:col-span-2 text-base md:text-xl text-muted-foreground max-w-2xl leading-relaxed">
               Composición original e improvisación en español. Blues electroacústico que conecta al
-              ser humano con su entorno, su ciudad y la vida cotidiana.
+              ser humano con su entorno, <span className="text-foreground">su ciudad</span> y{' '}
+              <span className="text-display italic text-primary text-[1.25em]">la vida cotidiana.</span>
             </p>
             <div className="flex gap-4">
               <a
                 href="#lanzamiento"
-                className="flex-1 md:flex-none px-8 py-4 bg-ember-gradient text-primary-foreground text-eyebrow shadow-ember hover:scale-[1.02] transition-transform text-center"
+                className="btn-shine flex-1 md:flex-none px-5 sm:px-8 py-4 whitespace-nowrap bg-ember-gradient text-primary-foreground text-eyebrow shadow-ember hover:scale-[1.02] transition-transform text-center inline-flex items-center justify-center gap-2"
               >
-                Nuevo single
+                <Play size={12} fill="currentColor" className="hidden sm:block" /> Nuevo single
               </a>
               <a
                 href="#contacto"
@@ -587,6 +638,19 @@ export default function LandingHome() {
           </div>
         </div>
 
+        {/* Indicador de scroll (solo pantallas anchas, donde no choca con los botones) */}
+        <a
+          href="#lanzamiento"
+          aria-label="Bajar al último lanzamiento"
+          className="hero-in hidden 2xl:flex absolute right-10 bottom-16 z-10 flex-col items-center gap-3 text-muted-foreground hover:text-primary transition"
+          style={{ '--d': '1000ms' }}
+        >
+          <span className="font-mono text-[10px] uppercase tracking-[0.3em] [writing-mode:vertical-rl]">
+            Scroll
+          </span>
+          <span className="scroll-cue" />
+        </a>
+
         {/* En escritorio la barra va fija bajo el menú (SiteNav) */}
         <NewsTicker items={ticker} className="absolute bottom-0 left-0 right-0 py-3 bg-background/70 lg:hidden" />
       </section>
@@ -594,7 +658,7 @@ export default function LandingHome() {
       {/* ÚLTIMO LANZAMIENTO — destacado */}
       <section id="lanzamiento" className="relative py-24 md:py-32 border-t border-border/40 bg-smoke-gradient">
         <div className="max-w-7xl mx-auto px-6 md:px-10 grid lg:grid-cols-12 gap-10 items-center">
-          <div className="lg:col-span-5">
+          <div className="reveal lg:col-span-5">
             <div className="text-eyebrow mb-4 animate-flicker">▶ Último lanzamiento</div>
             <h2 className="text-display text-6xl md:text-8xl leading-[0.9] mb-6">
               {latestTitle.split(' ')[0]}
@@ -611,7 +675,7 @@ export default function LandingHome() {
                 href={songSpotify}
                 target="_blank"
                 rel="noreferrer"
-                className="px-6 py-3 bg-ember-gradient text-primary-foreground text-eyebrow shadow-ember hover:scale-[1.02] transition-transform inline-flex items-center gap-2"
+                className="btn-shine px-6 py-3 bg-ember-gradient text-primary-foreground text-eyebrow shadow-ember hover:scale-[1.02] transition-transform inline-flex items-center gap-2"
               >
                 Escuchar en Spotify <ArrowUpRight size={14} />
               </a>
@@ -625,8 +689,8 @@ export default function LandingHome() {
               </a>
             </div>
           </div>
-          <div className="lg:col-span-7">
-            <div className="relative shadow-deep rounded-md border border-border/60 bg-card/40 p-5 md:p-6">
+          <div className="reveal lg:col-span-7" style={{ '--d': '150ms' }}>
+            <div className="spotlight relative shadow-deep rounded-md border border-border/60 bg-card/40 p-5 md:p-6">
               <div className="absolute -inset-3 bg-ember-gradient opacity-20 blur-2xl -z-10" />
               <div className="flex flex-col sm:flex-row gap-5 items-center">
                 {songCover && (
@@ -651,15 +715,16 @@ export default function LandingHome() {
       {/* HISTORIA */}
       <section id="historia" className="relative py-32 md:py-48 border-t border-border/40">
         <div className="max-w-6xl mx-auto px-6 md:px-10 grid md:grid-cols-12 gap-12 items-center">
-          <div className="md:col-span-5">
+          <div className="reveal md:col-span-5 group relative overflow-hidden shadow-deep">
             <img
               src={slides[1]?.src || trainNight}
               alt="Tren de Medianoche"
               loading="lazy"
-              className="w-full aspect-square object-cover object-top shadow-deep"
+              className="photo-warm w-full aspect-square object-cover object-top"
             />
+            <div className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-primary/20" />
           </div>
-          <div className="md:col-span-7">
+          <div className="reveal md:col-span-7" style={{ '--d': '150ms' }}>
             <div className="text-eyebrow mb-6">— Historia</div>
             <h2 className="text-display text-5xl md:text-7xl leading-[0.95] mb-8">
               Blues que viaja
@@ -692,7 +757,7 @@ export default function LandingHome() {
       {/* MÚSICA */}
       <section id="musica" className="relative py-32 md:py-48 bg-smoke-gradient border-t border-border/40">
         <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+          <div className="reveal flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
             <div>
               <div className="text-eyebrow mb-4">Discografía</div>
               <h2 className="text-display text-5xl md:text-7xl">
@@ -705,16 +770,16 @@ export default function LandingHome() {
           </div>
 
           <div className="grid lg:grid-cols-5 gap-8">
-            <div className="lg:col-span-2 min-h-[420px]">
+            <div className="reveal lg:col-span-2 min-h-[420px] group overflow-hidden shadow-deep">
               <img
                 src={slides[1]?.src || slides[0]?.src || guitarImg}
                 alt="Tren de Medianoche"
                 loading="lazy"
-                className="w-full h-full object-cover object-top shadow-deep"
+                className="photo-warm w-full h-full object-cover object-top"
               />
             </div>
 
-            <div className="lg:col-span-3">
+            <div className="reveal lg:col-span-3" style={{ '--d': '150ms' }}>
               <div className="text-eyebrow mb-4">Canciones · escúchalas</div>
               <ol className="divide-y divide-border/60 border-y border-border/60">
                 {trackList.map((t, i) => {
@@ -743,8 +808,22 @@ export default function LandingHome() {
                           <Play size={14} fill="currentColor" />
                         )}
                       </button>
-                      <span className="shrink-0 w-6 font-mono text-xs text-primary">{num}</span>
-                      <span className="flex-1 min-w-0 text-display text-xl md:text-2xl truncate">
+                      <span className="shrink-0 w-6 font-mono text-xs text-primary">
+                        {isPlaying ? (
+                          <span className="eq" aria-hidden="true">
+                            <span />
+                            <span />
+                            <span />
+                          </span>
+                        ) : (
+                          num
+                        )}
+                      </span>
+                      <span
+                        className={`flex-1 min-w-0 text-display text-xl md:text-2xl truncate transition-colors group-hover:text-primary ${
+                          isPlaying ? 'text-primary italic' : ''
+                        }`}
+                      >
                         {t.title}
                       </span>
                       <span className="shrink-0 font-mono text-xs text-muted-foreground">
@@ -833,7 +912,7 @@ export default function LandingHome() {
       {/* BANDA */}
       <section id="banda" className="relative py-32 md:py-48 border-t border-border/40">
         <div className="max-w-7xl mx-auto px-6 md:px-10 grid md:grid-cols-12 gap-12">
-          <div className="md:col-span-5">
+          <div className="reveal md:col-span-5">
             <div className="text-eyebrow mb-4">La banda</div>
             <h2 className="text-display text-5xl md:text-6xl mb-8">
               Tres músicos,
@@ -841,18 +920,22 @@ export default function LandingHome() {
               <span className="italic text-primary">un mismo tren.</span>
             </h2>
             <div className="grid grid-cols-2 gap-4">
-              <img
-                src={slides[0]?.src || guitarImg}
-                alt="Tren de Medianoche"
-                loading="lazy"
-                className="w-full aspect-square object-cover object-top shadow-deep"
-              />
-              <img
-                src={slides[2]?.src || harmonicaImg}
-                alt="Tren de Medianoche"
-                loading="lazy"
-                className="w-full aspect-square object-cover object-top shadow-deep translate-y-8"
-              />
+              <div className="group overflow-hidden shadow-deep">
+                <img
+                  src={slides[0]?.src || guitarImg}
+                  alt="Tren de Medianoche"
+                  loading="lazy"
+                  className="photo-warm w-full aspect-square object-cover object-top"
+                />
+              </div>
+              <div className="group overflow-hidden shadow-deep translate-y-8">
+                <img
+                  src={slides[2]?.src || harmonicaImg}
+                  alt="Tren de Medianoche"
+                  loading="lazy"
+                  className="photo-warm w-full aspect-square object-cover object-top"
+                />
+              </div>
             </div>
           </div>
 
@@ -860,14 +943,17 @@ export default function LandingHome() {
             {memberList.map((m, i) => (
               <div
                 key={m.id ?? m.name}
-                className="group border border-border/60 p-6 md:p-8 hover:border-primary/60 hover:bg-primary/5 transition-all"
+                className="reveal spotlight group border border-border/60 p-6 md:p-8 hover:border-primary/40 transition-colors"
+                style={{ '--d': `${i * 120}ms` }}
               >
                 <div className="flex items-baseline justify-between gap-4 flex-wrap">
                   <div className="flex items-baseline gap-4">
                     <span className="font-mono text-xs text-primary">
                       {String(i + 1).padStart(2, '0')}
                     </span>
-                    <h3 className="text-display text-3xl md:text-4xl">{m.name}</h3>
+                    <h3 className="text-display text-3xl md:text-4xl group-hover:italic group-hover:text-primary transition-colors">
+                      {m.name}
+                    </h3>
                   </div>
                   <span className="text-eyebrow">{m.role}</span>
                 </div>
@@ -891,7 +977,7 @@ export default function LandingHome() {
       {/* FECHAS EN VIVO */}
       <section id="fechas" className="relative py-32 md:py-40 bg-smoke-gradient border-t border-border/40">
         <div className="max-w-6xl mx-auto px-6 md:px-10">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-14 gap-6">
+          <div className="reveal flex flex-col md:flex-row md:items-end justify-between mb-14 gap-6">
             <div>
               <div className="text-eyebrow mb-4">Agenda</div>
               <h2 className="text-display text-5xl md:text-7xl">
@@ -901,7 +987,7 @@ export default function LandingHome() {
           </div>
 
           {events.upcoming.length === 0 ? (
-            <div className="border border-dashed border-border/60 p-12 md:p-16 text-center">
+            <div className="reveal spotlight border border-dashed border-border/60 p-12 md:p-16 text-center">
               <Calendar className="mx-auto mb-6 text-primary" size={40} strokeWidth={1.2} />
               <h3 className="text-display text-3xl md:text-4xl mb-3">
                 Estamos afinando la próxima parada.
@@ -994,7 +1080,7 @@ export default function LandingHome() {
       {/* BLOG */}
       <section id="blog" className="relative py-32 md:py-40 border-t border-border/40">
         <div className="max-w-6xl mx-auto px-6 md:px-10">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-14 gap-6">
+          <div className="reveal flex flex-col md:flex-row md:items-end justify-between mb-14 gap-6">
             <div>
               <div className="text-eyebrow mb-4">Bitácora</div>
               <h2 className="text-display text-5xl md:text-7xl">
@@ -1028,11 +1114,12 @@ export default function LandingHome() {
             </div>
           ) : (
             <div className="grid md:grid-cols-3 gap-6">
-              {posts.slice(0, 6).map((p) => (
+              {posts.slice(0, 6).map((p, i) => (
                 <a
                   key={p.id}
                   href="#/blog"
-                  className="h-[13.5rem] overflow-hidden border border-border/60 p-6 hover:border-primary/60 hover:bg-primary/5 transition group flex flex-col"
+                  className="reveal spotlight h-[13.5rem] overflow-hidden border border-border/60 p-6 hover:border-primary/40 group flex flex-col"
+                  style={{ '--d': `${(i % 3) * 120}ms` }}
                 >
                   <div className="font-mono text-xs text-primary mb-2">
                     {formatDate(p.created_at)}
@@ -1056,7 +1143,7 @@ export default function LandingHome() {
       {/* PRÓXIMO LANZAMIENTO / MARQUEE */}
       <section className="relative py-24 md:py-32 bg-smoke-gradient border-t border-border/40">
         <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <div className="flex items-baseline justify-between mb-6 gap-6 flex-wrap">
+          <div className="reveal flex items-baseline justify-between mb-6 gap-6 flex-wrap">
             <div>
               <div className="text-eyebrow mb-3">▶ Galería</div>
               <h2 className="text-display text-4xl md:text-5xl">Del bar a las vías.</h2>
@@ -1065,14 +1152,14 @@ export default function LandingHome() {
               Postales del tren mientras seguimos rodando por los escenarios.
             </p>
           </div>
-          <div className="relative overflow-hidden border-y border-border/60 py-6">
+          <div className="hover-pause relative overflow-hidden border-y border-border/60 py-6">
             <div className="flex gap-6 w-max animate-marquee">
               {[...slides, ...slides, ...slides, ...slides].map((s, i) => (
                 <div
                   key={(s.src || '') + 'm' + i}
-                  className="relative w-[280px] md:w-[360px] aspect-[4/5] shrink-0 shadow-deep"
+                  className="group relative w-[280px] md:w-[360px] aspect-[4/5] shrink-0 shadow-deep overflow-hidden"
                 >
-                  <img src={s.src} alt={s.alt} className="w-full h-full object-cover object-top" loading="lazy" />
+                  <img src={s.src} alt={s.alt} className="photo-warm w-full h-full object-cover object-top" loading="lazy" />
                   <div className="absolute inset-0 bg-gradient-to-t from-background/70 to-transparent" />
                   <div className="absolute bottom-3 left-3 font-mono text-[10px] text-primary uppercase tracking-[0.25em]">
                     {s.caption}
@@ -1090,17 +1177,18 @@ export default function LandingHome() {
       {novedades.length > 0 && (
         <section id="noticias" className="relative py-32 md:py-40 border-t border-border/40">
           <div className="max-w-6xl mx-auto px-6 md:px-10">
-            <div className="mb-14">
+            <div className="reveal mb-14">
               <div className="text-eyebrow mb-4">Novedades</div>
               <h2 className="text-display text-5xl md:text-7xl">
                 Lo último del <span className="italic text-primary">tren.</span>
               </h2>
             </div>
             <div className="grid md:grid-cols-2 gap-4">
-              {novedades.map((n) => (
+              {novedades.map((n, i) => (
                 <article
                   key={n.key}
-                  className="border border-border/60 p-6 md:p-8 hover:border-primary/60 hover:bg-primary/5 transition-all flex gap-5"
+                  className="reveal spotlight border border-border/60 p-6 md:p-8 hover:border-primary/40 flex gap-5"
+                  style={{ '--d': `${(i % 2) * 120}ms` }}
                 >
                   {n.event && (
                     <div className="shrink-0 w-16 text-center border-r border-border/60 pr-5">
@@ -1154,7 +1242,7 @@ export default function LandingHome() {
             </div>
             <button
               onClick={copyDonation}
-              className="mt-8 px-8 py-4 bg-ember-gradient text-primary-foreground text-eyebrow shadow-ember hover:scale-[1.02] transition-transform"
+              className="btn-shine mt-8 px-8 py-4 bg-ember-gradient text-primary-foreground text-eyebrow shadow-ember hover:scale-[1.02] transition-transform"
             >
               Copiar datos
             </button>
@@ -1165,7 +1253,7 @@ export default function LandingHome() {
       {/* CONTACTO */}
       <section id="contacto" className="relative py-32 md:py-40 border-t border-border/40">
         <div className="max-w-5xl mx-auto px-6 md:px-10">
-          <div className="text-center mb-14">
+          <div className="reveal text-center mb-14">
             <div className="text-eyebrow mb-6">Contacto</div>
             <h2 className="text-display text-5xl md:text-7xl mb-6">
               ¿Nos <span className="italic text-primary">subimos</span> al tren?
@@ -1177,26 +1265,26 @@ export default function LandingHome() {
           </div>
 
           <div className="grid lg:grid-cols-5 gap-10">
-            <div className="lg:col-span-3 border border-border/60 p-6 md:p-10 bg-background/40">
+            <div className="reveal spotlight lg:col-span-3 border border-border/60 p-6 md:p-10 bg-background/40">
               <ContactForm />
             </div>
 
-            <aside className="lg:col-span-2 space-y-3">
-              <a href={`mailto:${emailAddr}`} className="block p-5 border border-border/60 hover:border-primary transition group">
+            <aside className="reveal lg:col-span-2 space-y-3" style={{ '--d': '150ms' }}>
+              <a href={`mailto:${emailAddr}`} className="spotlight block p-5 border border-border/60 hover:border-primary/60 transition group">
                 <div className="text-eyebrow mb-1">Email</div>
                 <div className="font-mono text-xs md:text-sm break-all group-hover:text-primary transition">
                   {emailAddr}
                 </div>
               </a>
               {contact.phone && (
-                <a href={whatsappUrl} target="_blank" rel="noreferrer" className="block p-5 border border-border/60 hover:border-primary transition group">
+                <a href={whatsappUrl} target="_blank" rel="noreferrer" className="spotlight block p-5 border border-border/60 hover:border-primary/60 transition group">
                   <div className="text-eyebrow mb-1">WhatsApp</div>
                   <div className="font-mono text-sm group-hover:text-primary transition inline-flex items-center gap-2">
                     <MessageCircle size={14} /> +{contact.phone}
                   </div>
                 </a>
               )}
-              <a href={SPOTIFY_URL} target="_blank" rel="noreferrer" className="block p-5 border border-border/60 hover:border-primary transition group">
+              <a href={SPOTIFY_URL} target="_blank" rel="noreferrer" className="spotlight block p-5 border border-border/60 hover:border-primary/60 transition group">
                 <div className="text-eyebrow mb-1">Escúchanos</div>
                 <div className="font-mono text-sm group-hover:text-primary transition">
                   Spotify · Tren de Medianoche

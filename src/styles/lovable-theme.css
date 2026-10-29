@@ -180,3 +180,214 @@
 @utility animate-marquee {
   animation: marquee-x 90s linear infinite;
 }
+
+/* ---------------------------------------------------------------------------
+   Micro-interacciones (patrones tipo 21st.dev, sin dependencias extra)
+   --------------------------------------------------------------------------- */
+
+::selection {
+  background: oklch(0.72 0.16 55 / 0.35);
+  color: var(--foreground);
+}
+
+.lovable-root :focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 3px;
+}
+
+/* Aparición al hacer scroll: LandingHome añade .is-visible con IntersectionObserver */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  filter: blur(6px);
+  transition:
+    opacity 900ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 900ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 900ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--d, 0ms);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+/* Entrada escalonada del hero al cargar */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+.hero-in {
+  animation: rise-in 1100ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--d, 0ms);
+}
+
+/* Tarjeta con foco de luz que sigue al cursor (--mx / --my desde JS) */
+.spotlight {
+  position: relative;
+  isolation: isolate;
+}
+.spotlight::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 400ms ease;
+  background: radial-gradient(
+    420px circle at var(--mx, 50%) var(--my, 50%),
+    oklch(0.72 0.16 55 / 0.14),
+    transparent 45%
+  );
+}
+.spotlight::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 400ms ease;
+  padding: 1px;
+  background: radial-gradient(
+    260px circle at var(--mx, 50%) var(--my, 50%),
+    oklch(0.78 0.13 80 / 0.8),
+    transparent 60%
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+.spotlight:hover::before,
+.spotlight:hover::after {
+  opacity: 1;
+}
+
+/* Botón con destello que cruza al pasar el mouse */
+.btn-shine {
+  position: relative;
+  overflow: hidden;
+}
+.btn-shine::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-120%) skewX(-20deg);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    oklch(1 0 0 / 0.35),
+    transparent
+  );
+  transition: transform 800ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.btn-shine:hover::after {
+  transform: translateX(120%) skewX(-20deg);
+}
+
+/* Ecualizador junto al tema que está sonando */
+@keyframes eq {
+  0%,
+  100% {
+    transform: scaleY(0.3);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+.eq {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 14px;
+}
+.eq span {
+  width: 3px;
+  height: 100%;
+  background: var(--primary);
+  transform-origin: bottom;
+  animation: eq 900ms ease-in-out infinite;
+}
+.eq span:nth-child(2) {
+  animation-delay: -300ms;
+}
+.eq span:nth-child(3) {
+  animation-delay: -600ms;
+}
+
+/* Indicador de scroll del hero */
+@keyframes scroll-cue {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(200%);
+  }
+}
+.scroll-cue {
+  position: relative;
+  width: 1px;
+  height: 56px;
+  overflow: hidden;
+  background: oklch(0.94 0.02 70 / 0.15);
+}
+.scroll-cue::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  height: 40%;
+  background: var(--primary);
+  animation: scroll-cue 2.2s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+/* Las marquesinas se detienen al pasar el mouse */
+.hover-pause:hover .animate-marquee {
+  animation-play-state: paused;
+}
+
+/* Fotos: algo de tono sepia que se “revela” al pasar el mouse */
+.photo-warm {
+  filter: grayscale(0.35) sepia(0.15) contrast(1.05);
+  transition:
+    filter 700ms ease,
+    transform 900ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.group:hover .photo-warm,
+.photo-warm:hover {
+  filter: none;
+  transform: scale(1.03);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal,
+  .hero-in {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    animation: none;
+    transition: none;
+  }
+  .animate-slow-pan,
+  .animate-flicker,
+  .animate-marquee,
+  .eq span,
+  .scroll-cue::after {
+    animation: none;
+  }
+  .btn-shine::after {
+    display: none;
+  }
+}
