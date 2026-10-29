@@ -120,7 +120,7 @@ export default function AdminPanel() {
         )}
 
         <aside
-          className={`fixed top-16 bottom-0 left-0 z-40 w-64 shrink-0 overflow-y-auto border-r border-border/60 bg-background transition-transform duration-300 lg:sticky lg:h-[calc(100vh-4rem)] lg:translate-x-0 ${
+          className={`subtle-scroll fixed top-16 bottom-0 left-0 z-40 w-64 shrink-0 overflow-y-auto border-r border-border/60 bg-background transition-transform duration-300 lg:sticky lg:h-[calc(100vh-4rem)] lg:translate-x-0 ${
             menuOpen ? 'translate-x-0' : '-translate-x-full'
           }`}
         >

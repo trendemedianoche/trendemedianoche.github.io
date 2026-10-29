@@ -113,7 +113,7 @@ export default function ExtraNewsAdmin() {
       <div className="admin-card">
         <div className="admin-card-header">
           <h2 className="admin-card-title">
-            {editing ? 'Editar' : ' Nueva Extra'}
+            {editing ? 'Editar aviso' : 'Nuevo aviso'}
           </h2>
         </div>
 
@@ -189,7 +189,7 @@ export default function ExtraNewsAdmin() {
       {/* LISTADO */}
       <div className="admin-card">
         <div className="admin-card-header">
-          <h2 className="admin-card-title"> Extra ({items.length})</h2>
+          <h2 className="admin-card-title">Avisos ({items.length})</h2>
         </div>
 
         {loading ? (

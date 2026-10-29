@@ -77,7 +77,7 @@ export default function DonationAdmin() {
   return (
     <div className="admin-card">
       <div className="admin-card-header">
-        <h2 className="admin-card-title">💰 Datos de Donación ({fields.length})</h2>
+        <h2 className="admin-card-title">Datos de transferencia ({fields.length})</h2>
       </div>
 
       {loading ? (
@@ -136,7 +136,7 @@ export default function DonationAdmin() {
                     </>
                   ) : (
                     <button
-                      className="btn btn-primary btn-small"
+                      className="btn btn-secondary btn-small"
                       onClick={() => startEdit(f)}
                       disabled={loading || editingId !== null}
                       title="Editar"

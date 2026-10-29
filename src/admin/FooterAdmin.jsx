@@ -118,7 +118,7 @@ export default function FooterAdmin() {
   return (
     <div className="admin-card">
       <div className="admin-card-header">
-        <h2 className="admin-card-title">Configuración del Footer</h2>
+        <h2 className="admin-card-title">Pie de página</h2>
       </div>
 
       {loading ? (
@@ -189,7 +189,7 @@ export default function FooterAdmin() {
                         </>
                       ) : (
                         <button
-                          className="btn btn-primary btn-small"
+                          className="btn btn-secondary btn-small"
                           onClick={() => startEdit(item)}
                           disabled={loading || editingId !== null}
                           title="Editar"

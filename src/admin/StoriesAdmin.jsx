@@ -36,7 +36,7 @@ export default function StoriesAdmin() {
   return (
     <div className="admin-card">
       <div className="admin-card-header">
-        <h2 className="admin-card-title">Historias de Instagram ({stories.length})</h2>
+        <h2 className="admin-card-title">Capturadas ({stories.length})</h2>
         <p className="form-hint">
           Se capturan solas cada 3 horas. La portada muestra las de los últimos {STORIES_DAYS} días.
         </p>

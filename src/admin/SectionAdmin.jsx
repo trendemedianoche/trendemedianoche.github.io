@@ -2,6 +2,26 @@ import { useEffect, useState } from 'react';
 import { ArrowDown, ArrowUp, Eye, EyeOff } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
+// Nombre legible cuando la sección no trae etiqueta propia
+const SECTION_NAMES = {
+  header: 'Portada (inicio)',
+  hero: 'Portada (inicio)',
+  gallery: 'Galería',
+  about: 'Historia',
+  music: 'Música',
+  releases: 'Discografía',
+  band: 'Banda',
+  members: 'Banda',
+  agenda: 'Fechas',
+  events: 'Fechas',
+  news: 'Noticias',
+  blog: 'Blog',
+  donation: 'Apoyo / donaciones',
+  donations: 'Apoyo / donaciones',
+  contact: 'Contacto',
+  footer: 'Pie de página'
+};
+
 export default function SectionAdmin() {
   const [sections, setSections] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -67,7 +87,7 @@ export default function SectionAdmin() {
   return (
     <div className="admin-card">
       <div className="admin-card-header">
-        <h2 className="admin-card-title"> Secciones del Sitio ({sections.length})</h2>
+        <h2 className="admin-card-title">Orden y visibilidad ({sections.length})</h2>
       </div>
 
       {loading ? (
@@ -89,9 +109,9 @@ export default function SectionAdmin() {
             >
               <div>
                 <strong style={{ fontSize: '1.05rem' }}>
-                  {section.label}
+                  {section.label || SECTION_NAMES[section.key] || section.key}
                 </strong>
-                <p style={{ color: 'var(--muted-foreground)', fontSize: '0.85rem', margin: '0.3rem 0 0 0' }}>
+                <p style={{ color: 'var(--muted-foreground)', fontFamily: 'var(--font-mono)', fontSize: '0.7rem', margin: '0.3rem 0 0 0' }}>
                   {section.key}
                 </p>
                 {!section.active && <span className="badge badge-inactive">Inactivo</span>}
@@ -120,6 +140,7 @@ export default function SectionAdmin() {
                   className="btn btn-success btn-small"
                   onClick={() => toggleActive(section)}
                   disabled={loading}
+                  title={section.active ? 'Ocultar en la portada' : 'Mostrar en la portada'}
                 >
                   {section.active ? <Eye size={14} /> : <EyeOff size={14} />}
                 </button>

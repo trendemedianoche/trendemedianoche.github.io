@@ -37,7 +37,7 @@ export default function ChatAdmin() {
     <div>
       <div className="admin-card">
         <div className="admin-card-header">
-          <h2 className="admin-card-title"> Mensajes de Chat</h2>
+          <h2 className="admin-card-title">Bandeja de entrada</h2>
         </div>
 
         {loading ? (

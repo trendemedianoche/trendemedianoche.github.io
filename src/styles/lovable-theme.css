@@ -28,6 +28,9 @@
 }
 
 :root {
+  /* Todo el sitio es oscuro: controles nativos (fechas, selects) en modo oscuro */
+  color-scheme: dark;
+
   /* Deep smoky midnight with warm amber/ember accents — Chicago blues club at 2am */
   --background: oklch(0.14 0.012 40);
   --foreground: oklch(0.94 0.02 70);
@@ -500,4 +503,22 @@
 }
 ::-webkit-scrollbar-corner {
   background: transparent;
+}
+
+/* Scroll discreto (menú lateral del admin): la barra aparece solo al pasar el mouse */
+.subtle-scroll::-webkit-scrollbar-thumb {
+  background: transparent;
+  background-clip: padding-box;
+}
+.subtle-scroll:hover::-webkit-scrollbar-thumb {
+  background: oklch(0.72 0.16 55 / 0.35);
+  background-clip: padding-box;
+}
+@supports not selector(::-webkit-scrollbar) {
+  .subtle-scroll {
+    scrollbar-color: transparent transparent;
+  }
+  .subtle-scroll:hover {
+    scrollbar-color: oklch(0.72 0.16 55 / 0.45) transparent;
+  }
 }
