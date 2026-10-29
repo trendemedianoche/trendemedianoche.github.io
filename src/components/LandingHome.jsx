@@ -1565,14 +1565,16 @@ export default function LandingHome() {
           <div className="absolute inset-0 bg-spotlight" />
         </div>
 
-        {/* Locomotora del logo como sello grande (escritorio) */}
-        <img
-          src={logoMark}
-          alt=""
+        {/* Locomotora del logo como sello grande (escritorio). La animación va en
+            el contenedor: hero-in termina en opacidad 1 y anularía la del logo.
+            Con mix-blend-screen solo se ven las líneas claras, como en el menú. */}
+        <div
           aria-hidden="true"
-          className="hero-in hidden xl:block absolute right-[6%] top-32 w-[22rem] invert opacity-[0.08] pointer-events-none"
+          className="hero-in hidden xl:block absolute right-[6%] top-32 w-[22rem] mix-blend-screen pointer-events-none"
           style={{ '--d': '700ms' }}
-        />
+        >
+          <img src={logoMark} alt="" className="w-full invert opacity-30" />
+        </div>
 
         <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-10 pt-36 lg:pt-44 pb-10 md:pb-14 w-full">
           <div
