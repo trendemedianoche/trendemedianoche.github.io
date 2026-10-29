@@ -716,7 +716,7 @@ export default function LandingHome() {
     lanzamiento: (
       <section
         id="lanzamiento"
-        className="relative py-24 md:py-32 border-t border-border/40 bg-smoke-gradient"
+        className="relative py-16 md:py-24 border-t border-border/40 bg-smoke-gradient"
       >
         <div className="max-w-7xl mx-auto px-6 md:px-10 grid lg:grid-cols-12 gap-10 items-center">
           <div className="reveal lg:col-span-5">
@@ -788,7 +788,7 @@ export default function LandingHome() {
     historia: (
       <section
         id="historia"
-        className="relative py-32 md:py-48 border-t border-border/40"
+        className="relative py-20 md:py-28 border-t border-border/40"
       >
         <SectionNum n={num.historia} />
         <div className="max-w-6xl mx-auto px-6 md:px-10 grid md:grid-cols-12 gap-12 items-center">
@@ -833,11 +833,11 @@ export default function LandingHome() {
     musica: (
       <section
         id="musica"
-        className="relative py-32 md:py-48 bg-smoke-gradient border-t border-border/40"
+        className="relative py-20 md:py-28 bg-smoke-gradient border-t border-border/40"
       >
         <SectionNum n={num.musica} />
         <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <div className="reveal flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+          <div className="reveal flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
             <div>
               <Eyebrow n={num.musica} className="mb-4">
                 {T.musica.eyebrow}
@@ -944,7 +944,7 @@ export default function LandingHome() {
             <div ref={spotifyEmbedRef} />
           </div>
 
-          <div className="mt-24">
+          <div className="mt-16">
             <div className="flex items-center justify-between gap-4 mb-10">
               <div className="text-eyebrow">Línea de tiempo</div>
               <div className="text-eyebrow text-muted-foreground hidden md:block">
@@ -1017,7 +1017,7 @@ export default function LandingHome() {
     banda: (
       <section
         id="banda"
-        className="relative py-32 md:py-48 border-t border-border/40"
+        className="relative py-20 md:py-28 border-t border-border/40"
       >
         <SectionNum n={num.banda} />
         <div className="max-w-7xl mx-auto px-6 md:px-10 grid md:grid-cols-12 gap-12">
@@ -1098,11 +1098,11 @@ export default function LandingHome() {
     fechas: (
       <section
         id="fechas"
-        className="relative py-32 md:py-40 bg-smoke-gradient border-t border-border/40"
+        className="relative py-20 md:py-28 bg-smoke-gradient border-t border-border/40"
       >
         <SectionNum n={num.fechas} />
         <div className="max-w-6xl mx-auto px-6 md:px-10">
-          <div className="reveal flex flex-col md:flex-row md:items-end justify-between mb-14 gap-6">
+          <div className="reveal flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
             <div>
               <Eyebrow n={num.fechas} className="mb-4">
                 {T.fechas.eyebrow}
@@ -1241,11 +1241,11 @@ export default function LandingHome() {
     blog: (
       <section
         id="blog"
-        className="relative py-32 md:py-40 border-t border-border/40"
+        className="relative py-20 md:py-28 border-t border-border/40"
       >
         <SectionNum n={num.blog} />
         <div className="max-w-6xl mx-auto px-6 md:px-10">
-          <div className="reveal flex flex-col md:flex-row md:items-end justify-between mb-14 gap-6">
+          <div className="reveal flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
             <div>
               <Eyebrow n={num.blog} className="mb-4">
                 {T.blog.eyebrow}
@@ -1319,7 +1319,7 @@ export default function LandingHome() {
     ),
 
     galeria: (
-      <section className="relative py-24 md:py-32 bg-smoke-gradient border-t border-border/40">
+      <section className="relative py-16 md:py-24 bg-smoke-gradient border-t border-border/40">
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <div className="reveal flex items-baseline justify-between mb-6 gap-6 flex-wrap">
             <div>
@@ -1362,10 +1362,10 @@ export default function LandingHome() {
     noticias: novedades.length > 0 && (
       <section
         id="noticias"
-        className="relative py-32 md:py-40 border-t border-border/40"
+        className="relative py-20 md:py-28 border-t border-border/40"
       >
         <div className="max-w-6xl mx-auto px-6 md:px-10">
-          <div className="reveal mb-14">
+          <div className="reveal mb-12">
             <Eyebrow n={num.noticias}>{T.noticias.eyebrow}</Eyebrow>
             <h2 className="text-display text-5xl md:text-7xl">
               <RichTitle text={T.noticias.title} />
@@ -1428,7 +1428,7 @@ export default function LandingHome() {
     apoyo: visibleDonation.length > 0 && (
       <section
         id="apoyo"
-        className="relative py-32 md:py-40 bg-smoke-gradient border-t border-border/40"
+        className="relative py-20 md:py-28 bg-smoke-gradient border-t border-border/40"
       >
         <div className="max-w-4xl mx-auto px-6 md:px-10 text-center">
           <Eyebrow n={num.apoyo} className="mb-6">
@@ -1463,11 +1463,11 @@ export default function LandingHome() {
     contacto: (
       <section
         id="contacto"
-        className="relative py-32 md:py-40 border-t border-border/40"
+        className="relative py-20 md:py-28 border-t border-border/40"
       >
         <SectionNum n={num.contacto} />
         <div className="max-w-5xl mx-auto px-6 md:px-10">
-          <div className="reveal text-center mb-14">
+          <div className="reveal text-center mb-12">
             <Eyebrow n={num.contacto} className="mb-6">
               {T.contacto.eyebrow}
             </Eyebrow>
