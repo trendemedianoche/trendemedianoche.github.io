@@ -459,6 +459,12 @@
   border-bottom: 1px solid var(--border);
   margin-bottom: 2rem;
   overflow-x: auto;
+  /* Sin esto el margin-bottom: -1px de los botones genera scroll vertical */
+  overflow-y: hidden;
+  scrollbar-width: none;
+}
+.admin-tabs::-webkit-scrollbar {
+  display: none;
 }
 
 .admin-tabs button {
