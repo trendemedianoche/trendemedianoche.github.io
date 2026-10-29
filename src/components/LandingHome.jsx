@@ -1115,7 +1115,7 @@ export default function LandingHome() {
                 onMouseMove={onDragMove}
                 onMouseUp={onDragEnd}
                 onMouseLeave={onDragEnd}
-                className="overflow-x-auto pt-4 pb-4 cursor-grab active:cursor-grabbing select-none"
+                className="timeline-scroll overflow-x-auto pt-4 pb-8 cursor-grab active:cursor-grabbing select-none"
               >
                 <div className="relative flex gap-6 min-w-max pr-10">
                   {/* Línea horizontal continua */}

@@ -440,3 +440,31 @@
 .ticket-stub::after {
   bottom: -10px;
 }
+
+/* Barra de desplazamiento de la línea de tiempo: riel fino y pulgar ámbar */
+/* Firefox (en Chrome, scrollbar-color anularía los estilos ::-webkit-scrollbar) */
+@supports not selector(::-webkit-scrollbar) {
+  .timeline-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary) oklch(0.94 0.02 70 / 0.08);
+  }
+}
+.timeline-scroll::-webkit-scrollbar {
+  height: 4px;
+}
+.timeline-scroll::-webkit-scrollbar-track {
+  background: oklch(0.94 0.02 70 / 0.08);
+  border-radius: 9999px;
+}
+.timeline-scroll::-webkit-scrollbar-thumb {
+  background: var(--gradient-ember);
+  border-radius: 9999px;
+}
+.timeline-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--brass);
+}
+.timeline-scroll::-webkit-scrollbar-button {
+  display: none;
+  width: 0;
+  height: 0;
+}
