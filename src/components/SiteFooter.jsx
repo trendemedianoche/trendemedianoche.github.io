@@ -38,7 +38,7 @@ export default function SiteFooter() {
 
   return (
     <footer className="border-t border-border/40 pt-16 pb-10 bg-background">
-      <div className="max-w-7xl mx-auto px-6 md:px-10 grid gap-10 sm:grid-cols-2 md:grid-cols-4">
+      <div className="max-w-7xl mx-auto px-6 md:px-10 grid gap-10 sm:grid-cols-2 lg:grid-cols-[1fr_1.2fr_1.5fr_1fr]">
         {/* Logo */}
         <div className="flex flex-col items-center sm:items-start gap-4">
           <img
@@ -56,8 +56,8 @@ export default function SiteFooter() {
           </p>
         </div>
 
-        {/* Contacto */}
-        <div className="text-center sm:text-left">
+        {/* Contacto (container-type: el correo ajusta su tamaño al ancho de la columna) */}
+        <div className="text-center sm:text-left [container-type:inline-size]">
           <div className="text-eyebrow mb-4">Contacto</div>
           <div className="space-y-3 text-sm inline-flex flex-col items-center sm:items-start">
             {contact.phone && (
@@ -72,9 +72,9 @@ export default function SiteFooter() {
             )}
             <a
               href={`mailto:${emailAddr}`}
-              className="flex items-center gap-2 text-muted-foreground hover:text-primary transition break-all"
+              className="flex items-center gap-2 text-muted-foreground hover:text-primary transition whitespace-nowrap text-[length:min(0.875rem,calc(5.4cqi-1px))]"
             >
-              <Mail size={15} /> {emailAddr}
+              <Mail size={15} className="shrink-0" /> {emailAddr}
             </a>
           </div>
         </div>

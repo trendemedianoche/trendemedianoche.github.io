@@ -356,7 +356,7 @@ function ContactForm() {
         <button
           type="submit"
           disabled={status === 'sending'}
-          className="btn-shine w-full sm:w-auto px-8 py-4 bg-ember-gradient text-primary-foreground text-eyebrow shadow-ember hover:scale-[1.02] transition-transform disabled:opacity-60"
+          className="btn-shine w-full sm:w-auto px-8 py-4 whitespace-nowrap shrink-0 bg-ember-gradient text-primary-foreground text-eyebrow shadow-ember hover:scale-[1.02] transition-transform disabled:opacity-60"
         >
           {status === 'sending' ? 'Enviando…' : 'Enviar mensaje →'}
         </button>
