@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import DOMPurify from 'dompurify';
 import {
   Instagram,
@@ -28,6 +28,8 @@ import { getTransferData } from '../services/donationService';
 import { getReleases } from '../services/releasesService';
 import { getTopTracks } from '../services/topTracksService';
 import { getBandMembers } from '../services/bandMembersService';
+import { getSiteSections } from '../services/siteSectionsService';
+import { resolveSections } from '../lib/landingSections';
 import {
   getFooterContactData,
   getFooterSocialNetworks
@@ -365,10 +367,44 @@ function ContactForm() {
 
 // Número de sección gigante, solo contorno, de fondo
 function SectionNum({ n }) {
+  if (!n) return null;
   return (
     <span aria-hidden="true" className="section-num">
       {n}
     </span>
+  );
+}
+
+// Título editable: *texto* va en cursiva ámbar y cada salto de línea parte el título
+function RichTitle({ text = '' }) {
+  return text.split('\n').map((line, li, lines) => (
+    <Fragment key={li}>
+      {line.split(/\*([^*]+)\*/).map((part, pi) =>
+        pi % 2 === 1 ? (
+          <span key={pi} className="italic text-primary">
+            {part}
+          </span>
+        ) : (
+          part
+        )
+      )}
+      {li < lines.length - 1 && <br />}
+    </Fragment>
+  ));
+}
+
+// Etiqueta de sección con su número (si la sección va numerada)
+function Eyebrow({ n, children, className = 'mb-4' }) {
+  return (
+    <div className={`text-eyebrow ${className}`}>
+      {n && (
+        <>
+          <span className="text-muted-foreground">{n}</span>{' '}
+          <span className="inline-block h-px w-8 bg-primary/60 align-middle mx-2" />{' '}
+        </>
+      )}
+      {children}
+    </div>
   );
 }
 
@@ -517,6 +553,7 @@ export default function LandingHome() {
   const [membersData, setMembersData] = useState([]);
   const [newsItems, setNewsItems] = useState([]);
   const [donationFields, setDonationFields] = useState([]);
+  const [sectionRows, setSectionRows] = useState([]);
 
   useEffect(() => {
     getGalleryImages()
@@ -558,7 +595,20 @@ export default function LandingHome() {
     getBandMembers()
       .then(setMembersData)
       .catch(() => {});
+    getSiteSections()
+      .then(setSectionRows)
+      .catch(() => {});
   }, []);
+
+  // Orden, visibilidad y textos de las secciones (admin → Secciones)
+  const { order: sectionOrder, text: T } = resolveSections(sectionRows);
+  // Numeración 01, 02… según el orden visible
+  const num = {};
+  sectionOrder
+    .filter((k) => T[k].numbered)
+    .forEach((k, i) => {
+      num[k] = String(i + 1).padStart(2, '0');
+    });
 
   // Datos con respaldo local si la tabla viene vacía
   const releaseList = releasesData.length > 0 ? releasesData : releases;
@@ -661,186 +711,9 @@ export default function LandingHome() {
     ? `https://wa.me/${contact.phone}`
     : 'https://api.whatsapp.com/send/?phone=56963223241';
 
-  return (
-    <main
-      ref={rootRef}
-      className="lovable-root relative overflow-hidden"
-      onClick={handleAnchorClick}
-      onPointerMove={handleSpotlight}
-    >
-      {/* NAV */}
-      <SiteNav ticker={ticker} />
-
-      {/* HERO — titular editorial a pantalla completa */}
-      <section
-        id="top"
-        className="relative min-h-[100svh] flex flex-col justify-end"
-      >
-        <div className="absolute inset-0">
-          {slides.map((s, i) => (
-            <img
-              key={(s.src || '') + i}
-              src={s.src}
-              alt={s.alt}
-              className={`absolute inset-0 w-full h-full object-cover object-[center_30%] animate-slow-pan transition-opacity duration-[1600ms] ease-in-out ${
-                i === slide ? 'opacity-100' : 'opacity-0'
-              }`}
-            />
-          ))}
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/55 to-background/25" />
-          <div className="absolute inset-0 bg-gradient-to-r from-background/85 via-background/30 to-transparent" />
-          <div className="absolute inset-0 bg-spotlight" />
-        </div>
-
-        {/* Locomotora del logo como sello grande (escritorio) */}
-        <img
-          src={logoMark}
-          alt=""
-          aria-hidden="true"
-          className="hero-in hidden xl:block absolute right-[6%] top-32 w-[22rem] invert opacity-[0.08] pointer-events-none"
-          style={{ '--d': '700ms' }}
-        />
-
-        <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-10 pt-36 lg:pt-44 pb-10 md:pb-14 w-full">
-          <div
-            className="hero-in text-eyebrow mb-6 md:mb-8 inline-flex items-center gap-3"
-            style={{ '--d': '100ms' }}
-          >
-            <span className="h-px w-8 bg-primary" />
-            Est. 2017 · Blues chileno<span className="hidden sm:inline"> en español</span>
-          </div>
-
-          <h1 className="text-display text-[clamp(3.6rem,13.5vw,11.5rem)] leading-[0.82]">
-            <span className="hero-in block" style={{ '--d': '200ms' }}>
-              Tren de
-            </span>
-            <span
-              className="hero-in block italic text-primary pl-[0.45em]"
-              style={{ '--d': '350ms' }}
-            >
-              Medianoche<span className="text-foreground not-italic">.</span>
-            </span>
-          </h1>
-
-          <div className="mt-10 md:mt-14 grid lg:grid-cols-12 gap-8 lg:gap-10 items-end">
-            <p
-              className="hero-in lg:col-span-6 xl:col-span-5 text-base md:text-lg text-muted-foreground max-w-xl leading-relaxed"
-              style={{ '--d': '550ms' }}
-            >
-              Composición original e improvisación. Blues electroacústico que
-              conecta al ser humano con su entorno,{' '}
-              <span className="text-foreground">su ciudad</span> y{' '}
-              <span className="text-display italic text-primary text-[1.3em]">
-                la vida cotidiana.
-              </span>
-            </p>
-
-            <div
-              className="hero-in lg:col-span-6 xl:col-span-4 flex gap-3 lg:justify-end xl:justify-start"
-              style={{ '--d': '650ms' }}
-            >
-              <a
-                href="#lanzamiento"
-                className="btn-shine flex-1 lg:flex-none px-5 sm:px-8 py-4 whitespace-nowrap bg-ember-gradient text-primary-foreground text-eyebrow shadow-ember hover:scale-[1.02] transition-transform text-center inline-flex items-center justify-center gap-2"
-              >
-                <Play
-                  size={12}
-                  fill="currentColor"
-                  className="hidden sm:block"
-                />{' '}
-                Escuchar
-              </a>
-              <a
-                href="#fechas"
-                className="flex-1 lg:flex-none px-5 sm:px-8 py-4 whitespace-nowrap border border-foreground/30 text-foreground text-eyebrow hover:border-primary hover:text-primary transition text-center"
-              >
-                Ver fechas
-              </a>
-            </div>
-
-            {/* Tarjeta "Ahora suena" con el último lanzamiento */}
-            <a
-              href="#lanzamiento"
-              className="hero-in spotlight hidden xl:flex xl:col-span-3 items-center gap-4 p-4 border border-border/70 bg-background/80 hover:border-primary/60 transition-colors"
-              style={{ '--d': '800ms' }}
-            >
-              <div className="shrink-0 w-14 h-14 bg-ember-gradient flex items-center justify-center text-primary-foreground">
-                {songCover ? (
-                  <img
-                    src={songCover}
-                    alt=""
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <Play size={18} fill="currentColor" />
-                )}
-              </div>
-              <div className="min-w-0">
-                <div className="flex items-center gap-2 text-eyebrow text-[0.62rem]">
-                  <span className="eq" aria-hidden="true">
-                    <span />
-                    <span />
-                    <span />
-                  </span>
-                  Ahora suena
-                </div>
-                <div className="text-display text-2xl leading-tight truncate mt-1">
-                  {latestTitle}
-                </div>
-              </div>
-            </a>
-          </div>
-        </div>
-
-        {/* Barra inferior: datos de la banda + contador de fotos */}
-        <div className="relative z-10 border-t border-border/50 bg-background/70 backdrop-blur-sm">
-          <div className="max-w-7xl mx-auto px-6 md:px-10 py-4 flex items-center justify-between gap-6">
-            <dl className="flex gap-5 sm:gap-7 md:gap-14">
-              {[
-                ['2017', 'Fundación'],
-                [String(releaseList.length), 'Lanzamientos'],
-                [String(memberList.length), 'Músicos']
-              ].map(([n, l]) => (
-                <div key={l} className="flex items-baseline gap-2">
-                  <dt className="sr-only">{l}</dt>
-                  <dd className="text-display text-2xl md:text-3xl text-primary">
-                    {n}
-                  </dd>
-                  <span className="font-mono text-[0.6rem] md:text-[0.65rem] uppercase tracking-[0.2em] text-muted-foreground">
-                    {l}
-                  </span>
-                </div>
-              ))}
-            </dl>
-            <div className="hidden sm:flex items-center gap-4">
-              <span className="font-mono text-xs text-muted-foreground tabular-nums">
-                <span className="text-foreground">
-                  {String(slide + 1).padStart(2, '0')}
-                </span>{' '}
-                / {String(slides.length).padStart(2, '0')}
-              </span>
-              <div className="flex items-center gap-2">
-                {slides.map((s, i) => (
-                  <button
-                    key={(s.src || '') + 'dot' + i}
-                    onClick={() => setSlide(i)}
-                    aria-label={`Ver imagen ${i + 1}`}
-                    className={`h-[2px] transition-all ${
-                      i === slide
-                        ? 'w-10 bg-primary'
-                        : 'w-5 bg-foreground/30 hover:bg-foreground/60'
-                    }`}
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
-          {/* En móvil la barra de avisos va aquí; en escritorio, bajo el menú */}
-          <NewsTicker items={ticker} className="py-3 lg:hidden" />
-        </div>
-      </section>
-
-      {/* ÚLTIMO LANZAMIENTO — destacado */}
+  // Secciones de la portada como bloques: el admin (Secciones) define orden y visibilidad
+  const blocks = {
+    lanzamiento: (
       <section
         id="lanzamiento"
         className="relative py-24 md:py-32 border-t border-border/40 bg-smoke-gradient"
@@ -848,7 +721,7 @@ export default function LandingHome() {
         <div className="max-w-7xl mx-auto px-6 md:px-10 grid lg:grid-cols-12 gap-10 items-center">
           <div className="reveal lg:col-span-5">
             <div className="text-eyebrow mb-4 animate-flicker">
-              ▶ Último lanzamiento
+              {T.lanzamiento.eyebrow}
             </div>
             <h2 className="text-display text-6xl md:text-8xl leading-[0.9] mb-6">
               {latestTitle.split(' ')[0]}
@@ -910,13 +783,14 @@ export default function LandingHome() {
           </div>
         </div>
       </section>
+    ),
 
-      {/* HISTORIA */}
+    historia: (
       <section
         id="historia"
         className="relative py-32 md:py-48 border-t border-border/40"
       >
-        <SectionNum n="01" />
+        <SectionNum n={num.historia} />
         <div className="max-w-6xl mx-auto px-6 md:px-10 grid md:grid-cols-12 gap-12 items-center">
           <div className="reveal md:col-span-5 group relative overflow-hidden shadow-deep">
             <img
@@ -928,15 +802,11 @@ export default function LandingHome() {
             <div className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-primary/20" />
           </div>
           <div className="reveal md:col-span-7" style={{ '--d': '150ms' }}>
-            <div className="text-eyebrow mb-6">
-              <span className="text-muted-foreground">01</span>{' '}
-              <span className="inline-block h-px w-8 bg-primary/60 align-middle mx-2" />{' '}
-              Historia
-            </div>
+            <Eyebrow n={num.historia} className="mb-6">
+              {T.historia.eyebrow}
+            </Eyebrow>
             <h2 className="text-display text-5xl md:text-7xl leading-[0.95] mb-8">
-              Blues que viaja
-              <br />
-              <span className="italic text-primary">en español.</span>
+              <RichTitle text={T.historia.title} />
             </h2>
             <div
               className="space-y-5 text-muted-foreground leading-relaxed [&_p]:mb-4 [&_a]:text-primary"
@@ -946,11 +816,7 @@ export default function LandingHome() {
             />
 
             <div className="mt-10 grid grid-cols-3 gap-4">
-              {[
-                { n: '2017', l: 'Fundación' },
-                { n: '2', l: 'EPs' },
-                { n: '10+', l: 'Singles' }
-              ].map((s) => (
+              {(T.historia.extra.stats || []).map((s) => (
                 <div key={s.l} className="border-t border-primary/40 pt-4">
                   <div className="text-display text-4xl md:text-5xl text-primary">
                     {s.n}
@@ -962,23 +828,22 @@ export default function LandingHome() {
           </div>
         </div>
       </section>
+    ),
 
-      {/* MÚSICA */}
+    musica: (
       <section
         id="musica"
         className="relative py-32 md:py-48 bg-smoke-gradient border-t border-border/40"
       >
-        <SectionNum n="02" />
+        <SectionNum n={num.musica} />
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <div className="reveal flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
             <div>
-              <div className="text-eyebrow mb-4">
-                <span className="text-muted-foreground">02</span>{' '}
-                <span className="inline-block h-px w-8 bg-primary/60 align-middle mx-2" />{' '}
-                Discografía
-              </div>
+              <Eyebrow n={num.musica} className="mb-4">
+                {T.musica.eyebrow}
+              </Eyebrow>
               <h2 className="text-display text-5xl md:text-7xl">
-                Nuestro <span className="italic text-primary">recorrido.</span>
+                <RichTitle text={T.musica.title} />
               </h2>
             </div>
             <a
@@ -1147,24 +1012,21 @@ export default function LandingHome() {
           </div>
         </div>
       </section>
+    ),
 
-      {/* BANDA */}
+    banda: (
       <section
         id="banda"
         className="relative py-32 md:py-48 border-t border-border/40"
       >
-        <SectionNum n="03" />
+        <SectionNum n={num.banda} />
         <div className="max-w-7xl mx-auto px-6 md:px-10 grid md:grid-cols-12 gap-12">
           <div className="reveal md:col-span-5">
-            <div className="text-eyebrow mb-4">
-              <span className="text-muted-foreground">03</span>{' '}
-              <span className="inline-block h-px w-8 bg-primary/60 align-middle mx-2" />{' '}
-              La banda
-            </div>
+            <Eyebrow n={num.banda} className="mb-4">
+              {T.banda.eyebrow}
+            </Eyebrow>
             <h2 className="text-display text-5xl md:text-6xl mb-8">
-              Tres músicos,
-              <br />
-              <span className="italic text-primary">un mismo tren.</span>
+              <RichTitle text={T.banda.title} />
             </h2>
             <div className="grid grid-cols-2 gap-4">
               <div className="group overflow-hidden shadow-deep">
@@ -1223,33 +1085,30 @@ export default function LandingHome() {
               </div>
             ))}
 
-            <p className="text-muted-foreground text-sm leading-relaxed mt-8 border-l-2 border-primary/40 pl-6">
-              Hemos contado con colaboraciones de{' '}
-              <span className="text-foreground">César Díaz Bilbao</span>,{' '}
-              <span className="text-foreground">Marcelo Pizarro</span> y{' '}
-              <span className="text-foreground">Nehemías Muñoz</span>, entre
-              otros músicos de la escena nacional.
-            </p>
+            {T.banda.intro && (
+              <p className="text-muted-foreground text-sm leading-relaxed mt-8 border-l-2 border-primary/40 pl-6">
+                <RichTitle text={T.banda.intro} />
+              </p>
+            )}
           </div>
         </div>
       </section>
+    ),
 
-      {/* FECHAS EN VIVO */}
+    fechas: (
       <section
         id="fechas"
         className="relative py-32 md:py-40 bg-smoke-gradient border-t border-border/40"
       >
-        <SectionNum n="04" />
+        <SectionNum n={num.fechas} />
         <div className="max-w-6xl mx-auto px-6 md:px-10">
           <div className="reveal flex flex-col md:flex-row md:items-end justify-between mb-14 gap-6">
             <div>
-              <div className="text-eyebrow mb-4">
-                <span className="text-muted-foreground">04</span>{' '}
-                <span className="inline-block h-px w-8 bg-primary/60 align-middle mx-2" />{' '}
-                Agenda
-              </div>
+              <Eyebrow n={num.fechas} className="mb-4">
+                {T.fechas.eyebrow}
+              </Eyebrow>
               <h2 className="text-display text-5xl md:text-7xl">
-                Próximas <span className="italic text-primary">fechas.</span>
+                <RichTitle text={T.fechas.title} />
               </h2>
             </div>
           </div>
@@ -1265,8 +1124,7 @@ export default function LandingHome() {
                 Estamos afinando la próxima parada.
               </h3>
               <p className="text-muted-foreground max-w-md mx-auto mb-8">
-                Aún no hay fechas confirmadas publicadas aquí. Escríbenos para
-                contrataciones.
+                {T.fechas.intro}
               </p>
               <div className="flex flex-wrap gap-3 justify-center">
                 <a
@@ -1378,24 +1236,22 @@ export default function LandingHome() {
           )}
         </div>
       </section>
+    ),
 
-      {/* BLOG */}
+    blog: (
       <section
         id="blog"
         className="relative py-32 md:py-40 border-t border-border/40"
       >
-        <SectionNum n="05" />
+        <SectionNum n={num.blog} />
         <div className="max-w-6xl mx-auto px-6 md:px-10">
           <div className="reveal flex flex-col md:flex-row md:items-end justify-between mb-14 gap-6">
             <div>
-              <div className="text-eyebrow mb-4">
-                <span className="text-muted-foreground">05</span>{' '}
-                <span className="inline-block h-px w-8 bg-primary/60 align-middle mx-2" />{' '}
-                Bitácora
-              </div>
+              <Eyebrow n={num.blog} className="mb-4">
+                {T.blog.eyebrow}
+              </Eyebrow>
               <h2 className="text-display text-5xl md:text-7xl">
-                Notas desde{' '}
-                <span className="italic text-primary">el vagón.</span>
+                <RichTitle text={T.blog.title} />
               </h2>
             </div>
             {posts.length > 0 && (
@@ -1460,19 +1316,20 @@ export default function LandingHome() {
           )}
         </div>
       </section>
+    ),
 
-      {/* PRÓXIMO LANZAMIENTO / MARQUEE */}
+    galeria: (
       <section className="relative py-24 md:py-32 bg-smoke-gradient border-t border-border/40">
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <div className="reveal flex items-baseline justify-between mb-6 gap-6 flex-wrap">
             <div>
-              <div className="text-eyebrow mb-3">▶ Galería</div>
+              <div className="text-eyebrow mb-3">{T.galeria.eyebrow}</div>
               <h2 className="text-display text-4xl md:text-5xl">
-                Del bar a las vías.
+                <RichTitle text={T.galeria.title} />
               </h2>
             </div>
             <p className="text-sm text-muted-foreground max-w-md">
-              Postales del tren mientras seguimos rodando por los escenarios.
+              {T.galeria.intro}
             </p>
           </div>
           <div className="hover-pause relative overflow-hidden border-y border-border/60 py-6">
@@ -1500,128 +1357,125 @@ export default function LandingHome() {
           </div>
         </div>
       </section>
+    ),
 
-      {/* NOVEDADES: fechas confirmadas que vienen + noticias recientes (solo si hay) */}
-      {novedades.length > 0 && (
-        <section
-          id="noticias"
-          className="relative py-32 md:py-40 border-t border-border/40"
-        >
-          <div className="max-w-6xl mx-auto px-6 md:px-10">
-            <div className="reveal mb-14">
-              <div className="text-eyebrow mb-4">Novedades</div>
-              <h2 className="text-display text-5xl md:text-7xl">
-                Lo último del <span className="italic text-primary">tren.</span>
-              </h2>
-            </div>
-            <div className="grid md:grid-cols-2 gap-4">
-              {novedades.map((n, i) => (
-                <article
-                  key={n.key}
-                  className="reveal spotlight border border-border/60 p-6 md:p-8 hover:border-primary/40 flex gap-5"
-                  style={{ '--d': `${(i % 2) * 120}ms` }}
-                >
-                  {n.event && (
-                    <div className="shrink-0 w-16 text-center border-r border-border/60 pr-5">
-                      <div className="font-mono text-[0.62rem] uppercase tracking-[0.2em] text-primary">
-                        {parseEventDate(n.event.event_date).toLocaleDateString(
-                          'es-CL',
-                          { weekday: 'short' }
-                        )}
-                      </div>
-                      <div className="text-display text-4xl leading-none">
-                        {parseEventDate(n.event.event_date).getDate()}
-                      </div>
-                      <div className="font-mono text-[0.62rem] uppercase tracking-[0.2em] text-muted-foreground">
-                        {parseEventDate(n.event.event_date).toLocaleDateString(
-                          'es-CL',
-                          { month: 'short' }
-                        )}
-                      </div>
-                    </div>
-                  )}
-                  <div className="min-w-0">
-                    <div className="font-mono text-xs text-primary mb-3">
-                      {n.eyebrow}
-                    </div>
-                    <h3 className="text-display text-2xl md:text-3xl mb-2">
-                      {n.title}
-                    </h3>
-                    {n.content && (
-                      <p className="text-muted-foreground text-sm leading-relaxed">
-                        {n.content}
-                      </p>
-                    )}
-                    {n.event && (
-                      <a
-                        href="#fechas"
-                        className="mt-3 inline-flex items-center gap-1 text-eyebrow text-primary hover:underline"
-                      >
-                        Ver agenda <ArrowUpRight size={12} />
-                      </a>
-                    )}
-                  </div>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* APOYA EL PROYECTO (solo si hay datos de transferencia) */}
-      {visibleDonation.length > 0 && (
-        <section
-          id="apoyo"
-          className="relative py-32 md:py-40 bg-smoke-gradient border-t border-border/40"
-        >
-          <div className="max-w-4xl mx-auto px-6 md:px-10 text-center">
-            <div className="text-eyebrow mb-6">Apóyanos</div>
-            <h2 className="text-display text-5xl md:text-7xl mb-6">
-              Apoya el <span className="italic text-primary">proyecto.</span>
+    noticias: novedades.length > 0 && (
+      <section
+        id="noticias"
+        className="relative py-32 md:py-40 border-t border-border/40"
+      >
+        <div className="max-w-6xl mx-auto px-6 md:px-10">
+          <div className="reveal mb-14">
+            <Eyebrow n={num.noticias}>{T.noticias.eyebrow}</Eyebrow>
+            <h2 className="text-display text-5xl md:text-7xl">
+              <RichTitle text={T.noticias.title} />
             </h2>
-            <p className="text-muted-foreground max-w-xl mx-auto mb-12">
-              Si quieres apoyar nuestro trabajo y futuras producciones, puedes
-              hacerlo mediante transferencia bancaria.
-            </p>
-            <div className="grid sm:grid-cols-2 gap-3 text-left">
-              {visibleDonation.map((f) => (
-                <div key={f.id} className="border border-border/60 p-5">
-                  <div className="text-eyebrow mb-1">{f.field_key}</div>
-                  <div className="font-mono text-sm md:text-base break-all">
-                    {f.field_value}
-                  </div>
-                </div>
-              ))}
-            </div>
-            <button
-              onClick={copyDonation}
-              className="btn-shine mt-8 px-8 py-4 bg-ember-gradient text-primary-foreground text-eyebrow shadow-ember hover:scale-[1.02] transition-transform"
-            >
-              Copiar datos
-            </button>
           </div>
-        </section>
-      )}
+          <div className="grid md:grid-cols-2 gap-4">
+            {novedades.map((n, i) => (
+              <article
+                key={n.key}
+                className="reveal spotlight border border-border/60 p-6 md:p-8 hover:border-primary/40 flex gap-5"
+                style={{ '--d': `${(i % 2) * 120}ms` }}
+              >
+                {n.event && (
+                  <div className="shrink-0 w-16 text-center border-r border-border/60 pr-5">
+                    <div className="font-mono text-[0.62rem] uppercase tracking-[0.2em] text-primary">
+                      {parseEventDate(n.event.event_date).toLocaleDateString(
+                        'es-CL',
+                        { weekday: 'short' }
+                      )}
+                    </div>
+                    <div className="text-display text-4xl leading-none">
+                      {parseEventDate(n.event.event_date).getDate()}
+                    </div>
+                    <div className="font-mono text-[0.62rem] uppercase tracking-[0.2em] text-muted-foreground">
+                      {parseEventDate(n.event.event_date).toLocaleDateString(
+                        'es-CL',
+                        { month: 'short' }
+                      )}
+                    </div>
+                  </div>
+                )}
+                <div className="min-w-0">
+                  <div className="font-mono text-xs text-primary mb-3">
+                    {n.eyebrow}
+                  </div>
+                  <h3 className="text-display text-2xl md:text-3xl mb-2">
+                    {n.title}
+                  </h3>
+                  {n.content && (
+                    <p className="text-muted-foreground text-sm leading-relaxed">
+                      {n.content}
+                    </p>
+                  )}
+                  {n.event && (
+                    <a
+                      href="#fechas"
+                      className="mt-3 inline-flex items-center gap-1 text-eyebrow text-primary hover:underline"
+                    >
+                      Ver agenda <ArrowUpRight size={12} />
+                    </a>
+                  )}
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+    ),
 
-      {/* CONTACTO */}
+    apoyo: visibleDonation.length > 0 && (
+      <section
+        id="apoyo"
+        className="relative py-32 md:py-40 bg-smoke-gradient border-t border-border/40"
+      >
+        <div className="max-w-4xl mx-auto px-6 md:px-10 text-center">
+          <Eyebrow n={num.apoyo} className="mb-6">
+            {T.apoyo.eyebrow}
+          </Eyebrow>
+          <h2 className="text-display text-5xl md:text-7xl mb-6">
+            <RichTitle text={T.apoyo.title} />
+          </h2>
+          <p className="text-muted-foreground max-w-xl mx-auto mb-12">
+            {T.apoyo.intro}
+          </p>
+          <div className="grid sm:grid-cols-2 gap-3 text-left">
+            {visibleDonation.map((f) => (
+              <div key={f.id} className="border border-border/60 p-5">
+                <div className="text-eyebrow mb-1">{f.field_key}</div>
+                <div className="font-mono text-sm md:text-base break-all">
+                  {f.field_value}
+                </div>
+              </div>
+            ))}
+          </div>
+          <button
+            onClick={copyDonation}
+            className="btn-shine mt-8 px-8 py-4 bg-ember-gradient text-primary-foreground text-eyebrow shadow-ember hover:scale-[1.02] transition-transform"
+          >
+            Copiar datos
+          </button>
+        </div>
+      </section>
+    ),
+
+    contacto: (
       <section
         id="contacto"
         className="relative py-32 md:py-40 border-t border-border/40"
       >
-        <SectionNum n="06" />
+        <SectionNum n={num.contacto} />
         <div className="max-w-5xl mx-auto px-6 md:px-10">
           <div className="reveal text-center mb-14">
-            <div className="text-eyebrow mb-6">
-              <span className="text-muted-foreground">06</span>{' '}
-              <span className="inline-block h-px w-8 bg-primary/60 align-middle mx-2" />{' '}
-              Contacto
-            </div>
+            <Eyebrow n={num.contacto} className="mb-6">
+              {T.contacto.eyebrow}
+            </Eyebrow>
             <h2 className="text-display text-5xl md:text-7xl mb-6">
-              ¿Nos <span className="italic text-primary">subimos</span> al tren?
+              <RichTitle text={T.contacto.title} />
             </h2>
             <p className="text-lg text-muted-foreground max-w-xl mx-auto">
-              Contratación de shows, prensa, colaboraciones y notas. Escríbenos
-              y respondemos con la misma pasión con la que tocamos.
+              {T.contacto.intro}
             </p>
           </div>
 
@@ -1677,6 +1531,186 @@ export default function LandingHome() {
           </div>
         </div>
       </section>
+    )
+  };
+
+  return (
+    <main
+      ref={rootRef}
+      className="lovable-root relative overflow-hidden"
+      onClick={handleAnchorClick}
+      onPointerMove={handleSpotlight}
+    >
+      {/* NAV */}
+      <SiteNav ticker={ticker} visible={sectionOrder} />
+
+      {/* HERO — titular editorial a pantalla completa */}
+      <section
+        id="top"
+        className="relative min-h-[100svh] flex flex-col justify-end"
+      >
+        <div className="absolute inset-0">
+          {slides.map((s, i) => (
+            <img
+              key={(s.src || '') + i}
+              src={s.src}
+              alt={s.alt}
+              className={`absolute inset-0 w-full h-full object-cover object-[center_30%] animate-slow-pan transition-opacity duration-[1600ms] ease-in-out ${
+                i === slide ? 'opacity-100' : 'opacity-0'
+              }`}
+            />
+          ))}
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/55 to-background/25" />
+          <div className="absolute inset-0 bg-gradient-to-r from-background/85 via-background/30 to-transparent" />
+          <div className="absolute inset-0 bg-spotlight" />
+        </div>
+
+        {/* Locomotora del logo como sello grande (escritorio) */}
+        <img
+          src={logoMark}
+          alt=""
+          aria-hidden="true"
+          className="hero-in hidden xl:block absolute right-[6%] top-32 w-[22rem] invert opacity-[0.08] pointer-events-none"
+          style={{ '--d': '700ms' }}
+        />
+
+        <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-10 pt-36 lg:pt-44 pb-10 md:pb-14 w-full">
+          <div
+            className="hero-in text-eyebrow mb-6 md:mb-8 inline-flex items-center gap-3"
+            style={{ '--d': '100ms' }}
+          >
+            <span className="h-px w-8 bg-primary" />
+            {T.hero.eyebrow}
+          </div>
+
+          <h1 className="text-display text-[clamp(3.6rem,13.5vw,11.5rem)] leading-[0.82]">
+            {T.hero.title.split('\n').map((line, i) => (
+              <span
+                key={i}
+                className={`hero-in block ${i > 0 ? 'pl-[0.45em]' : ''}`}
+                style={{ '--d': `${200 + i * 150}ms` }}
+              >
+                <RichTitle text={line} />
+              </span>
+            ))}
+          </h1>
+
+          <div className="mt-10 md:mt-14 grid lg:grid-cols-12 gap-8 lg:gap-10 items-end">
+            <p
+              className="hero-in lg:col-span-6 xl:col-span-5 text-base md:text-lg text-muted-foreground max-w-xl leading-relaxed"
+              style={{ '--d': '550ms' }}
+            >
+              <RichTitle text={T.hero.intro} />
+            </p>
+
+            <div
+              className="hero-in lg:col-span-6 xl:col-span-4 flex gap-3 lg:justify-end xl:justify-start"
+              style={{ '--d': '650ms' }}
+            >
+              <a
+                href="#lanzamiento"
+                className="btn-shine flex-1 lg:flex-none px-5 sm:px-8 py-4 whitespace-nowrap bg-ember-gradient text-primary-foreground text-eyebrow shadow-ember hover:scale-[1.02] transition-transform text-center inline-flex items-center justify-center gap-2"
+              >
+                <Play
+                  size={12}
+                  fill="currentColor"
+                  className="hidden sm:block"
+                />{' '}
+                Escuchar
+              </a>
+              <a
+                href="#fechas"
+                className="flex-1 lg:flex-none px-5 sm:px-8 py-4 whitespace-nowrap border border-foreground/30 text-foreground text-eyebrow hover:border-primary hover:text-primary transition text-center"
+              >
+                Ver fechas
+              </a>
+            </div>
+
+            {/* Tarjeta "Ahora suena" con el último lanzamiento */}
+            <a
+              href="#lanzamiento"
+              className="hero-in spotlight hidden xl:flex xl:col-span-3 items-center gap-4 p-4 border border-border/70 bg-background/80 hover:border-primary/60 transition-colors"
+              style={{ '--d': '800ms' }}
+            >
+              <div className="shrink-0 w-14 h-14 bg-ember-gradient flex items-center justify-center text-primary-foreground">
+                {songCover ? (
+                  <img
+                    src={songCover}
+                    alt=""
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <Play size={18} fill="currentColor" />
+                )}
+              </div>
+              <div className="min-w-0">
+                <div className="flex items-center gap-2 text-eyebrow text-[0.62rem]">
+                  <span className="eq" aria-hidden="true">
+                    <span />
+                    <span />
+                    <span />
+                  </span>
+                  Ahora suena
+                </div>
+                <div className="text-display text-2xl leading-tight truncate mt-1">
+                  {latestTitle}
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        {/* Barra inferior: datos de la banda + contador de fotos */}
+        <div className="relative z-10 border-t border-border/50 bg-background/70 backdrop-blur-sm">
+          <div className="max-w-7xl mx-auto px-6 md:px-10 py-4 flex items-center justify-between gap-6">
+            <dl className="flex gap-5 sm:gap-7 md:gap-14">
+              {[
+                ['2017', 'Fundación'],
+                [String(releaseList.length), 'Lanzamientos'],
+                [String(memberList.length), 'Músicos']
+              ].map(([n, l]) => (
+                <div key={l} className="flex items-baseline gap-2">
+                  <dt className="sr-only">{l}</dt>
+                  <dd className="text-display text-2xl md:text-3xl text-primary">
+                    {n}
+                  </dd>
+                  <span className="font-mono text-[0.6rem] md:text-[0.65rem] uppercase tracking-[0.2em] text-muted-foreground">
+                    {l}
+                  </span>
+                </div>
+              ))}
+            </dl>
+            <div className="hidden sm:flex items-center gap-4">
+              <span className="font-mono text-xs text-muted-foreground tabular-nums">
+                <span className="text-foreground">
+                  {String(slide + 1).padStart(2, '0')}
+                </span>{' '}
+                / {String(slides.length).padStart(2, '0')}
+              </span>
+              <div className="flex items-center gap-2">
+                {slides.map((s, i) => (
+                  <button
+                    key={(s.src || '') + 'dot' + i}
+                    onClick={() => setSlide(i)}
+                    aria-label={`Ver imagen ${i + 1}`}
+                    className={`h-[2px] transition-all ${
+                      i === slide
+                        ? 'w-10 bg-primary'
+                        : 'w-5 bg-foreground/30 hover:bg-foreground/60'
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+          {/* En móvil la barra de avisos va aquí; en escritorio, bajo el menú */}
+          <NewsTicker items={ticker} className="py-3 lg:hidden" />
+        </div>
+      </section>
+
+      {sectionOrder.map((key) => (
+        <Fragment key={key}>{blocks[key]}</Fragment>
+      ))}
 
       {/* FOOTER */}
       <SiteFooter />

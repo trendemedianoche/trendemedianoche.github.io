@@ -3,11 +3,12 @@ import { supabase } from '../lib/supabase';
 // ==========================
 // GET (Home)
 // ==========================
+// Filas completas (orden, visibilidad y textos); la portada las une con
+// los valores por defecto de src/lib/landingSections.js
 export async function getSiteSections() {
   const { data, error } = await supabase
     .from('site_sections')
-    .select('key')
-    .eq('active', true)
+    .select('*')
     .order('position');
 
   if (error) {
@@ -15,7 +16,7 @@ export async function getSiteSections() {
     return [];
   }
 
-  return data.map(s => s.key);
+  return data;
 }
 
 // ==========================
@@ -32,13 +33,11 @@ export async function getAllSections() {
 }
 
 export async function createSection(section) {
-  const { error } = await supabase
-    .from('site_sections')
-    .insert({
-      key: section.key,
-      active: section.active ?? true,
-      position: section.position ?? 0
-    });
+  const { error } = await supabase.from('site_sections').insert({
+    key: section.key,
+    active: section.active ?? true,
+    position: section.position ?? 0
+  });
 
   if (error) throw error;
 }
@@ -53,10 +52,7 @@ export async function updateSection(id, updates) {
 }
 
 export async function deleteSection(id) {
-  const { error } = await supabase
-    .from('site_sections')
-    .delete()
-    .eq('id', id);
+  const { error } = await supabase.from('site_sections').delete().eq('id', id);
 
   if (error) throw error;
 }

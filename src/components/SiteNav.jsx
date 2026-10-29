@@ -17,7 +17,11 @@ const NAV_LINKS = [
   ['contacto', 'Contacto']
 ];
 
-export default function SiteNav({ ticker = [] }) {
+// visible: secciones mostradas en la portada (las ocultas en el admin salen del menú)
+export default function SiteNav({ ticker = [], visible }) {
+  const links = visible
+    ? NAV_LINKS.filter(([id]) => id === 'top' || visible.includes(id))
+    : NAV_LINKS;
   const [menuOpen, setMenuOpen] = useState(false);
   const [active, setActive] = useState('top');
   const [scrolled, setScrolled] = useState(false);
@@ -104,7 +108,7 @@ export default function SiteNav({ ticker = [] }) {
 
         {/* Desktop */}
         <div className="hidden lg:flex items-center gap-1 text-[0.68rem] uppercase tracking-[0.22em]">
-          {NAV_LINKS.map(([id, label]) => (
+          {links.map(([id, label]) => (
             <a
               key={id}
               href={`#${id}`}
@@ -152,7 +156,7 @@ export default function SiteNav({ ticker = [] }) {
       {/* Menú móvil */}
       {menuOpen && (
         <div className="pointer-events-auto lg:hidden mx-3 mt-2 rounded-2xl border border-border/70 bg-background/95 backdrop-blur-md p-3 shadow-deep">
-          {NAV_LINKS.map(([id, label], i) => (
+          {links.map(([id, label], i) => (
             <a
               key={id}
               href={`#${id}`}
