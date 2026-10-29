@@ -40,7 +40,6 @@ import trainNight from '../assets/train-night.jpeg';
 import bandBar1 from '../assets/band-bar-1.png';
 import bandBar2 from '../assets/band-bar-2.png';
 import bandTracks from '../assets/band-tracks.png';
-import logoText from '../assets/logo-text.png';
 import logoMark from '../assets/logo-mark.png';
 import sientesComoMp3 from '../assets/sientes_como.mp3';
 
@@ -55,7 +54,6 @@ const SPOTIFY_TRACK_EMBED =
   'https://open.spotify.com/embed/track/4GZ6PL2ci4VAUgGAlQ4qoo?utm_source=generator&theme=0';
 const YOUTUBE_URL = 'https://www.youtube.com/watch?v=P55OqqhOlTE';
 
-
 const LATEST_FALLBACK = {
   title: 'Sientes Cómo',
   year: '2024',
@@ -63,19 +61,42 @@ const LATEST_FALLBACK = {
 };
 
 const band = [
-  { name: 'Manuel Mercado', role: 'Guitarra & Voz', note: 'Compositor principal' },
+  {
+    name: 'Manuel Mercado',
+    role: 'Guitarra & Voz',
+    note: 'Compositor principal'
+  },
   {
     name: 'Ricardo Mizraji',
     role: 'Armónica, Teclado & Coros',
     note: 'Hohner Marine Band'
   },
-  { name: 'José Antil', role: 'Guitarra, Armónica & Coros', note: 'Slide & rítmica' }
+  {
+    name: 'José Antil',
+    role: 'Guitarra, Armónica & Coros',
+    note: 'Slide & rítmica'
+  }
 ];
 
 const releases = [
-  { year: '2024', title: 'Sientes Cómo', type: 'Single', note: 'Último lanzamiento' },
-  { year: '2023', title: 'Cuatro Patitas', type: 'Single', note: 'Historia de adopción' },
-  { year: '2023', title: 'Carta a mis amigos', type: 'Single', note: 'En memoria de H. Briceño' },
+  {
+    year: '2024',
+    title: 'Sientes Cómo',
+    type: 'Single',
+    note: 'Último lanzamiento'
+  },
+  {
+    year: '2023',
+    title: 'Cuatro Patitas',
+    type: 'Single',
+    note: 'Historia de adopción'
+  },
+  {
+    year: '2023',
+    title: 'Carta a mis amigos',
+    type: 'Single',
+    note: 'En memoria de H. Briceño'
+  },
   {
     year: '2023',
     title: 'Aullando a la Luna',
@@ -88,15 +109,30 @@ const releases = [
     type: 'Single',
     note: 'Primer adelanto del álbum debut'
   },
-  { year: '2021', title: 'Desde la Otra Ruta', type: 'EP', note: 'Producido por Johnny Espina' },
-  { year: '2021', title: 'Mi Mejor Regalo', type: 'Single', note: 'Con Nehemías Muñoz en saxofón' },
+  {
+    year: '2021',
+    title: 'Desde la Otra Ruta',
+    type: 'EP',
+    note: 'Producido por Johnny Espina'
+  },
+  {
+    year: '2021',
+    title: 'Mi Mejor Regalo',
+    type: 'Single',
+    note: 'Con Nehemías Muñoz en saxofón'
+  },
   {
     year: '2018',
     title: 'Arriba de la Locomotora',
     type: 'EP',
     note: 'Producido por Cristian Olivares'
   },
-  { year: '2018', title: 'Santa se Llevó a Mi Chica', type: 'Single', note: 'Single navideño' }
+  {
+    year: '2018',
+    title: 'Santa se Llevó a Mi Chica',
+    type: 'Single',
+    note: 'Single navideño'
+  }
 ];
 
 const topTracks = [
@@ -113,9 +149,21 @@ const topTracks = [
 ];
 
 const FALLBACK_SLIDES = [
-  { src: bandBar1, alt: 'Tren de Medianoche en la barra', caption: 'En la barra · Santiago' },
-  { src: bandBar2, alt: 'Tren de Medianoche sentados en el bar', caption: 'Antes del show' },
-  { src: bandTracks, alt: 'Tren de Medianoche sobre las vías', caption: 'En las vías · Cordillera' }
+  {
+    src: bandBar1,
+    alt: 'Tren de Medianoche en la barra',
+    caption: 'En la barra · Santiago'
+  },
+  {
+    src: bandBar2,
+    alt: 'Tren de Medianoche sentados en el bar',
+    caption: 'Antes del show'
+  },
+  {
+    src: bandTracks,
+    alt: 'Tren de Medianoche sobre las vías',
+    caption: 'En las vías · Cordillera'
+  }
 ];
 
 const FALLBACK_TICKER = [
@@ -145,7 +193,9 @@ const SOCIAL_ICONS = {
 
 function stripHtml(html = '') {
   // DOMParser también decodifica entidades como &quot;
-  return (new DOMParser().parseFromString(html, 'text/html').body.textContent || '')
+  return (
+    new DOMParser().parseFromString(html, 'text/html').body.textContent || ''
+  )
     .replace(/\s+/g, ' ')
     .trim();
 }
@@ -313,6 +363,15 @@ function ContactForm() {
   );
 }
 
+// Número de sección gigante, solo contorno, de fondo
+function SectionNum({ n }) {
+  return (
+    <span aria-hidden="true" className="section-num">
+      {n}
+    </span>
+  );
+}
+
 /* ------------------------------ PÁGINA ------------------------------ */
 
 export default function LandingHome() {
@@ -348,7 +407,9 @@ export default function LandingHome() {
       { rootMargin: '0px 0px -10% 0px', threshold: 0.1 }
     );
     const observeAll = () =>
-      root.querySelectorAll('.reveal:not(.is-visible)').forEach((el) => io.observe(el));
+      root
+        .querySelectorAll('.reveal:not(.is-visible)')
+        .forEach((el) => io.observe(el));
     observeAll();
     const mo = new MutationObserver(observeAll);
     mo.observe(root, { childList: true, subtree: true });
@@ -426,13 +487,18 @@ export default function LandingHome() {
   const onDragStart = (e) => {
     const el = timelineRef.current;
     if (!el) return;
-    dragRef.current = { down: true, startX: e.pageX, scrollLeft: el.scrollLeft };
+    dragRef.current = {
+      down: true,
+      startX: e.pageX,
+      scrollLeft: el.scrollLeft
+    };
   };
   const onDragMove = (e) => {
     const el = timelineRef.current;
     if (!el || !dragRef.current.down) return;
     e.preventDefault();
-    el.scrollLeft = dragRef.current.scrollLeft - (e.pageX - dragRef.current.startX);
+    el.scrollLeft =
+      dragRef.current.scrollLeft - (e.pageX - dragRef.current.startX);
   };
   const onDragEnd = () => {
     dragRef.current.down = false;
@@ -453,21 +519,45 @@ export default function LandingHome() {
   const [donationFields, setDonationFields] = useState([]);
 
   useEffect(() => {
-    getGalleryImages().then(setGallery).catch(() => {});
-    getNews().then(setNewsItems).catch(() => {});
-    getPublishedEvents().then(setEvents).catch(() => {});
-    getTransferData().then(setDonationFields).catch(() => {});
-    getAbout().then(setAboutHtml).catch(() => {});
-    getLatestSong().then(setSong).catch(() => {});
+    getGalleryImages()
+      .then(setGallery)
+      .catch(() => {});
+    getNews()
+      .then(setNewsItems)
+      .catch(() => {});
+    getPublishedEvents()
+      .then(setEvents)
+      .catch(() => {});
+    getTransferData()
+      .then(setDonationFields)
+      .catch(() => {});
+    getAbout()
+      .then(setAboutHtml)
+      .catch(() => {});
+    getLatestSong()
+      .then(setSong)
+      .catch(() => {});
     getExtraNewsItems()
       .then((items) => setExtraNews(items.filter((i) => i.active !== false)))
       .catch(() => {});
-    getBlogPosts().then(setPosts).catch(() => {});
-    getFooterContactData().then(setContact).catch(() => {});
-    getFooterSocialNetworks().then(setSocials).catch(() => {});
-    getReleases().then(setReleasesData).catch(() => {});
-    getTopTracks().then(setTracksData).catch(() => {});
-    getBandMembers().then(setMembersData).catch(() => {});
+    getBlogPosts()
+      .then(setPosts)
+      .catch(() => {});
+    getFooterContactData()
+      .then(setContact)
+      .catch(() => {});
+    getFooterSocialNetworks()
+      .then(setSocials)
+      .catch(() => {});
+    getReleases()
+      .then(setReleasesData)
+      .catch(() => {});
+    getTopTracks()
+      .then(setTracksData)
+      .catch(() => {});
+    getBandMembers()
+      .then(setMembersData)
+      .catch(() => {});
   }, []);
 
   // Datos con respaldo local si la tabla viene vacía
@@ -486,7 +576,10 @@ export default function LandingHome() {
       : FALLBACK_SLIDES;
 
   useEffect(() => {
-    const id = setInterval(() => setSlide((s) => (s + 1) % slides.length), 7000);
+    const id = setInterval(
+      () => setSlide((s) => (s + 1) % slides.length),
+      7000
+    );
     return () => clearInterval(id);
   }, [slides.length]);
 
@@ -517,14 +610,20 @@ export default function LandingHome() {
   const ticker = extraNews.length > 0 ? extraNews : FALLBACK_TICKER;
 
   // Novedades: próximas fechas confirmadas primero, luego noticias de los últimos 6 meses
-  const sixMonthsAgo = new Date(Date.now() - 183 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  const sixMonthsAgo = new Date(Date.now() - 183 * 24 * 60 * 60 * 1000)
+    .toISOString()
+    .slice(0, 10);
   const novedades = [
     ...events.upcoming.slice(0, 2).map((e) => ({
       key: `event-${e.id}`,
       event: e,
       eyebrow: 'Nueva fecha',
       title: e.title,
-      content: [e.venue !== e.title ? e.venue : '', e.city, e.event_time && `${e.event_time} h`]
+      content: [
+        e.venue !== e.title ? e.venue : '',
+        e.city,
+        e.event_time && `${e.event_time} h`
+      ]
         .filter(Boolean)
         .join(' · ')
     })),
@@ -551,7 +650,9 @@ export default function LandingHome() {
 
   const visibleDonation = donationFields.filter((f) => f.visible !== false);
   const copyDonation = () => {
-    const text = visibleDonation.map((f) => `${f.field_key}: ${f.field_value}`).join('\n');
+    const text = visibleDonation
+      .map((f) => `${f.field_key}: ${f.field_value}`)
+      .join('\n');
     navigator.clipboard?.writeText(text);
   };
 
@@ -570,8 +671,11 @@ export default function LandingHome() {
       {/* NAV */}
       <SiteNav ticker={ticker} />
 
-      {/* HERO */}
-      <section id="top" className="relative min-h-screen flex items-end">
+      {/* HERO — titular editorial a pantalla completa */}
+      <section
+        id="top"
+        className="relative min-h-[100svh] flex flex-col justify-end"
+      >
         <div className="absolute inset-0">
           {slides.map((s, i) => (
             <img
@@ -583,83 +687,169 @@ export default function LandingHome() {
               }`}
             />
           ))}
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/30" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/55 to-background/25" />
+          <div className="absolute inset-0 bg-gradient-to-r from-background/85 via-background/30 to-transparent" />
           <div className="absolute inset-0 bg-spotlight" />
         </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-10 pb-24 pt-40 w-full">
-          <div className="hero-in" style={{ '--d': '100ms' }}>
-            <div className="text-eyebrow mb-8 animate-flicker inline-flex items-center gap-3">
-              <span className="h-px w-8 bg-primary" />
-              Est. 2017 · Blues Chileno
-            </div>
-          </div>
+        {/* Locomotora del logo como sello grande (escritorio) */}
+        <img
+          src={logoMark}
+          alt=""
+          aria-hidden="true"
+          className="hero-in hidden xl:block absolute right-[6%] top-32 w-[22rem] invert opacity-[0.08] pointer-events-none"
+          style={{ '--d': '700ms' }}
+        />
+
+        <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-10 pt-36 lg:pt-44 pb-10 md:pb-14 w-full">
           <div
-            className="hero-in mb-6 max-w-[150px] sm:max-w-[210px] md:max-w-xs flex flex-col items-center drop-shadow-[0_10px_30px_rgba(0,0,0,0.6)]"
-            style={{ '--d': '250ms' }}
+            className="hero-in text-eyebrow mb-6 md:mb-8 inline-flex items-center gap-3"
+            style={{ '--d': '100ms' }}
           >
-            <img src={logoMark} alt="" className="w-2/3 h-auto invert opacity-95" />
-            <img src={logoText} alt="Tren de Medianoche" className="w-full h-auto invert opacity-95 mt-3" />
+            <span className="h-px w-8 bg-primary" />
+            Est. 2017 · Blues chileno<span className="hidden sm:inline"> en español</span>
           </div>
 
-          <div className="hero-in flex items-center gap-3 mb-6" style={{ '--d': '450ms' }}>
-            {slides.map((s, i) => (
-              <button
-                key={(s.src || '') + 'dot' + i}
-                onClick={() => setSlide(i)}
-                aria-label={`Ver imagen ${i + 1}`}
-                className={`h-[2px] transition-all ${
-                  i === slide ? 'w-12 bg-primary' : 'w-6 bg-foreground/30 hover:bg-foreground/60'
-                }`}
-              />
-            ))}
-          </div>
+          <h1 className="text-display text-[clamp(3.6rem,13.5vw,11.5rem)] leading-[0.82]">
+            <span className="hero-in block" style={{ '--d': '200ms' }}>
+              Tren de
+            </span>
+            <span
+              className="hero-in block italic text-primary pl-[0.45em]"
+              style={{ '--d': '350ms' }}
+            >
+              Medianoche<span className="text-foreground not-italic">.</span>
+            </span>
+          </h1>
 
-          <div className="hero-in mt-10 grid md:grid-cols-3 gap-8 items-end" style={{ '--d': '600ms' }}>
-            <p className="md:col-span-2 text-base md:text-xl text-muted-foreground max-w-2xl leading-relaxed">
-              Composición original e improvisación en español. Blues electroacústico que conecta al
-              ser humano con su entorno, <span className="text-foreground">su ciudad</span> y{' '}
-              <span className="text-display italic text-primary text-[1.25em]">la vida cotidiana.</span>
+          <div className="mt-10 md:mt-14 grid lg:grid-cols-12 gap-8 lg:gap-10 items-end">
+            <p
+              className="hero-in lg:col-span-6 xl:col-span-5 text-base md:text-lg text-muted-foreground max-w-xl leading-relaxed"
+              style={{ '--d': '550ms' }}
+            >
+              Composición original e improvisación. Blues electroacústico que
+              conecta al ser humano con su entorno,{' '}
+              <span className="text-foreground">su ciudad</span> y{' '}
+              <span className="text-display italic text-primary text-[1.3em]">
+                la vida cotidiana.
+              </span>
             </p>
-            <div className="flex gap-4">
+
+            <div
+              className="hero-in lg:col-span-6 xl:col-span-4 flex gap-3 lg:justify-end xl:justify-start"
+              style={{ '--d': '650ms' }}
+            >
               <a
                 href="#lanzamiento"
-                className="btn-shine flex-1 md:flex-none px-5 sm:px-8 py-4 whitespace-nowrap bg-ember-gradient text-primary-foreground text-eyebrow shadow-ember hover:scale-[1.02] transition-transform text-center inline-flex items-center justify-center gap-2"
+                className="btn-shine flex-1 lg:flex-none px-5 sm:px-8 py-4 whitespace-nowrap bg-ember-gradient text-primary-foreground text-eyebrow shadow-ember hover:scale-[1.02] transition-transform text-center inline-flex items-center justify-center gap-2"
               >
-                <Play size={12} fill="currentColor" className="hidden sm:block" /> Nuevo single
+                <Play
+                  size={12}
+                  fill="currentColor"
+                  className="hidden sm:block"
+                />{' '}
+                Escuchar
               </a>
               <a
-                href="#contacto"
-                className="flex-1 md:flex-none px-8 py-4 border border-foreground/30 text-foreground text-eyebrow hover:border-primary hover:text-primary transition text-center"
+                href="#fechas"
+                className="flex-1 lg:flex-none px-5 sm:px-8 py-4 whitespace-nowrap border border-foreground/30 text-foreground text-eyebrow hover:border-primary hover:text-primary transition text-center"
               >
-                Contáctanos
+                Ver fechas
               </a>
             </div>
+
+            {/* Tarjeta "Ahora suena" con el último lanzamiento */}
+            <a
+              href="#lanzamiento"
+              className="hero-in spotlight hidden xl:flex xl:col-span-3 items-center gap-4 p-4 border border-border/70 bg-background/80 hover:border-primary/60 transition-colors"
+              style={{ '--d': '800ms' }}
+            >
+              <div className="shrink-0 w-14 h-14 bg-ember-gradient flex items-center justify-center text-primary-foreground">
+                {songCover ? (
+                  <img
+                    src={songCover}
+                    alt=""
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <Play size={18} fill="currentColor" />
+                )}
+              </div>
+              <div className="min-w-0">
+                <div className="flex items-center gap-2 text-eyebrow text-[0.62rem]">
+                  <span className="eq" aria-hidden="true">
+                    <span />
+                    <span />
+                    <span />
+                  </span>
+                  Ahora suena
+                </div>
+                <div className="text-display text-2xl leading-tight truncate mt-1">
+                  {latestTitle}
+                </div>
+              </div>
+            </a>
           </div>
         </div>
 
-        {/* Indicador de scroll (solo pantallas anchas, donde no choca con los botones) */}
-        <a
-          href="#lanzamiento"
-          aria-label="Bajar al último lanzamiento"
-          className="hero-in hidden 2xl:flex absolute right-10 bottom-16 z-10 flex-col items-center gap-3 text-muted-foreground hover:text-primary transition"
-          style={{ '--d': '1000ms' }}
-        >
-          <span className="font-mono text-[10px] uppercase tracking-[0.3em] [writing-mode:vertical-rl]">
-            Scroll
-          </span>
-          <span className="scroll-cue" />
-        </a>
-
-        {/* En escritorio la barra va fija bajo el menú (SiteNav) */}
-        <NewsTicker items={ticker} className="absolute bottom-0 left-0 right-0 py-3 bg-background/70 lg:hidden" />
+        {/* Barra inferior: datos de la banda + contador de fotos */}
+        <div className="relative z-10 border-t border-border/50 bg-background/70 backdrop-blur-sm">
+          <div className="max-w-7xl mx-auto px-6 md:px-10 py-4 flex items-center justify-between gap-6">
+            <dl className="flex gap-5 sm:gap-7 md:gap-14">
+              {[
+                ['2017', 'Fundación'],
+                [String(releaseList.length), 'Lanzamientos'],
+                [String(memberList.length), 'Músicos']
+              ].map(([n, l]) => (
+                <div key={l} className="flex items-baseline gap-2">
+                  <dt className="sr-only">{l}</dt>
+                  <dd className="text-display text-2xl md:text-3xl text-primary">
+                    {n}
+                  </dd>
+                  <span className="font-mono text-[0.6rem] md:text-[0.65rem] uppercase tracking-[0.2em] text-muted-foreground">
+                    {l}
+                  </span>
+                </div>
+              ))}
+            </dl>
+            <div className="hidden sm:flex items-center gap-4">
+              <span className="font-mono text-xs text-muted-foreground tabular-nums">
+                <span className="text-foreground">
+                  {String(slide + 1).padStart(2, '0')}
+                </span>{' '}
+                / {String(slides.length).padStart(2, '0')}
+              </span>
+              <div className="flex items-center gap-2">
+                {slides.map((s, i) => (
+                  <button
+                    key={(s.src || '') + 'dot' + i}
+                    onClick={() => setSlide(i)}
+                    aria-label={`Ver imagen ${i + 1}`}
+                    className={`h-[2px] transition-all ${
+                      i === slide
+                        ? 'w-10 bg-primary'
+                        : 'w-5 bg-foreground/30 hover:bg-foreground/60'
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+          {/* En móvil la barra de avisos va aquí; en escritorio, bajo el menú */}
+          <NewsTicker items={ticker} className="py-3 lg:hidden" />
+        </div>
       </section>
 
       {/* ÚLTIMO LANZAMIENTO — destacado */}
-      <section id="lanzamiento" className="relative py-24 md:py-32 border-t border-border/40 bg-smoke-gradient">
+      <section
+        id="lanzamiento"
+        className="relative py-24 md:py-32 border-t border-border/40 bg-smoke-gradient"
+      >
         <div className="max-w-7xl mx-auto px-6 md:px-10 grid lg:grid-cols-12 gap-10 items-center">
           <div className="reveal lg:col-span-5">
-            <div className="text-eyebrow mb-4 animate-flicker">▶ Último lanzamiento</div>
+            <div className="text-eyebrow mb-4 animate-flicker">
+              ▶ Último lanzamiento
+            </div>
             <h2 className="text-display text-6xl md:text-8xl leading-[0.9] mb-6">
               {latestTitle.split(' ')[0]}
               <br />
@@ -702,9 +892,18 @@ export default function LandingHome() {
                 )}
                 <div className="flex-1 w-full min-w-0">
                   <div className="text-eyebrow mb-2">Reproduce el single</div>
-                  <h3 className="text-display text-3xl md:text-4xl mb-1 truncate">{latestTitle}</h3>
-                  <p className="font-mono text-xs text-muted-foreground mb-4">{latestSubtitle}</p>
-                  <audio controls preload="metadata" src={songAudio} className="w-full" />
+                  <h3 className="text-display text-3xl md:text-4xl mb-1 truncate">
+                    {latestTitle}
+                  </h3>
+                  <p className="font-mono text-xs text-muted-foreground mb-4">
+                    {latestSubtitle}
+                  </p>
+                  <audio
+                    controls
+                    preload="metadata"
+                    src={songAudio}
+                    className="w-full"
+                  />
                 </div>
               </div>
             </div>
@@ -713,7 +912,11 @@ export default function LandingHome() {
       </section>
 
       {/* HISTORIA */}
-      <section id="historia" className="relative py-32 md:py-48 border-t border-border/40">
+      <section
+        id="historia"
+        className="relative py-32 md:py-48 border-t border-border/40"
+      >
+        <SectionNum n="01" />
         <div className="max-w-6xl mx-auto px-6 md:px-10 grid md:grid-cols-12 gap-12 items-center">
           <div className="reveal md:col-span-5 group relative overflow-hidden shadow-deep">
             <img
@@ -725,7 +928,11 @@ export default function LandingHome() {
             <div className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-primary/20" />
           </div>
           <div className="reveal md:col-span-7" style={{ '--d': '150ms' }}>
-            <div className="text-eyebrow mb-6">— Historia</div>
+            <div className="text-eyebrow mb-6">
+              <span className="text-muted-foreground">01</span>{' '}
+              <span className="inline-block h-px w-8 bg-primary/60 align-middle mx-2" />{' '}
+              Historia
+            </div>
             <h2 className="text-display text-5xl md:text-7xl leading-[0.95] mb-8">
               Blues que viaja
               <br />
@@ -745,7 +952,9 @@ export default function LandingHome() {
                 { n: '10+', l: 'Singles' }
               ].map((s) => (
                 <div key={s.l} className="border-t border-primary/40 pt-4">
-                  <div className="text-display text-4xl md:text-5xl text-primary">{s.n}</div>
+                  <div className="text-display text-4xl md:text-5xl text-primary">
+                    {s.n}
+                  </div>
                   <div className="text-eyebrow mt-2">{s.l}</div>
                 </div>
               ))}
@@ -755,16 +964,29 @@ export default function LandingHome() {
       </section>
 
       {/* MÚSICA */}
-      <section id="musica" className="relative py-32 md:py-48 bg-smoke-gradient border-t border-border/40">
+      <section
+        id="musica"
+        className="relative py-32 md:py-48 bg-smoke-gradient border-t border-border/40"
+      >
+        <SectionNum n="02" />
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <div className="reveal flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
             <div>
-              <div className="text-eyebrow mb-4">Discografía</div>
+              <div className="text-eyebrow mb-4">
+                <span className="text-muted-foreground">02</span>{' '}
+                <span className="inline-block h-px w-8 bg-primary/60 align-middle mx-2" />{' '}
+                Discografía
+              </div>
               <h2 className="text-display text-5xl md:text-7xl">
                 Nuestro <span className="italic text-primary">recorrido.</span>
               </h2>
             </div>
-            <a href={SPOTIFY_URL} target="_blank" rel="noreferrer" className="text-eyebrow text-primary hover:underline">
+            <a
+              href={SPOTIFY_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="text-eyebrow text-primary hover:underline"
+            >
               Ver perfil completo →
             </a>
           </div>
@@ -783,7 +1005,10 @@ export default function LandingHome() {
               <div className="text-eyebrow mb-4">Canciones · escúchalas</div>
               <ol className="divide-y divide-border/60 border-y border-border/60">
                 {trackList.map((t, i) => {
-                  const num = String(t.position ?? t.n ?? i + 1).padStart(2, '0');
+                  const num = String(t.position ?? t.n ?? i + 1).padStart(
+                    2,
+                    '0'
+                  );
                   const time = t.duration ?? t.time;
                   const key = t.id ?? t.title;
                   const isPlaying = playing.key === key && !playing.paused;
@@ -857,16 +1082,23 @@ export default function LandingHome() {
           <div className="mt-24">
             <div className="flex items-center justify-between gap-4 mb-10">
               <div className="text-eyebrow">Línea de tiempo</div>
-              <div className="text-eyebrow text-muted-foreground hidden md:block">desliza →</div>
+              <div className="text-eyebrow text-muted-foreground hidden md:block">
+                desliza →
+              </div>
             </div>
 
             {/* Móvil: línea de tiempo VERTICAL */}
             <div className="md:hidden relative border-l border-border/60 ml-1.5">
               {releaseList.map((r) => (
-                <div key={r.id ?? r.title} className="relative pl-6 pb-8 last:pb-0">
+                <div
+                  key={r.id ?? r.title}
+                  className="relative pl-6 pb-8 last:pb-0"
+                >
                   <span className="absolute left-0 top-2 -translate-x-1/2 w-3 h-3 rounded-full bg-primary shadow-ember" />
                   <div className="flex items-baseline gap-3 flex-wrap">
-                    <span className="font-mono text-sm text-primary">{r.year}</span>
+                    <span className="font-mono text-sm text-primary">
+                      {r.year}
+                    </span>
                     <span className="text-eyebrow">{r.type}</span>
                   </div>
                   <h3 className="text-display text-2xl mt-1">{r.title}</h3>
@@ -889,16 +1121,23 @@ export default function LandingHome() {
                   {/* Línea horizontal continua */}
                   <div className="absolute left-0 right-0 top-0 h-px bg-border/60" />
                   {releaseList.map((r) => (
-                    <div key={r.id ?? r.title} className="relative w-60 shrink-0 pt-8 group">
+                    <div
+                      key={r.id ?? r.title}
+                      className="relative w-60 shrink-0 pt-8 group"
+                    >
                       <span className="absolute top-0 left-0 -translate-y-1/2 w-3 h-3 rounded-full bg-primary shadow-ember" />
                       <div className="flex items-baseline gap-3 flex-wrap">
-                        <span className="font-mono text-sm text-primary">{r.year}</span>
+                        <span className="font-mono text-sm text-primary">
+                          {r.year}
+                        </span>
                         <span className="text-eyebrow">{r.type}</span>
                       </div>
                       <h3 className="text-display text-2xl mt-1 group-hover:text-primary transition-colors">
                         {r.title}
                       </h3>
-                      <p className="text-sm text-muted-foreground mt-1">{r.note}</p>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        {r.note}
+                      </p>
                     </div>
                   ))}
                 </div>
@@ -910,10 +1149,18 @@ export default function LandingHome() {
       </section>
 
       {/* BANDA */}
-      <section id="banda" className="relative py-32 md:py-48 border-t border-border/40">
+      <section
+        id="banda"
+        className="relative py-32 md:py-48 border-t border-border/40"
+      >
+        <SectionNum n="03" />
         <div className="max-w-7xl mx-auto px-6 md:px-10 grid md:grid-cols-12 gap-12">
           <div className="reveal md:col-span-5">
-            <div className="text-eyebrow mb-4">La banda</div>
+            <div className="text-eyebrow mb-4">
+              <span className="text-muted-foreground">03</span>{' '}
+              <span className="inline-block h-px w-8 bg-primary/60 align-middle mx-2" />{' '}
+              La banda
+            </div>
             <h2 className="text-display text-5xl md:text-6xl mb-8">
               Tres músicos,
               <br />
@@ -943,10 +1190,21 @@ export default function LandingHome() {
             {memberList.map((m, i) => (
               <div
                 key={m.id ?? m.name}
-                className="reveal spotlight group border border-border/60 p-6 md:p-8 hover:border-primary/40 transition-colors"
+                className="reveal spotlight group overflow-hidden border border-border/60 p-6 md:p-8 hover:border-primary/40 transition-colors"
                 style={{ '--d': `${i * 120}ms` }}
               >
-                <div className="flex items-baseline justify-between gap-4 flex-wrap">
+                {/* Iniciales grandes de fondo */}
+                <span
+                  aria-hidden="true"
+                  className="text-outline absolute -right-2 -bottom-6 text-display text-[7rem] md:text-[8.5rem] leading-none select-none pointer-events-none transition-transform duration-700 group-hover:-translate-x-3"
+                >
+                  {m.name
+                    .split(' ')
+                    .map((w) => w[0])
+                    .join('')
+                    .slice(0, 2)}
+                </span>
+                <div className="relative flex items-baseline justify-between gap-4 flex-wrap">
                   <div className="flex items-baseline gap-4">
                     <span className="font-mono text-xs text-primary">
                       {String(i + 1).padStart(2, '0')}
@@ -958,7 +1216,9 @@ export default function LandingHome() {
                   <span className="text-eyebrow">{m.role}</span>
                 </div>
                 {m.note && (
-                  <p className="font-mono text-xs text-muted-foreground mt-3 pl-8">{m.note}</p>
+                  <p className="relative font-mono text-xs text-muted-foreground mt-3 pl-8">
+                    {m.note}
+                  </p>
                 )}
               </div>
             ))}
@@ -967,19 +1227,27 @@ export default function LandingHome() {
               Hemos contado con colaboraciones de{' '}
               <span className="text-foreground">César Díaz Bilbao</span>,{' '}
               <span className="text-foreground">Marcelo Pizarro</span> y{' '}
-              <span className="text-foreground">Nehemías Muñoz</span>, entre otros músicos de la
-              escena nacional.
+              <span className="text-foreground">Nehemías Muñoz</span>, entre
+              otros músicos de la escena nacional.
             </p>
           </div>
         </div>
       </section>
 
       {/* FECHAS EN VIVO */}
-      <section id="fechas" className="relative py-32 md:py-40 bg-smoke-gradient border-t border-border/40">
+      <section
+        id="fechas"
+        className="relative py-32 md:py-40 bg-smoke-gradient border-t border-border/40"
+      >
+        <SectionNum n="04" />
         <div className="max-w-6xl mx-auto px-6 md:px-10">
           <div className="reveal flex flex-col md:flex-row md:items-end justify-between mb-14 gap-6">
             <div>
-              <div className="text-eyebrow mb-4">Agenda</div>
+              <div className="text-eyebrow mb-4">
+                <span className="text-muted-foreground">04</span>{' '}
+                <span className="inline-block h-px w-8 bg-primary/60 align-middle mx-2" />{' '}
+                Agenda
+              </div>
               <h2 className="text-display text-5xl md:text-7xl">
                 Próximas <span className="italic text-primary">fechas.</span>
               </h2>
@@ -988,12 +1256,17 @@ export default function LandingHome() {
 
           {events.upcoming.length === 0 ? (
             <div className="reveal spotlight border border-dashed border-border/60 p-12 md:p-16 text-center">
-              <Calendar className="mx-auto mb-6 text-primary" size={40} strokeWidth={1.2} />
+              <Calendar
+                className="mx-auto mb-6 text-primary"
+                size={40}
+                strokeWidth={1.2}
+              />
               <h3 className="text-display text-3xl md:text-4xl mb-3">
                 Estamos afinando la próxima parada.
               </h3>
               <p className="text-muted-foreground max-w-md mx-auto mb-8">
-                Aún no hay fechas confirmadas publicadas aquí. Escríbenos para contrataciones.
+                Aún no hay fechas confirmadas publicadas aquí. Escríbenos para
+                contrataciones.
               </p>
               <div className="flex flex-wrap gap-3 justify-center">
                 <a
@@ -1007,47 +1280,68 @@ export default function LandingHome() {
               </div>
             </div>
           ) : (
-            <ul className="divide-y divide-border/60 border-y border-border/60">
-              {events.upcoming.map((e) => {
+            <ul className="grid gap-4">
+              {events.upcoming.map((e, i) => {
                 const d = parseEventDate(e.event_date);
                 return (
+                  // Boleto de tren: talón con la fecha + cuerpo con el detalle
                   <li
                     key={e.id}
-                    className="grid grid-cols-[4.5rem_1fr] md:grid-cols-12 gap-x-5 gap-y-2 items-center py-6 px-2 hover:bg-primary/5 transition"
+                    className="reveal spotlight ticket group grid grid-cols-[5.5rem_1fr] md:grid-cols-[8rem_1fr] border border-border/60 bg-card/50 hover:border-primary/50 transition-colors"
+                    style={{ '--d': `${i * 100}ms` }}
                   >
-                    <div className="row-span-2 md:row-span-1 md:col-span-2 text-center md:text-left">
+                    <div className="ticket-stub flex flex-col items-center justify-center py-6 border-r border-dashed border-border/80 bg-primary/[0.06]">
                       <div className="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-primary">
                         {d.toLocaleDateString('es-CL', { weekday: 'short' })}
                       </div>
-                      <div className="text-display text-4xl md:text-5xl leading-none">{d.getDate()}</div>
+                      <div className="text-display text-5xl md:text-6xl leading-none my-1 group-hover:text-primary transition-colors">
+                        {d.getDate()}
+                      </div>
                       <div className="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-muted-foreground">
                         {d.toLocaleDateString('es-CL', { month: 'short' })}
                       </div>
                     </div>
-                    <div className="md:col-span-6">
-                      <div className="text-display text-2xl md:text-3xl leading-tight">{e.title}</div>
-                      {e.venue && e.venue !== e.title && (
-                        <div className="text-muted-foreground mt-1">{e.venue}</div>
-                      )}
-                    </div>
-                    <div className="md:col-span-4 flex flex-wrap gap-x-5 gap-y-1 text-sm text-muted-foreground">
-                      {(e.city || e.address) && (
-                        <span className="inline-flex items-center gap-1.5">
-                          <MapPin size={14} className="text-primary" /> {[e.address, e.city].filter(Boolean).join(', ')}
-                        </span>
-                      )}
-                      {e.event_time && <span className="font-mono text-xs">{e.event_time} h</span>}
-                      {e.price && <span className="font-mono text-xs">{e.price}</span>}
-                      {(e.ticket_url || e.source_url) && (
-                        <a
-                          href={e.ticket_url || e.source_url}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="text-eyebrow text-primary hover:underline inline-flex items-center gap-1"
-                        >
-                          {e.ticket_url ? 'Entradas' : 'Más info'} <ArrowUpRight size={12} />
-                        </a>
-                      )}
+                    <div className="p-5 md:p-7 grid md:grid-cols-[1fr_auto] gap-4 md:gap-8 items-center min-w-0">
+                      <div className="min-w-0">
+                        <div className="font-mono text-[0.6rem] uppercase tracking-[0.25em] text-muted-foreground mb-2">
+                          Boleto · Parada {String(i + 1).padStart(2, '0')}
+                        </div>
+                        <div className="text-display text-2xl md:text-4xl leading-tight">
+                          {e.title}
+                        </div>
+                        {e.venue && e.venue !== e.title && (
+                          <div className="text-muted-foreground mt-1">
+                            {e.venue}
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex flex-wrap md:flex-col md:items-end gap-x-5 gap-y-2 text-sm text-muted-foreground">
+                        {(e.city || e.address) && (
+                          <span className="inline-flex items-center gap-1.5">
+                            <MapPin size={14} className="text-primary" />{' '}
+                            {[e.address, e.city].filter(Boolean).join(', ')}
+                          </span>
+                        )}
+                        {e.event_time && (
+                          <span className="font-mono text-xs">
+                            {e.event_time} h
+                          </span>
+                        )}
+                        {e.price && (
+                          <span className="font-mono text-xs">{e.price}</span>
+                        )}
+                        {(e.ticket_url || e.source_url) && (
+                          <a
+                            href={e.ticket_url || e.source_url}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-eyebrow text-primary hover:underline inline-flex items-center gap-1"
+                          >
+                            {e.ticket_url ? 'Entradas' : 'Más info'}{' '}
+                            <ArrowUpRight size={12} />
+                          </a>
+                        )}
+                      </div>
                     </div>
                   </li>
                 );
@@ -1060,15 +1354,23 @@ export default function LandingHome() {
               <div className="text-eyebrow mb-5">Ya pasamos por aquí</div>
               <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8">
                 {events.past.slice(0, 9).map((e) => (
-                  <li key={e.id} className="flex items-baseline gap-4 py-3 border-b border-border/40">
+                  <li
+                    key={e.id}
+                    className="flex items-baseline gap-4 py-3 border-b border-border/40"
+                  >
                     <span className="font-mono text-xs text-muted-foreground shrink-0 w-20">
-                      {parseEventDate(e.event_date).toLocaleDateString('es-CL', {
-                        day: 'numeric',
-                        month: 'short',
-                        year: 'numeric'
-                      })}
+                      {parseEventDate(e.event_date).toLocaleDateString(
+                        'es-CL',
+                        {
+                          day: 'numeric',
+                          month: 'short',
+                          year: 'numeric'
+                        }
+                      )}
                     </span>
-                    <span className="text-foreground/90 truncate">{e.venue || e.title}</span>
+                    <span className="text-foreground/90 truncate">
+                      {e.venue || e.title}
+                    </span>
                   </li>
                 ))}
               </ul>
@@ -1078,17 +1380,29 @@ export default function LandingHome() {
       </section>
 
       {/* BLOG */}
-      <section id="blog" className="relative py-32 md:py-40 border-t border-border/40">
+      <section
+        id="blog"
+        className="relative py-32 md:py-40 border-t border-border/40"
+      >
+        <SectionNum n="05" />
         <div className="max-w-6xl mx-auto px-6 md:px-10">
           <div className="reveal flex flex-col md:flex-row md:items-end justify-between mb-14 gap-6">
             <div>
-              <div className="text-eyebrow mb-4">Bitácora</div>
+              <div className="text-eyebrow mb-4">
+                <span className="text-muted-foreground">05</span>{' '}
+                <span className="inline-block h-px w-8 bg-primary/60 align-middle mx-2" />{' '}
+                Bitácora
+              </div>
               <h2 className="text-display text-5xl md:text-7xl">
-                Notas desde <span className="italic text-primary">el vagón.</span>
+                Notas desde{' '}
+                <span className="italic text-primary">el vagón.</span>
               </h2>
             </div>
             {posts.length > 0 && (
-              <a href="#/blog" className="text-eyebrow text-primary hover:underline">
+              <a
+                href="#/blog"
+                className="text-eyebrow text-primary hover:underline"
+              >
                 Ver todo el blog →
               </a>
             )}
@@ -1102,13 +1416,20 @@ export default function LandingHome() {
                   className="border border-dashed border-border/60 p-8 flex flex-col justify-between min-h-[240px]"
                 >
                   <div>
-                    <div className="font-mono text-xs text-primary mb-4">Próximamente</div>
-                    <h3 className="text-display text-2xl mb-2 text-muted-foreground">Post #{i}</h3>
+                    <div className="font-mono text-xs text-primary mb-4">
+                      Próximamente
+                    </div>
+                    <h3 className="text-display text-2xl mb-2 text-muted-foreground">
+                      Post #{i}
+                    </h3>
                     <p className="text-sm text-muted-foreground/70">
-                      Historias del camino, sesiones de estudio y crónicas de shows en vivo.
+                      Historias del camino, sesiones de estudio y crónicas de
+                      shows en vivo.
                     </p>
                   </div>
-                  <div className="text-eyebrow text-muted-foreground/60 mt-6">— En preparación</div>
+                  <div className="text-eyebrow text-muted-foreground/60 mt-6">
+                    — En preparación
+                  </div>
                 </article>
               ))}
             </div>
@@ -1146,7 +1467,9 @@ export default function LandingHome() {
           <div className="reveal flex items-baseline justify-between mb-6 gap-6 flex-wrap">
             <div>
               <div className="text-eyebrow mb-3">▶ Galería</div>
-              <h2 className="text-display text-4xl md:text-5xl">Del bar a las vías.</h2>
+              <h2 className="text-display text-4xl md:text-5xl">
+                Del bar a las vías.
+              </h2>
             </div>
             <p className="text-sm text-muted-foreground max-w-md">
               Postales del tren mientras seguimos rodando por los escenarios.
@@ -1159,7 +1482,12 @@ export default function LandingHome() {
                   key={(s.src || '') + 'm' + i}
                   className="group relative w-[280px] md:w-[360px] aspect-[4/5] shrink-0 shadow-deep overflow-hidden"
                 >
-                  <img src={s.src} alt={s.alt} className="photo-warm w-full h-full object-cover object-top" loading="lazy" />
+                  <img
+                    src={s.src}
+                    alt={s.alt}
+                    className="photo-warm w-full h-full object-cover object-top"
+                    loading="lazy"
+                  />
                   <div className="absolute inset-0 bg-gradient-to-t from-background/70 to-transparent" />
                   <div className="absolute bottom-3 left-3 font-mono text-[10px] text-primary uppercase tracking-[0.25em]">
                     {s.caption}
@@ -1175,7 +1503,10 @@ export default function LandingHome() {
 
       {/* NOVEDADES: fechas confirmadas que vienen + noticias recientes (solo si hay) */}
       {novedades.length > 0 && (
-        <section id="noticias" className="relative py-32 md:py-40 border-t border-border/40">
+        <section
+          id="noticias"
+          className="relative py-32 md:py-40 border-t border-border/40"
+        >
           <div className="max-w-6xl mx-auto px-6 md:px-10">
             <div className="reveal mb-14">
               <div className="text-eyebrow mb-4">Novedades</div>
@@ -1193,22 +1524,39 @@ export default function LandingHome() {
                   {n.event && (
                     <div className="shrink-0 w-16 text-center border-r border-border/60 pr-5">
                       <div className="font-mono text-[0.62rem] uppercase tracking-[0.2em] text-primary">
-                        {parseEventDate(n.event.event_date).toLocaleDateString('es-CL', { weekday: 'short' })}
+                        {parseEventDate(n.event.event_date).toLocaleDateString(
+                          'es-CL',
+                          { weekday: 'short' }
+                        )}
                       </div>
                       <div className="text-display text-4xl leading-none">
                         {parseEventDate(n.event.event_date).getDate()}
                       </div>
                       <div className="font-mono text-[0.62rem] uppercase tracking-[0.2em] text-muted-foreground">
-                        {parseEventDate(n.event.event_date).toLocaleDateString('es-CL', { month: 'short' })}
+                        {parseEventDate(n.event.event_date).toLocaleDateString(
+                          'es-CL',
+                          { month: 'short' }
+                        )}
                       </div>
                     </div>
                   )}
                   <div className="min-w-0">
-                    <div className="font-mono text-xs text-primary mb-3">{n.eyebrow}</div>
-                    <h3 className="text-display text-2xl md:text-3xl mb-2">{n.title}</h3>
-                    {n.content && <p className="text-muted-foreground text-sm leading-relaxed">{n.content}</p>}
+                    <div className="font-mono text-xs text-primary mb-3">
+                      {n.eyebrow}
+                    </div>
+                    <h3 className="text-display text-2xl md:text-3xl mb-2">
+                      {n.title}
+                    </h3>
+                    {n.content && (
+                      <p className="text-muted-foreground text-sm leading-relaxed">
+                        {n.content}
+                      </p>
+                    )}
                     {n.event && (
-                      <a href="#fechas" className="mt-3 inline-flex items-center gap-1 text-eyebrow text-primary hover:underline">
+                      <a
+                        href="#fechas"
+                        className="mt-3 inline-flex items-center gap-1 text-eyebrow text-primary hover:underline"
+                      >
                         Ver agenda <ArrowUpRight size={12} />
                       </a>
                     )}
@@ -1222,21 +1570,26 @@ export default function LandingHome() {
 
       {/* APOYA EL PROYECTO (solo si hay datos de transferencia) */}
       {visibleDonation.length > 0 && (
-        <section id="apoyo" className="relative py-32 md:py-40 bg-smoke-gradient border-t border-border/40">
+        <section
+          id="apoyo"
+          className="relative py-32 md:py-40 bg-smoke-gradient border-t border-border/40"
+        >
           <div className="max-w-4xl mx-auto px-6 md:px-10 text-center">
             <div className="text-eyebrow mb-6">Apóyanos</div>
             <h2 className="text-display text-5xl md:text-7xl mb-6">
               Apoya el <span className="italic text-primary">proyecto.</span>
             </h2>
             <p className="text-muted-foreground max-w-xl mx-auto mb-12">
-              Si quieres apoyar nuestro trabajo y futuras producciones, puedes hacerlo mediante
-              transferencia bancaria.
+              Si quieres apoyar nuestro trabajo y futuras producciones, puedes
+              hacerlo mediante transferencia bancaria.
             </p>
             <div className="grid sm:grid-cols-2 gap-3 text-left">
               {visibleDonation.map((f) => (
                 <div key={f.id} className="border border-border/60 p-5">
                   <div className="text-eyebrow mb-1">{f.field_key}</div>
-                  <div className="font-mono text-sm md:text-base break-all">{f.field_value}</div>
+                  <div className="font-mono text-sm md:text-base break-all">
+                    {f.field_value}
+                  </div>
                 </div>
               ))}
             </div>
@@ -1251,16 +1604,24 @@ export default function LandingHome() {
       )}
 
       {/* CONTACTO */}
-      <section id="contacto" className="relative py-32 md:py-40 border-t border-border/40">
+      <section
+        id="contacto"
+        className="relative py-32 md:py-40 border-t border-border/40"
+      >
+        <SectionNum n="06" />
         <div className="max-w-5xl mx-auto px-6 md:px-10">
           <div className="reveal text-center mb-14">
-            <div className="text-eyebrow mb-6">Contacto</div>
+            <div className="text-eyebrow mb-6">
+              <span className="text-muted-foreground">06</span>{' '}
+              <span className="inline-block h-px w-8 bg-primary/60 align-middle mx-2" />{' '}
+              Contacto
+            </div>
             <h2 className="text-display text-5xl md:text-7xl mb-6">
               ¿Nos <span className="italic text-primary">subimos</span> al tren?
             </h2>
             <p className="text-lg text-muted-foreground max-w-xl mx-auto">
-              Contratación de shows, prensa, colaboraciones y notas. Escríbenos y respondemos con la
-              misma pasión con la que tocamos.
+              Contratación de shows, prensa, colaboraciones y notas. Escríbenos
+              y respondemos con la misma pasión con la que tocamos.
             </p>
           </div>
 
@@ -1269,22 +1630,38 @@ export default function LandingHome() {
               <ContactForm />
             </div>
 
-            <aside className="reveal lg:col-span-2 space-y-3" style={{ '--d': '150ms' }}>
-              <a href={`mailto:${emailAddr}`} className="spotlight block p-5 border border-border/60 hover:border-primary/60 transition group">
+            <aside
+              className="reveal lg:col-span-2 space-y-3"
+              style={{ '--d': '150ms' }}
+            >
+              <a
+                href={`mailto:${emailAddr}`}
+                className="spotlight block p-5 border border-border/60 hover:border-primary/60 transition group"
+              >
                 <div className="text-eyebrow mb-1">Email</div>
                 <div className="font-mono text-xs md:text-sm break-all group-hover:text-primary transition">
                   {emailAddr}
                 </div>
               </a>
               {contact.phone && (
-                <a href={whatsappUrl} target="_blank" rel="noreferrer" className="spotlight block p-5 border border-border/60 hover:border-primary/60 transition group">
+                <a
+                  href={whatsappUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="spotlight block p-5 border border-border/60 hover:border-primary/60 transition group"
+                >
                   <div className="text-eyebrow mb-1">WhatsApp</div>
                   <div className="font-mono text-sm group-hover:text-primary transition inline-flex items-center gap-2">
                     <MessageCircle size={14} /> +{contact.phone}
                   </div>
                 </a>
               )}
-              <a href={SPOTIFY_URL} target="_blank" rel="noreferrer" className="spotlight block p-5 border border-border/60 hover:border-primary/60 transition group">
+              <a
+                href={SPOTIFY_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="spotlight block p-5 border border-border/60 hover:border-primary/60 transition group"
+              >
                 <div className="text-eyebrow mb-1">Escúchanos</div>
                 <div className="font-mono text-sm group-hover:text-primary transition">
                   Spotify · Tren de Medianoche

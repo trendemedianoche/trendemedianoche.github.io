@@ -391,3 +391,52 @@
     display: none;
   }
 }
+
+/* Texto solo con contorno (números de sección, iniciales) */
+.text-outline {
+  color: transparent;
+  -webkit-text-stroke: 1px oklch(0.72 0.16 55 / 0.22);
+}
+
+/* Número gigante de cada sección, de fondo en la esquina */
+.section-num {
+  position: absolute;
+  top: 2.5rem;
+  right: 1rem;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(7rem, 22vw, 19rem);
+  line-height: 0.8;
+  letter-spacing: -0.04em;
+  color: transparent;
+  -webkit-text-stroke: 1px oklch(0.72 0.16 55 / 0.16);
+  pointer-events: none;
+  user-select: none;
+}
+@media (min-width: 768px) {
+  .section-num {
+    right: 2.5rem;
+  }
+}
+
+/* Boleto: muescas semicirculares en los extremos de la línea punteada */
+.ticket-stub {
+  position: relative;
+}
+.ticket-stub::before,
+.ticket-stub::after {
+  content: '';
+  position: absolute;
+  right: -9px;
+  width: 18px;
+  height: 18px;
+  border-radius: 9999px;
+  background: var(--background);
+  border: 1px solid var(--color-border);
+}
+.ticket-stub::before {
+  top: -10px;
+}
+.ticket-stub::after {
+  bottom: -10px;
+}
