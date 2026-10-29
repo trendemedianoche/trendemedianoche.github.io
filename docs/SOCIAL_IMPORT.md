@@ -58,8 +58,30 @@ Para probarlo en local:
 SUPABASE_URL=... SUPABASE_SERVICE_ROLE_KEY=... META_ACCESS_TOKEN=... IG_USER_ID=... node scripts/import-social.mjs
 ```
 
+## Token que no caduca (recomendado)
+
+El token del paso 3 sale de la cuenta personal de quien lo genera: **deja de funcionar si esa persona cambia su contraseña de Facebook**. Para no depender de la cuenta de nadie, usa un token de **usuario del sistema** de Meta Business. No es una persona, no tiene contraseña y su token puede configurarse para que no caduque nunca.
+
+Lo hace una sola vez alguien que sea **administrador de la página** de la banda (por ejemplo Manuel):
+
+1. **Portafolio comercial.** Entra a <https://business.facebook.com> y crea un portafolio para la banda (o usa uno existente).
+2. **Agregar la página y el Instagram.** En **Configuración → Cuentas → Páginas → Agregar → Agregar una página**, elige la página de Tren de Medianoche. Luego, en **Cuentas → Cuentas de Instagram**, agrega la cuenta de la banda.
+3. **Agregar la app.** En **Cuentas → Apps → Agregar → Conectar un identificador de app**, pega el App ID de la app de developers.facebook.com que usa el importador. Si no hay app, créala como dice el paso 3 de arriba.
+4. **Crear el usuario del sistema.** En **Usuarios → Usuarios del sistema → Agregar**, ponle un nombre (p. ej. `importador-sitio`) y rol **Administrador**.
+5. **Darle acceso.** Con el usuario del sistema seleccionado, pulsa **Asignar activos**:
+   - **Páginas** → la página de la banda → activa *Contenido* (o *Control total*).
+   - **Cuentas de Instagram** → la cuenta de la banda → *Contenido*.
+   - **Apps** → la app → *Desarrollar app* (o *Control total*).
+6. **Generar el token.** Pulsa **Generar nuevo token**, elige la app, en **Caducidad del token** elige **Nunca** y marca estos permisos:
+   `pages_show_list`, `pages_read_engagement`, `instagram_basic`, `business_management`.
+   Copia el token (empieza con `EAA`). Solo se muestra una vez.
+7. **Guardarlo en GitHub.** En el repo: **Settings → Secrets and variables → Actions → `META_ACCESS_TOKEN` → Update** y pega el token. `IG_USER_ID` y `FB_PAGE_ID` no cambian.
+8. **Probar.** **Actions → Importar Instagram y Facebook al blog → Run workflow.** El log debe mostrar `🔑 Token de: importador-sitio` y, si hay página configurada, `🔑 Usando el token de la página …`.
+
+El importador acepta este token directamente: si hay `FB_PAGE_ID`, obtiene solo el token de la página a partir de él.
+
 ## Problemas comunes
-- **`Error validating access token`**: el token caducó o cambiaste la contraseña de Facebook. Repite el paso 3.
+- **`El token de Meta (META_ACCESS_TOKEN) ya no es válido`** / **`Error validating access token`**: alguien cambió su contraseña de Facebook o quitó permisos. Genera un token de usuario del sistema (sección anterior) para que no vuelva a pasar.
 - **`(#10) Application does not have permission`**: falta algún permiso del paso 3, o la cuenta de Instagram no está vinculada a la página.
 - **No aparecen imágenes**: revisa que el bucket `social_media` exista y sea público.
 

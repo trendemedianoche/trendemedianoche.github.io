@@ -7,7 +7,8 @@
 //
 // Variables de entorno:
 //   SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY   (obligatorias)
-//   META_ACCESS_TOKEN                          (token de página, obligatorio)
+//   META_ACCESS_TOKEN                          (obligatorio: token de usuario del
+//                                              sistema de Meta Business, o de página)
 //   IG_USER_ID                                 (opcional: activa Instagram)
 //   FB_PAGE_ID                                 (opcional: activa Facebook)
 //   SOCIAL_AUTO_PUBLISH=true                   (publica sin revisión)
@@ -42,17 +43,58 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
   auth: { persistSession: false }
 });
 
-async function graph(path, params) {
+// Token con el que se consulta Meta. Puede ser un token de página o uno de
+// "usuario del sistema" (Meta Business); en ese caso se cambia por el de la página.
+let accessToken = META_ACCESS_TOKEN;
+
+async function graph(path, params, token = accessToken) {
   const url = new URL(`${GRAPH}/${path}`);
-  for (const [k, v] of Object.entries({ ...params, access_token: META_ACCESS_TOKEN })) {
+  for (const [k, v] of Object.entries({ ...params, access_token: token })) {
     url.searchParams.set(k, v);
   }
   const res = await fetch(url);
   const body = await res.json();
   if (!res.ok || body.error) {
-    throw new Error(`Graph API ${path}: ${body.error?.message || res.status}`);
+    const err = new Error(`Graph API ${path}: ${body.error?.message || res.status}`);
+    err.code = body.error?.code;
+    throw err;
   }
   return body;
+}
+
+// Revisa el token antes de importar. Si es de un usuario del sistema y hay
+// página de Facebook, obtiene el token de esa página (tampoco caduca).
+async function prepareToken() {
+  let me;
+  try {
+    me = await graph('me', { fields: 'id,name' });
+  } catch (err) {
+    if (err.code === 190) {
+      console.error(
+        '❌ El token de Meta (META_ACCESS_TOKEN) ya no es válido.\n' +
+          '   Pasa cuando quien lo generó cambia su contraseña de Facebook o quita permisos.\n' +
+          '   Solución definitiva: token de "usuario del sistema" de Meta Business, que no depende\n' +
+          '   de la cuenta de nadie. Pasos en docs/SOCIAL_IMPORT.md → "Token que no caduca".'
+      );
+      process.exitCode = 1;
+      return false;
+    }
+    throw err;
+  }
+  console.log(`🔑 Token de: ${me.name}`);
+
+  if (FB_PAGE_ID && me.id !== FB_PAGE_ID) {
+    try {
+      const page = await graph(FB_PAGE_ID, { fields: 'access_token,name' });
+      if (page.access_token) {
+        accessToken = page.access_token;
+        console.log(`🔑 Usando el token de la página ${page.name}`);
+      }
+    } catch (err) {
+      console.warn(`⚠️  No se pudo obtener el token de la página ${FB_PAGE_ID}: ${err.message}`);
+    }
+  }
+  return true;
 }
 
 /* ----------------------------- LECTURA ----------------------------- */
@@ -180,8 +222,12 @@ async function importStories() {
   const { data } = await graph(`${IG_USER_ID}/stories`, {
     fields: 'id,media_type,media_url,thumbnail_url,permalink,timestamp'
   });
+  // Sin historias en las últimas 24 h es lo normal, no un error
+  if (!data.length) {
+    console.log('📭 Historias: no hay historias activas ahora (nada que importar)');
+    return;
+  }
   console.log(`🔍 Historias activas: ${data.length}`);
-  if (!data.length) return;
 
   const { data: existing, error } = await supabase
     .from('instagram_stories')
@@ -421,6 +467,8 @@ async function main() {
     console.error('❌ Define IG_USER_ID y/o FB_PAGE_ID');
     process.exit(1);
   }
+
+  if (!(await prepareToken())) return;
 
   if (IG_USER_ID) {
     try {
