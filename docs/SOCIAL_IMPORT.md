@@ -37,6 +37,14 @@ Ejecuta `scripts/social-import-setup.sql` en el SQL Editor de Supabase.
    - `id` → `FB_PAGE_ID`
    - `instagram_business_account.id` → `IG_USER_ID`
 
+#### Alternativa recomendada: token de usuario del sistema
+El token de página deja de funcionar si alguien cambia la contraseña de Facebook o Meta cierra las sesiones por seguridad. Un token de **usuario del sistema** no depende de la sesión de nadie:
+
+1. En <https://business.facebook.com/settings> → **Usuarios → Usuarios del sistema**, crea uno con rol **Administrador**.
+2. **Asignar activos**: agrega la página de Facebook y la cuenta de Instagram (control total), y la app.
+3. **Generar nuevo token**: elige la app, caducidad **Nunca** y los permisos `pages_show_list`, `pages_read_engagement`, `instagram_basic`, `business_management`.
+4. Usa ese token como `META_ACCESS_TOKEN`; los ids de `FB_PAGE_ID` e `IG_USER_ID` no cambian.
+
 ### 4. Secretos en GitHub
 En el repo: **Settings → Secrets and variables → Actions**.
 
