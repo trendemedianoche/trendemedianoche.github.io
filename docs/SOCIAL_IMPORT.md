@@ -1,6 +1,6 @@
 # Importar Instagram y Facebook al blog
 
-Cada 3 horas, la GitHub Action `.github/workflows/import-social.yml` corre `scripts/import-social.mjs`, que:
+Cada hora, la GitHub Action `.github/workflows/import-social.yml` corre `scripts/import-social.mjs`, que:
 
 1. Lee las últimas publicaciones de Instagram y/o de la página de Facebook (Graph API de Meta).
 2. Copia las imágenes al bucket `social_media` de Supabase (las URLs de Meta caducan).
@@ -87,7 +87,7 @@ El importador acepta este token directamente: si hay `FB_PAGE_ID`, obtiene solo 
 
 ## Historias de Instagram
 
-El mismo importador guarda las historias **activas** de la cuenta (las de las últimas 24 h; como corre cada 3 horas, alcanza a capturarlas todas) en la tabla `instagram_stories`, con la imagen o el video copiados al bucket `social_media`.
+El mismo importador guarda las historias **activas** de la cuenta (las de las últimas 24 h; como corre cada hora, alcanza a capturarlas todas) en la tabla `instagram_stories`, con la imagen o el video copiados al bucket `social_media`.
 
 - Cuando hay historias de los últimos 7 días, el logo del menú lleva un anillo (ámbar si hay alguna sin ver, tenue si ya se vieron). Al tocarlo se abre un visor a pantalla completa.
 - Si una historia comparte un post (se sube hasta 6 h después de él), tocar la imagen abre ese post en Instagram.

@@ -2,7 +2,7 @@ name: Importar Instagram y Facebook al blog
 
 on:
   schedule:
-    - cron: '40 */3 * * *' # cada 3 horas
+    - cron: '40 * * * *' # cada hora (GitHub suele saltarse ejecuciones; las historias duran 24 h)
   workflow_dispatch:       # permite ejecutarlo manualmente
     inputs:
       rescan:
@@ -15,9 +15,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 22
           cache: npm
