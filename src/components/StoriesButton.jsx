@@ -6,18 +6,6 @@ import { getRecentStories } from '../services/storiesService';
 const IMAGE_DURATION = 5000;
 const DAY = 24 * 60 * 60 * 1000;
 
-function dayKey(date) {
-  return new Date(date).toLocaleDateString('es-CL');
-}
-
-function dayLabel(date) {
-  const d = new Date(date);
-  const today = new Date();
-  if (dayKey(d) === dayKey(today)) return 'Hoy';
-  if (dayKey(d) === dayKey(today.getTime() - DAY)) return 'Ayer';
-  return d.toLocaleDateString('es-CL', { weekday: 'short', day: 'numeric' });
-}
-
 function timeAgo(date) {
   const hours = Math.floor((Date.now() - new Date(date).getTime()) / (60 * 60 * 1000));
   if (hours < 1) return 'Hace un momento';
@@ -135,13 +123,21 @@ function StoryViewer({ stories, startIndex, onClose }) {
             onTimeUpdate={(e) => setProgress(e.target.currentTime / (e.target.duration || 1))}
             onEnded={next}
           />
-        ) : (
+        ) : story.media_url ? (
           <img
             key={story.id}
             src={story.media_url}
             alt="Historia de Instagram"
             className="absolute inset-0 w-full h-full object-contain"
           />
+        ) : (
+          // Instagram no entrega la imagen de algunas historias (p. ej. con música con derechos)
+          <div key={story.id} className="absolute inset-0 flex flex-col items-center justify-center gap-4 px-10 text-center bg-smoke-gradient">
+            <div className="text-display text-3xl">Historia en Instagram</div>
+            <p className="text-sm text-muted-foreground">
+              Esta historia solo se puede ver en Instagram.
+            </p>
+          </div>
         )}
 
         {/* Zonas táctiles: bordes = anterior/siguiente; si comparte un post, el centro lo abre en Instagram */}
@@ -226,14 +222,12 @@ export default function StoriesButton({ children, fallback = null }) {
 
   if (!stories.length) return fallback;
 
-  // Empieza por la primera historia del día más reciente, como Instagram
+  // Se reproducen todas las de las últimas 24 h, de la más antigua a la más reciente
   const latest = stories[stories.length - 1];
-  const lastDay = dayKey(latest.taken_at);
-  const startIndex = stories.findIndex((s) => dayKey(s.taken_at) === lastDay);
   const unseen = seen !== latest.id;
 
   const open = () => {
-    setOpenAt(startIndex);
+    setOpenAt(0);
     setSeen(latest.id);
     try {
       localStorage.setItem(SEEN_KEY, latest.id);
@@ -250,7 +244,7 @@ export default function StoriesButton({ children, fallback = null }) {
         className={`shrink-0 block p-[2px] rounded-full transition-transform hover:scale-105 outline-none focus-visible:ring-2 focus-visible:ring-primary/50 ${
           unseen ? 'bg-ember-gradient shadow-ember' : 'bg-border'
         }`}
-        title={`Historias · ${dayLabel(latest.taken_at)}`}
+        title={`Historias · ${stories.length} en las últimas 24 h`}
         aria-label={unseen ? 'Ver historias nuevas de Instagram' : 'Ver historias de Instagram'}
       >
         <span className="block p-[2px] rounded-full bg-background">{children}</span>

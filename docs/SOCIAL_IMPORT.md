@@ -89,10 +89,11 @@ El importador acepta este token directamente: si hay `FB_PAGE_ID`, obtiene solo 
 
 El mismo importador guarda las historias **activas** de la cuenta (las de las últimas 24 h; como corre cada hora, alcanza a capturarlas todas) en la tabla `instagram_stories`, con la imagen o el video copiados al bucket `social_media`.
 
-- Cuando hay historias de los últimos 7 días, el logo del menú lleva un anillo (ámbar si hay alguna sin ver, tenue si ya se vieron). Al tocarlo se abre un visor a pantalla completa.
+- Cuando hay historias de las últimas 24 horas, el logo del menú lleva un anillo (ámbar si hay alguna sin ver, tenue si ya se vieron). Al tocarlo se abre un visor a pantalla completa.
 - Si una historia comparte un post (se sube hasta 6 h después de él), tocar la imagen abre ese post en Instagram.
 - En **Admin → Historias** puedes ocultar o eliminar cualquiera.
 - Las de más de 30 días se borran solas (registro y archivos).
 - Las historias de otras cuentas donde etiquetan a la banda no llegan por la API: hay que compartirlas en la historia propia.
 
 Configuración: ejecutar `scripts/instagram-stories-setup.sql` una vez en Supabase.
+- Instagram no entrega la imagen de algunas historias (sobre todo las que tienen música con derechos de autor). Se guardan igual: con la miniatura si existe o, si no, el visor muestra una tarjeta con enlace a la historia en Instagram.

@@ -1,13 +1,13 @@
 import { supabase } from '../lib/supabase';
 
-// Días hacia atrás que se muestran en la franja de la portada
-export const STORIES_DAYS = 7;
+// Como en Instagram: el sitio muestra las historias de las últimas 24 horas
+export const STORIES_HOURS = 24;
 
 /**
- * Historias visibles de los últimos días (más antiguas primero, como en Instagram)
+ * Historias visibles de las últimas 24 horas (más antiguas primero, como en Instagram)
  */
 export async function getRecentStories() {
-  const since = new Date(Date.now() - STORIES_DAYS * 24 * 60 * 60 * 1000).toISOString();
+  const since = new Date(Date.now() - STORIES_HOURS * 60 * 60 * 1000).toISOString();
   const { data, error } = await supabase
     .from('instagram_stories')
     .select('*')

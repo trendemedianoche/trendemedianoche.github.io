@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Eye, EyeOff, Play, Trash2 } from 'lucide-react';
-import { getAllStories, setStoryVisible, deleteStory, STORIES_DAYS } from '../services/storiesService';
+import { getAllStories, setStoryVisible, deleteStory, STORIES_HOURS } from '../services/storiesService';
 
 export default function StoriesAdmin() {
   const [stories, setStories] = useState([]);
@@ -31,14 +31,14 @@ export default function StoriesAdmin() {
     new Date(value).toLocaleString('es-CL', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
 
   const onStrip = (story) =>
-    story.visible && Date.now() - new Date(story.taken_at).getTime() < STORIES_DAYS * 24 * 60 * 60 * 1000;
+    story.visible && Date.now() - new Date(story.taken_at).getTime() < STORIES_HOURS * 60 * 60 * 1000;
 
   return (
     <div className="admin-card">
       <div className="admin-card-header">
         <h2 className="admin-card-title">Capturadas ({stories.length})</h2>
         <p className="form-hint">
-          Se capturan solas cada 3 horas. La portada muestra las de los últimos {STORIES_DAYS} días.
+          Se capturan solas varias veces al día. El sitio muestra las de las últimas {STORIES_HOURS} horas, como Instagram.
         </p>
       </div>
 

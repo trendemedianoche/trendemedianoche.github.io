@@ -219,15 +219,21 @@ const STORIES_KEEP_DAYS = 30;
 
 // Las historias duran 24 h en Instagram: se copian para mostrarlas en la franja de la portada
 async function importStories() {
-  const { data } = await graph(`${IG_USER_ID}/stories`, {
-    fields: 'id,media_type,media_url,thumbnail_url,permalink,timestamp'
+  // Todas las páginas: la respuesta viene paginada
+  let { data, paging } = await graph(`${IG_USER_ID}/stories`, {
+    fields: 'id,media_type,media_url,thumbnail_url,permalink,timestamp',
+    limit: 100
   });
+  while (paging?.next) {
+    const body = await (await fetch(paging.next)).json();
+    data = data.concat(body.data || []);
+    paging = body.paging;
+  }
   // Sin historias en las últimas 24 h es lo normal, no un error
   if (!data.length) {
     console.log('📭 Historias: no hay historias activas ahora (nada que importar)');
     return;
   }
-  console.log(`🔍 Historias activas: ${data.length}`);
 
   const { data: existing, error } = await supabase
     .from('instagram_stories')
@@ -235,22 +241,44 @@ async function importStories() {
     .in('source_id', data.map((s) => s.id));
   if (error) throw error;
   const known = new Set(existing.map((e) => e.source_id));
+  const pending = data.filter((s) => !known.has(s.id));
+  console.log(`🔍 Historias activas: ${data.length} (${pending.length} nuevas)`);
 
-  for (const story of data.filter((s) => !known.has(s.id) && s.media_url)) {
-    const isVideo = story.media_type === 'VIDEO';
-    const mediaUrl = await copyMedia(story.media_url, `stories/${story.id}`, isVideo ? 'mp4' : null);
-    const thumbnailUrl = story.thumbnail_url ? await copyImage(story.thumbnail_url, `stories/${story.id}_thumb`) : null;
+  for (const story of pending) {
+    try {
+      // Instagram no entrega media_url cuando la historia tiene música con derechos de autor:
+      // se usa la miniatura y, si tampoco hay, se guarda igual (el visor ofrece verla en Instagram)
+      const isVideo = story.media_type === 'VIDEO' && Boolean(story.media_url);
+      let mediaUrl = '';
+      let thumbnailUrl = null;
+      if (story.media_url) {
+        mediaUrl = await copyMedia(story.media_url, `stories/${story.id}`, isVideo ? 'mp4' : null);
+      }
+      if (story.thumbnail_url) {
+        thumbnailUrl = await copyImage(story.thumbnail_url, `stories/${story.id}_thumb`);
+      }
+      if (!mediaUrl && thumbnailUrl) mediaUrl = thumbnailUrl;
 
-    const { error: insertError } = await supabase.from('instagram_stories').insert({
-      source_id: story.id,
-      media_type: story.media_type,
-      media_url: mediaUrl,
-      thumbnail_url: thumbnailUrl,
-      permalink: story.permalink,
-      taken_at: new Date(story.timestamp).toISOString()
-    });
-    if (insertError) throw insertError;
-    console.log(`📸 Historia ${story.id} guardada (${story.media_type})`);
+      const { error: insertError } = await supabase.from('instagram_stories').insert({
+        source_id: story.id,
+        media_type: isVideo ? 'VIDEO' : 'IMAGE',
+        media_url: mediaUrl,
+        thumbnail_url: thumbnailUrl,
+        permalink: story.permalink,
+        taken_at: new Date(story.timestamp).toISOString()
+      });
+      if (insertError) throw insertError;
+
+      const note = story.media_url
+        ? ''
+        : mediaUrl
+          ? ' · sin archivo (¿música con derechos?): se usa la miniatura'
+          : ' · Instagram no entrega imagen (¿música con derechos?): se mostrará con enlace a Instagram';
+      console.log(`📸 Historia ${story.id} guardada (${story.media_type})${note}`);
+    } catch (err) {
+      console.error(`❌ Historia ${story.id}:`, err.message);
+      process.exitCode = 1;
+    }
   }
 }
 
