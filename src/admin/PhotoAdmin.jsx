@@ -1,10 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { Eye, EyeOff, Trash2 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import { GALLERY_BUCKET as BUCKET, resolveImageUrl } from '../services/galleryService';
 import visible from '../assets/visible.png';
 import no_visible from '../assets/no_visible.svg';
-
-const BUCKET = 'trendemedianoche_assets';
 
 export default function PhotoAdmin() {
   const [images, setImages] = useState([]);
@@ -34,16 +33,12 @@ export default function PhotoAdmin() {
       return;
     }
 
+    // Las que no cargan se muestran igual (sin miniatura) para poder borrarlas u ordenarlas
     const withUrls = await Promise.all(
-      data.map(async (img) => {
-        const { data: signed } = await supabase.storage
-          .from(BUCKET)
-          .createSignedUrl(img.path, 3600);
-        return signed ? { ...img, url: signed.signedUrl } : null;
-      })
+      data.map(async (img) => ({ ...img, url: await resolveImageUrl(img) }))
     );
 
-    setImages(withUrls.filter(Boolean));
+    setImages(withUrls);
     setLoading(false);
   };
 
@@ -111,7 +106,7 @@ export default function PhotoAdmin() {
   const remove = async (img) => {
     if (!window.confirm('¿Eliminar esta imagen?')) return;
     setLoading(true);
-    await supabase.storage.from(BUCKET).remove([img.path]);
+    await supabase.storage.from(img.bucket || BUCKET).remove([img.path]);
     await supabase.from('gallery_images').delete().eq('id', img.id);
     setMessage('Imagen eliminada');
     setMessageType('success');
@@ -189,7 +184,7 @@ export default function PhotoAdmin() {
                 border: '1px solid var(--border)',
                 borderRadius: 0
               }}>
-                {img.url && (
+                {img.url ? (
                   <img
                     src={img.url}
                     alt={img.path}
@@ -203,6 +198,21 @@ export default function PhotoAdmin() {
                       border: img.active ? '2px solid var(--primary)' : '2px solid var(--muted-foreground)'
                     }}
                   />
+                ) : (
+                  <div style={{
+                    height: '180px',
+                    marginBottom: '1rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    textAlign: 'center',
+                    padding: '1rem',
+                    fontSize: '0.8rem',
+                    color: 'var(--muted-foreground)',
+                    border: '2px dashed var(--border)'
+                  }}>
+                    No se encontró el archivo en {img.bucket || BUCKET}
+                  </div>
                 )}
                 <div style={{ marginBottom: '0.8rem' }}>
                   <strong style={{ fontSize: '0.9rem', color: 'var(--foreground)' }}>{shortName(img.path)}</strong>
