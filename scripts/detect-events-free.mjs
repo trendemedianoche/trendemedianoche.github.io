@@ -64,6 +64,14 @@ async function ocr(imageUrl) {
   return texts;
 }
 
+// Días de la semana escritos en el flyer ("ESTE VIERNES", "sábado 7 de noviembre")
+function weekdaysIn(texts) {
+  const names = Object.keys(WEEKDAYS).join('|');
+  const found = new Set();
+  for (const t of texts) for (const m of strip(t).matchAll(new RegExp(`(${names})`, 'g'))) found.add(WEEKDAYS[m[1]]);
+  return found;
+}
+
 // La fecha que más se repite entre las lecturas del flyer
 function voteDate(texts, published) {
   const votes = new Map();
@@ -77,8 +85,21 @@ function voteDate(texts, published) {
       if (date) votes.set(toISO(date), (votes.get(toISO(date)) || 0) + 0.5);
     }
   }
+  // Si el flyer dice "viernes", la fecha tiene que caer en viernes: el OCR lee ruido como
+  // fechas ("ESTE VIERNES | 22:00 Hs. - 7-3" se leía como 7 de marzo, que es domingo)
+  const days = weekdaysIn(texts);
+  if (days.size) {
+    for (const d of votes.keys()) {
+      const [y, m, dd] = d.split('-').map(Number);
+      if (!days.has(new Date(y, m - 1, dd).getDay())) votes.delete(d);
+    }
+  }
   const [best] = [...votes.entries()].sort((a, b) => b[1] - a[1]);
-  return best ? { date: best[0], votes: best[1] } : null;
+  if (best) return { date: best[0], votes: best[1] };
+  // Sin fecha escrita: "este viernes", "hoy", "mañana", contadas desde la publicación
+  // (en una historia, que dura 24 h, es lo más común)
+  const rel = relativeDate(texts.map(strip).join('\n'), published);
+  return rel ? { date: toISO(rel), votes: 1, relative: true } : null;
 }
 
 export async function closeOcr() {
@@ -135,22 +156,28 @@ function findDates(text, published, { relative = true } = {}) {
 
   // Relativas a la fecha de publicación
   if (relative && !found.length) {
-    if (/\bpasado manana\b/.test(t)) found.push(new Date(published.getTime() + 2 * DAY));
-    else if (/\bmanana\b/.test(t)) found.push(new Date(published.getTime() + DAY));
-    else if (/\b(hoy|esta noche)\b/.test(t)) found.push(published);
-    else if (/\banoche\b/.test(t)) found.push(new Date(published.getTime() - DAY));
-
-    const weekdays = Object.keys(WEEKDAYS).join('|');
-    const rel = new RegExp(`\\b(este|el|proximo|este proximo)\\s+(${weekdays})\\b(\\s+pasado)?`);
-    const m = t.match(rel);
-    if (m && !found.length) {
-      const target = WEEKDAYS[m[2]];
-      const diff = (target - published.getDay() + 7) % 7;
-      found.push(new Date(published.getTime() + (m[3] ? diff - 7 : diff) * DAY));
-    }
+    const rel = relativeDate(t, published);
+    if (rel) found.push(rel);
   }
 
   return [...new Set(found.map(toISO))].slice(0, 3);
+}
+
+// "este viernes", "hoy", "mañana"… desde la fecha de publicación. `t` ya viene sin tildes.
+// El día de la semana manda sobre hoy/mañana: "Mañana en entrevista … ESTE VIERNES 22:00"
+// habla de la tocata del viernes, no de la entrevista. \s* porque el OCR pega "ESTEVIERNES".
+function relativeDate(t, published) {
+  const weekdays = Object.keys(WEEKDAYS).join('|');
+  const m = t.match(new RegExp(`\\b(este proximo|este|el|proximo)\\s*(${weekdays})\\b(\\s+pasado)?`));
+  if (m) {
+    const diff = (WEEKDAYS[m[2]] - published.getDay() + 7) % 7;
+    return new Date(published.getTime() + (m[3] ? diff - 7 : diff) * DAY);
+  }
+  if (/\bpasado manana\b/.test(t)) return new Date(published.getTime() + 2 * DAY);
+  if (/\bmanana\b/.test(t)) return new Date(published.getTime() + DAY);
+  if (/\b(hoy|esta noche)\b/.test(t)) return published;
+  if (/\banoche\b/.test(t)) return new Date(published.getTime() - DAY);
+  return null;
 }
 
 /* ------------------------------- DATOS ------------------------------- */
@@ -261,7 +288,9 @@ export async function detectEventsFree({ text = '', imageUrl, publishedAt }) {
     city: findCity(all),
     address: findAddress(all),
     price: findPrice(all),
-    notes: flyerVotes
+    notes: flyerVotes?.relative
+      ? `Fecha calculada desde la publicación (el flyer no trae fecha): confírmala`
+      : flyerVotes
       ? `Fecha leída del flyer: confírmala`
       : 'Detectada automáticamente: revisa los datos',
     certainty: venue && time && (!flyerVotes || flyerVotes.votes >= 1.5) ? 'media' : 'baja'
