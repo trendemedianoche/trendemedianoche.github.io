@@ -1,7 +1,7 @@
 import { supabase } from '../lib/supabase';
 
 export const GALLERY_BUCKET = 'trendemedianoche_assets';
-const PUBLIC_BUCKET = 'trendemedianoche_public';
+export const PUBLIC_BUCKET = 'trendemedianoche_public';
 
 // Cada fila indica en qué bucket está su archivo: el público sirve URL directa,
 // el privado necesita una URL firmada

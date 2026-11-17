@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { ArrowUpRight, LogOut, Menu, X } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { supabase } from '../lib/supabase';
-import logoMark from '../assets/logo-mark.png';
-import logoText from '../assets/logo-text.png';
+import logoMark from '../assets/logo-mark.webp';
+import logoText from '../assets/logo-text.webp';
 
 export default function AdminHeader({ menuOpen, onToggleMenu }) {
   const { user } = useAuth();

@@ -4,7 +4,7 @@ import {
   getFooterContactData,
   getFooterSocialNetworks
 } from '../services/donationService';
-import logoFull from '../assets/logo_2.png';
+import logoFull from '../assets/logo-full.webp';
 
 const SOCIAL_ICONS = {
   Instagram,

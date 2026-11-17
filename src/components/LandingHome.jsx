@@ -36,13 +36,13 @@ import {
 } from '../services/donationService';
 
 // Imágenes locales de respaldo (si Supabase aún no tiene contenido)
-import guitarImg from '../assets/guitar.jpeg';
-import trainNight from '../assets/train-night.jpeg';
-import harmonicaImg from '../assets/harmonica.jpeg';
-import bandBar1 from '../assets/band-bar-1.png';
-import bandBar2 from '../assets/band-bar-2.png';
-import bandTracks from '../assets/band-tracks.png';
-import logoMark from '../assets/logo-mark.png';
+import guitarImg from '../assets/guitar.webp';
+import trainNight from '../assets/train-night.webp';
+import harmonicaImg from '../assets/harmonica.webp';
+import bandBar1 from '../assets/band-bar-1.webp';
+import bandBar2 from '../assets/band-bar-2.webp';
+import bandTracks from '../assets/band-tracks.webp';
+import logoMark from '../assets/logo-mark.webp';
 import sientesComoMp3 from '../assets/sientes_como.mp3';
 
 /* ------------------------------ DATOS FIJOS ------------------------------ */

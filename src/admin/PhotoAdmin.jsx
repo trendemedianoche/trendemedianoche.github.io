@@ -1,9 +1,69 @@
 import { useEffect, useRef, useState } from 'react';
 import { Eye, EyeOff, Trash2 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
-import { GALLERY_BUCKET as BUCKET, resolveImageUrl } from '../services/galleryService';
+import {
+  GALLERY_BUCKET as BUCKET,
+  PUBLIC_BUCKET,
+  resolveImageUrl
+} from '../services/galleryService';
+import { slugifyFilename, toWebpVariants } from '../lib/imageTransform';
 import visible from '../assets/visible.png';
 import no_visible from '../assets/no_visible.svg';
+
+const kb = (bytes) => `${Math.round(bytes / 1024)} KB`;
+
+// Convierte la foto a WebP (-lg 1920 px y -sm 800 px) y la sube al bucket
+// público (CDN). Si el navegador no puede convertirla (p. ej. HEIC) o no hay
+// permiso en el bucket público, sube al privado como antes.
+async function uploadOptimized(file) {
+  const converted = await toWebpVariants(file);
+  const stamp = Date.now();
+
+  if (converted) {
+    const base = `gallery/${stamp}-${slugifyFilename(file.name)}`;
+    const note = ` (${kb(converted.originalBytes)} → ${kb(
+      converted.variants[0].blob.size
+    )} en WebP)`;
+    const uploaded = [];
+    let failed = false;
+    for (const v of converted.variants) {
+      const path = `${base}-${v.suffix}.webp`;
+      const { error } = await supabase.storage
+        .from(PUBLIC_BUCKET)
+        .upload(path, v.blob, {
+          contentType: 'image/webp',
+          cacheControl: '31536000'
+        });
+      if (error) {
+        failed = true;
+        break;
+      }
+      uploaded.push(path);
+    }
+    if (!failed)
+      return { bucket: PUBLIC_BUCKET, path: `${base}-lg.webp`, note };
+
+    // Sin permiso en el bucket público: limpiar y guardar el WebP en el privado
+    if (uploaded.length)
+      await supabase.storage.from(PUBLIC_BUCKET).remove(uploaded);
+    const lg = converted.variants.find((v) => v.suffix === 'lg');
+    const path = `images/${stamp}-${slugifyFilename(file.name)}.webp`;
+    const { error } = await supabase.storage
+      .from(BUCKET)
+      .upload(path, lg.blob, { contentType: 'image/webp' });
+    if (error) throw error;
+    return { bucket: BUCKET, path, note };
+  }
+
+  const path = `images/${stamp}-${file.name}`;
+  const { error } = await supabase.storage.from(BUCKET).upload(path, file);
+  if (error) throw error;
+  return {
+    bucket: BUCKET,
+    path,
+    note: ' (sin convertir: formato no soportado)'
+  };
+}
 
 export default function PhotoAdmin() {
   const [images, setImages] = useState([]);
@@ -54,28 +114,26 @@ export default function PhotoAdmin() {
     }
 
     setLoading(true);
-    const filePath = `images/${Date.now()}-${file.name}`;
-
-    const { error } = await supabase.storage.from(BUCKET).upload(filePath, file);
-
-    if (error) {
-      setMessage(error.message);
+    try {
+      const { bucket, path, note } = await uploadOptimized(file);
+      const maxPosition = Math.max(0, ...images.map((i) => i.position || 0));
+      const { error } = await supabase.from('gallery_images').insert({
+        bucket,
+        path,
+        position: maxPosition + 1,
+        active: true
+      });
+      if (error) throw error;
+      setMessage(`Imagen subida correctamente${note}`);
+      setMessageType('success');
+    } catch (err) {
+      setMessage(err.message || 'No se pudo subir la imagen');
       setMessageType('error');
       setLoading(false);
       return;
     }
 
-    const maxPosition = Math.max(0, ...images.map(i => i.position || 0));
-
-    await supabase.from('gallery_images').insert({
-      path: filePath,
-      position: maxPosition + 1,
-      active: true
-    });
-
     setFile(null);
-    setMessage('Imagen subida correctamente');
-    setMessageType('success');
     if (fileInputRef.current) fileInputRef.current.value = '';
     loadImages();
   };
@@ -97,16 +155,29 @@ export default function PhotoAdmin() {
     const target = images[targetIndex];
 
     setLoading(true);
-    await supabase.from('gallery_images').update({ position: -1 }).eq('id', current.id);
-    await supabase.from('gallery_images').update({ position: current.position }).eq('id', target.id);
-    await supabase.from('gallery_images').update({ position: target.position }).eq('id', current.id);
+    await supabase
+      .from('gallery_images')
+      .update({ position: -1 })
+      .eq('id', current.id);
+    await supabase
+      .from('gallery_images')
+      .update({ position: current.position })
+      .eq('id', target.id);
+    await supabase
+      .from('gallery_images')
+      .update({ position: target.position })
+      .eq('id', current.id);
     loadImages();
   };
 
   const remove = async (img) => {
     if (!window.confirm('¿Eliminar esta imagen?')) return;
     setLoading(true);
-    await supabase.storage.from(img.bucket || BUCKET).remove([img.path]);
+    // En el bucket público también existe la variante -sm
+    const paths = [img.path];
+    if (img.bucket === PUBLIC_BUCKET && img.path.endsWith('-lg.webp'))
+      paths.push(img.path.replace(/-lg\.webp$/, '-sm.webp'));
+    await supabase.storage.from(img.bucket || BUCKET).remove(paths);
     await supabase.from('gallery_images').delete().eq('id', img.id);
     setMessage('Imagen eliminada');
     setMessageType('success');
@@ -116,9 +187,7 @@ export default function PhotoAdmin() {
   return (
     <div>
       {message && (
-        <div className={`admin-alert alert-${messageType}`}>
-          {message}
-        </div>
+        <div className={`admin-alert alert-${messageType}`}>{message}</div>
       )}
 
       <div className="admin-card">
@@ -141,7 +210,10 @@ export default function PhotoAdmin() {
             </div>
 
             {file && (
-              <div className="item-card" style={{ borderLeft: '4px solid var(--primary)' }}>
+              <div
+                className="item-card"
+                style={{ borderLeft: '4px solid var(--primary)' }}
+              >
                 <strong>Archivo seleccionado:</strong>
                 <p>{shortName(file.name)}</p>
               </div>
@@ -169,21 +241,27 @@ export default function PhotoAdmin() {
             <p className="empty-state-text">No hay imágenes en la galería</p>
           </div>
         ) : (
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-            gap: '1.5rem',
-            padding: '1.5rem'
-          }}>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+              gap: '1.5rem',
+              padding: '1.5rem'
+            }}
+          >
             {images.map((img, i) => (
-              <div key={img.id} className="item-card" style={{ 
-                display: 'flex', 
-                flexDirection: 'column',
-                padding: '1rem',
-                background: 'var(--card)',
-                border: '1px solid var(--border)',
-                borderRadius: 0
-              }}>
+              <div
+                key={img.id}
+                className="item-card"
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  padding: '1rem',
+                  background: 'var(--card)',
+                  border: '1px solid var(--border)',
+                  borderRadius: 0
+                }}
+              >
                 {img.url ? (
                   <img
                     src={img.url}
@@ -195,47 +273,77 @@ export default function PhotoAdmin() {
                       borderRadius: 0,
                       marginBottom: '1rem',
                       opacity: img.active ? 1 : 0.5,
-                      border: img.active ? '2px solid var(--primary)' : '2px solid var(--muted-foreground)'
+                      border: img.active
+                        ? '2px solid var(--primary)'
+                        : '2px solid var(--muted-foreground)'
                     }}
                   />
                 ) : (
-                  <div style={{
-                    height: '180px',
-                    marginBottom: '1rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    textAlign: 'center',
-                    padding: '1rem',
-                    fontSize: '0.8rem',
-                    color: 'var(--muted-foreground)',
-                    border: '2px dashed var(--border)'
-                  }}>
+                  <div
+                    style={{
+                      height: '180px',
+                      marginBottom: '1rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      textAlign: 'center',
+                      padding: '1rem',
+                      fontSize: '0.8rem',
+                      color: 'var(--muted-foreground)',
+                      border: '2px dashed var(--border)'
+                    }}
+                  >
                     No se encontró el archivo en {img.bucket || BUCKET}
                   </div>
                 )}
                 <div style={{ marginBottom: '0.8rem' }}>
-                  <strong style={{ fontSize: '0.9rem', color: 'var(--foreground)' }}>{shortName(img.path)}</strong>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.3rem' }}>
-                    <span style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>
+                  <strong
+                    style={{ fontSize: '0.9rem', color: 'var(--foreground)' }}
+                  >
+                    {shortName(img.path)}
+                  </strong>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      marginTop: '0.3rem'
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontSize: '0.75rem',
+                        color: 'var(--muted-foreground)'
+                      }}
+                    >
                       {new Date(img.created_at).toLocaleDateString()}
                     </span>
-                    {!img.active && <span className="badge badge-inactive" style={{
-                      fontSize: '0.7rem',
-                      padding: '0.2rem 0.5rem',
-                      background: 'color-mix(in oklch, var(--accent) 20%, transparent)',
-                      color: 'var(--accent)',
-                      borderRadius: 0
-                    }}>Inactiva</span>}
+                    {!img.active && (
+                      <span
+                        className="badge badge-inactive"
+                        style={{
+                          fontSize: '0.7rem',
+                          padding: '0.2rem 0.5rem',
+                          background:
+                            'color-mix(in oklch, var(--accent) 20%, transparent)',
+                          color: 'var(--accent)',
+                          borderRadius: 0
+                        }}
+                      >
+                        Inactiva
+                      </span>
+                    )}
                   </div>
                 </div>
-                
+
                 {/* Botones de acción */}
-                <div style={{ 
-                  display: 'grid',
-                  gridTemplateColumns: '1fr 1fr 1fr 1fr',
-                  gap: '0.5rem'
-                }}>
+                <div
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: '1fr 1fr 1fr 1fr',
+                    gap: '0.5rem'
+                  }}
+                >
                   <button
                     className="btn btn-secondary btn-small"
                     onClick={() => move(i, -1)}

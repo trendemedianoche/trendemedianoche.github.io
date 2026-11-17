@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 
-import logoIcon from '../assets/logo.png';
-import logoText from '../assets/letters.png';
+import logoIcon from '../assets/logo-admin.webp';
+import logoText from '../assets/letters.webp';
 import '../styles/admin.css';
 
 

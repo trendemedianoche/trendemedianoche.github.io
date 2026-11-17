@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ArrowUpRight, Menu, X } from 'lucide-react';
-import logoMark from '../assets/logo-mark.png';
-import logoText from '../assets/logo-text.png';
+import logoMark from '../assets/logo-mark.webp';
+import logoText from '../assets/logo-text.webp';
 import NewsTicker from './NewsTicker.jsx';
 import StoriesButton from './StoriesButton.jsx';
 
