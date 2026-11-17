@@ -6,6 +6,7 @@ import {
   Disc3,
   HandHeart,
   Images,
+  ImagePlus,
   Info,
   LayoutTemplate,
   ListMusic,
@@ -23,6 +24,7 @@ import ExtraNewsAdmin from './ExtraNewsAdmin';
 import DonationAdmin from './DonationAdmin';
 import FooterAdmin from './FooterAdmin';
 import SectionAdmin from './SectionAdmin';
+import SectionPhotosAdmin from './SectionPhotosAdmin';
 import ChatAdmin from './ChatAdmin';
 import AboutAdmin from './AboutAdmin';
 import BlogAdmin from './BlogAdmin';
@@ -39,41 +41,160 @@ const NAV_GROUPS = [
   {
     label: 'Comunidad',
     tabs: [
-      { id: 'blog', label: 'Blog', icon: BookOpen, title: 'Bitácora', description: 'Publicaciones, entradas importadas desde redes y comentarios.', component: BlogAdmin },
-      { id: 'stories', label: 'Historias', icon: CircleDot, title: 'Historias', description: 'Historias de Instagram capturadas para la franja de la portada.', component: StoriesAdmin },
-      { id: 'chat', label: 'Mensajes', icon: MessageSquare, title: 'Mensajes', description: 'Lo que escriben los visitantes desde el chat del sitio.', component: ChatAdmin }
+      {
+        id: 'blog',
+        label: 'Blog',
+        icon: BookOpen,
+        title: 'Bitácora',
+        description:
+          'Publicaciones, entradas importadas desde redes y comentarios.',
+        component: BlogAdmin
+      },
+      {
+        id: 'stories',
+        label: 'Historias',
+        icon: CircleDot,
+        title: 'Historias',
+        description:
+          'Historias de Instagram capturadas para la franja de la portada.',
+        component: StoriesAdmin
+      },
+      {
+        id: 'chat',
+        label: 'Mensajes',
+        icon: MessageSquare,
+        title: 'Mensajes',
+        description: 'Lo que escriben los visitantes desde el chat del sitio.',
+        component: ChatAdmin
+      }
     ]
   },
   {
     label: 'Contenido',
     tabs: [
-      { id: 'agenda', label: 'Agenda', icon: CalendarDays, title: 'Agenda', description: 'Próximas fechas y tocatas pasadas. Las detectadas en redes quedan por revisar.', component: AgendaAdmin },
-      { id: 'sections', label: 'Secciones', icon: LayoutTemplate, title: 'Secciones', description: 'Textos principales de cada sección de la portada.', component: SectionAdmin },
-      { id: 'about', label: 'Historia', icon: Info, title: 'Historia', description: 'El relato de la banda en la sección "Acerca de".', component: AboutAdmin },
-      { id: 'news', label: 'Noticias', icon: Newspaper, title: 'Noticias', description: 'Novedades de la banda.', component: NewsAdmin },
-      { id: 'extra-news', label: 'Barra de avisos', icon: Megaphone, title: 'Barra de avisos', description: 'Mensajes cortos que corren en la barra superior.', component: ExtraNewsAdmin },
-      { id: 'photos', label: 'Galería', icon: Images, title: 'Galería', description: 'Fotos de la banda en el sitio.', component: PhotoAdmin }
+      {
+        id: 'agenda',
+        label: 'Agenda',
+        icon: CalendarDays,
+        title: 'Agenda',
+        description:
+          'Próximas fechas y tocatas pasadas. Las detectadas en redes quedan por revisar.',
+        component: AgendaAdmin
+      },
+      {
+        id: 'sections',
+        label: 'Secciones',
+        icon: LayoutTemplate,
+        title: 'Secciones',
+        description: 'Textos principales de cada sección de la portada.',
+        component: SectionAdmin
+      },
+      {
+        id: 'about',
+        label: 'Historia',
+        icon: Info,
+        title: 'Historia',
+        description: 'El relato de la banda en la sección "Acerca de".',
+        component: AboutAdmin
+      },
+      {
+        id: 'news',
+        label: 'Noticias',
+        icon: Newspaper,
+        title: 'Noticias',
+        description: 'Novedades de la banda.',
+        component: NewsAdmin
+      },
+      {
+        id: 'extra-news',
+        label: 'Barra de avisos',
+        icon: Megaphone,
+        title: 'Barra de avisos',
+        description: 'Mensajes cortos que corren en la barra superior.',
+        component: ExtraNewsAdmin
+      },
+      {
+        id: 'photos',
+        label: 'Galería',
+        icon: Images,
+        title: 'Galería',
+        description: 'Fotos de la banda en el sitio.',
+        component: PhotoAdmin
+      },
+      {
+        id: 'section-photos',
+        label: 'Fotos por sección',
+        icon: ImagePlus,
+        title: 'Fotos por sección',
+        description:
+          'Qué foto de la Galería muestra cada sección de la portada, sin repetir.',
+        component: SectionPhotosAdmin
+      }
     ]
   },
   {
     label: 'Música',
     tabs: [
-      { id: 'music', label: 'Reproductor', icon: Music, title: 'Reproductor', description: 'La canción destacada y sus enlaces.', component: MusicAdmin },
-      { id: 'releases', label: 'Discografía', icon: Disc3, title: 'Discografía', description: 'Singles y EPs publicados.', component: ReleasesAdmin },
-      { id: 'tracks', label: 'Top tracks', icon: ListMusic, title: 'Top tracks', description: 'Canciones más escuchadas.', component: TopTracksAdmin },
-      { id: 'members', label: 'Integrantes', icon: Users, title: 'Integrantes', description: 'Quiénes van arriba del tren.', component: BandMembersAdmin }
+      {
+        id: 'music',
+        label: 'Reproductor',
+        icon: Music,
+        title: 'Reproductor',
+        description: 'La canción destacada y sus enlaces.',
+        component: MusicAdmin
+      },
+      {
+        id: 'releases',
+        label: 'Discografía',
+        icon: Disc3,
+        title: 'Discografía',
+        description: 'Singles y EPs publicados.',
+        component: ReleasesAdmin
+      },
+      {
+        id: 'tracks',
+        label: 'Top tracks',
+        icon: ListMusic,
+        title: 'Top tracks',
+        description: 'Canciones más escuchadas.',
+        component: TopTracksAdmin
+      },
+      {
+        id: 'members',
+        label: 'Integrantes',
+        icon: Users,
+        title: 'Integrantes',
+        description: 'Quiénes van arriba del tren.',
+        component: BandMembersAdmin
+      }
     ]
   },
   {
     label: 'Sitio',
     tabs: [
-      { id: 'footer', label: 'Contacto y redes', icon: PanelBottom, title: 'Contacto y redes', description: 'Datos de contacto y enlaces del pie de página.', component: FooterAdmin },
-      { id: 'donation', label: 'Donaciones', icon: HandHeart, title: 'Donaciones', description: 'Datos para apoyar a la banda.', component: DonationAdmin }
+      {
+        id: 'footer',
+        label: 'Contacto y redes',
+        icon: PanelBottom,
+        title: 'Contacto y redes',
+        description: 'Datos de contacto y enlaces del pie de página.',
+        component: FooterAdmin
+      },
+      {
+        id: 'donation',
+        label: 'Donaciones',
+        icon: HandHeart,
+        title: 'Donaciones',
+        description: 'Datos para apoyar a la banda.',
+        component: DonationAdmin
+      }
     ]
   }
 ];
 
-const ALL_TABS = NAV_GROUPS.flatMap((g) => g.tabs.map((t) => ({ ...t, group: g.label })));
+const ALL_TABS = NAV_GROUPS.flatMap((g) =>
+  g.tabs.map((t) => ({ ...t, group: g.label }))
+);
 const STORAGE_KEY = 'admin-active-tab';
 
 function readStoredTab() {
@@ -108,7 +229,10 @@ export default function AdminPanel() {
 
   return (
     <div className="admin-shell">
-      <AdminHeader menuOpen={menuOpen} onToggleMenu={() => setMenuOpen((v) => !v)} />
+      <AdminHeader
+        menuOpen={menuOpen}
+        onToggleMenu={() => setMenuOpen((v) => !v)}
+      />
 
       <div className="flex">
         {/* Fondo oscuro del menú en móvil */}
@@ -144,7 +268,11 @@ export default function AdminPanel() {
                               : 'border-transparent text-muted-foreground hover:text-foreground hover:bg-secondary/50'
                           }`}
                         >
-                          <Icon size={16} strokeWidth={1.6} className={active ? 'text-primary' : ''} />
+                          <Icon
+                            size={16}
+                            strokeWidth={1.6}
+                            className={active ? 'text-primary' : ''}
+                          />
                           {label}
                         </button>
                       </li>
@@ -160,8 +288,12 @@ export default function AdminPanel() {
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-12 py-10 lg:py-14">
             <header className="mb-10">
               <div className="text-eyebrow mb-3">{current.group}</div>
-              <h1 className="text-display text-4xl md:text-5xl">{current.title}</h1>
-              <p className="mt-3 text-muted-foreground">{current.description}</p>
+              <h1 className="text-display text-4xl md:text-5xl">
+                {current.title}
+              </h1>
+              <p className="mt-3 text-muted-foreground">
+                {current.description}
+              </p>
             </header>
             <Content key={current.id} />
           </div>

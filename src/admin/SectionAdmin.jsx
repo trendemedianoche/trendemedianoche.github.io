@@ -11,10 +11,6 @@ import {
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { LANDING_SECTIONS } from '../lib/landingSections';
-import { getGalleryImages } from '../services/galleryService';
-
-// Miniatura liviana: las fotos del bucket público tienen variante -sm
-const thumbUrl = (img) => img.url.replace(/-lg\.webp$/, '-sm.webp');
 
 const MIGRATION_FILE = 'scripts/site-sections-texts.sql';
 
@@ -42,7 +38,6 @@ export default function SectionAdmin() {
   const [editingKey, setEditingKey] = useState(null);
   const [form, setForm] = useState(null);
   const [message, setMessage] = useState(null);
-  const [galleryImgs, setGalleryImgs] = useState([]);
 
   const loadSections = async () => {
     setLoading(true);
@@ -72,9 +67,6 @@ export default function SectionAdmin() {
 
   useEffect(() => {
     loadSections();
-    getGalleryImages()
-      .then(setGalleryImgs)
-      .catch(() => {});
   }, []);
 
   // Guarda una sección: actualiza su fila o la crea si aún no existe
@@ -139,8 +131,7 @@ export default function SectionAdmin() {
       intro: section.intro || '',
       stats: section.extra?.stats
         ? section.extra.stats.map((s) => ({ ...s }))
-        : null,
-      imageId: section.extra?.image_id ?? null
+        : null
     });
   };
 
@@ -154,7 +145,6 @@ export default function SectionAdmin() {
       const extra = { ...section.extra };
       if (form.stats)
         extra.stats = form.stats.filter((s) => s.n.trim() || s.l.trim());
-      if (section.image) extra.image_id = form.imageId;
       await saveRow(section, {
         eyebrow: form.eyebrow.trim(),
         title: form.title.trim(),
@@ -371,102 +361,10 @@ export default function SectionAdmin() {
                   )}
 
                   {section.image && (
-                    <div className="form-group">
-                      <label>Foto</label>
-                      <div
-                        role="radiogroup"
-                        aria-label="Foto de la sección"
-                        style={{
-                          display: 'grid',
-                          gridTemplateColumns:
-                            'repeat(auto-fill, minmax(96px, 1fr))',
-                          gap: '0.5rem'
-                        }}
-                      >
-                        {[{ id: null }, ...galleryImgs].map((img) => {
-                          const selected = form.imageId === img.id;
-                          // Ya elegida en otra sección: no se puede repetir
-                          const takenBy = img.id
-                            ? sections.find(
-                                (o) =>
-                                  o.image &&
-                                  o.key !== section.key &&
-                                  o.extra?.image_id === img.id
-                              )
-                            : null;
-                          return (
-                            <button
-                              key={img.id ?? 'auto'}
-                              type="button"
-                              role="radio"
-                              aria-checked={selected}
-                              disabled={Boolean(takenBy)}
-                              onClick={() =>
-                                setForm({ ...form, imageId: img.id })
-                              }
-                              title={
-                                takenBy
-                                  ? `Ya se usa en ${takenBy.label}`
-                                  : img.id
-                                    ? img.alt || `Foto ${img.id}`
-                                    : 'Automática: una foto que no use otra sección'
-                              }
-                              style={{
-                                position: 'relative',
-                                aspectRatio: '4 / 3',
-                                padding: 0,
-                                overflow: 'hidden',
-                                cursor: takenBy ? 'not-allowed' : 'pointer',
-                                borderRadius: '4px',
-                                border: selected
-                                  ? '3px solid var(--primary)'
-                                  : '1px solid var(--border)',
-                                background: 'var(--muted)',
-                                color: 'var(--muted-foreground)',
-                                fontSize: '0.75rem'
-                              }}
-                            >
-                              {img.id ? (
-                                <img
-                                  src={thumbUrl(img)}
-                                  alt={img.alt || `Foto ${img.id}`}
-                                  loading="lazy"
-                                  style={{
-                                    width: '100%',
-                                    height: '100%',
-                                    objectFit: 'cover',
-                                    display: 'block',
-                                    opacity: takenBy ? 0.35 : 1
-                                  }}
-                                />
-                              ) : (
-                                'Automática'
-                              )}
-                              {takenBy && (
-                                <span
-                                  style={{
-                                    position: 'absolute',
-                                    inset: 'auto 0 0 0',
-                                    padding: '0.2rem 0.3rem',
-                                    background: 'rgba(0, 0, 0, 0.7)',
-                                    color: '#fff',
-                                    fontSize: '0.7rem',
-                                    lineHeight: 1.2
-                                  }}
-                                >
-                                  En {takenBy.label}
-                                </span>
-                              )}
-                            </button>
-                          );
-                        })}
-                      </div>
-                      <span className="form-hint">
-                        Elige una de las fotos activas de la Galería. Las que ya
-                        usa otra sección no se pueden repetir. Para sumar otra,
-                        súbela primero en Galería.
-                      </span>
-                    </div>
+                    <p className="form-hint">
+                      La foto de esta sección se elige en{' '}
+                      <strong>Contenido → Fotos por sección</strong>.
+                    </p>
                   )}
 
                   {form.stats && (
