@@ -29,7 +29,7 @@ import { getReleases } from '../services/releasesService';
 import { getTopTracks } from '../services/topTracksService';
 import { getBandMembers } from '../services/bandMembersService';
 import { getSiteSections } from '../services/siteSectionsService';
-import { resolveSections } from '../lib/landingSections';
+import { pickSectionImages, resolveSections } from '../lib/landingSections';
 import {
   getFooterContactData,
   getFooterSocialNetworks
@@ -38,6 +38,7 @@ import {
 // Imágenes locales de respaldo (si Supabase aún no tiene contenido)
 import guitarImg from '../assets/guitar.jpeg';
 import trainNight from '../assets/train-night.jpeg';
+import harmonicaImg from '../assets/harmonica.jpeg';
 import bandBar1 from '../assets/band-bar-1.png';
 import bandBar2 from '../assets/band-bar-2.png';
 import bandTracks from '../assets/band-tracks.png';
@@ -624,8 +625,8 @@ export default function LandingHome() {
         }))
       : FALLBACK_SLIDES;
 
-  // Foto de la sección Banda elegida en el admin (si sigue activa en la galería)
-  const bandaImg = gallery.find((g) => g.id === T.banda.extra?.image_id);
+  // Fotos de Historia, Música y Banda: las elegidas en el admin, sin repetir
+  const sectionImg = pickSectionImages(gallery, T);
 
   useEffect(() => {
     const id = setInterval(
@@ -796,8 +797,8 @@ export default function LandingHome() {
         <div className="max-w-6xl mx-auto px-6 md:px-10 grid md:grid-cols-12 gap-12 items-center">
           <div className="reveal md:col-span-5 group relative overflow-hidden shadow-deep">
             <img
-              src={slides[1]?.src || trainNight}
-              alt="Tren de Medianoche"
+              src={sectionImg.historia?.url || trainNight}
+              alt={sectionImg.historia?.alt || 'Tren de Medianoche'}
               loading="lazy"
               className="photo-warm w-full aspect-square object-cover object-top"
             />
@@ -861,8 +862,8 @@ export default function LandingHome() {
           <div className="grid lg:grid-cols-5 gap-8">
             <div className="reveal lg:col-span-2 min-h-[420px] group overflow-hidden shadow-deep">
               <img
-                src={slides[1]?.src || slides[0]?.src || guitarImg}
-                alt="Tren de Medianoche"
+                src={sectionImg.musica?.url || guitarImg}
+                alt={sectionImg.musica?.alt || 'Tren de Medianoche'}
                 loading="lazy"
                 className="photo-warm w-full h-full object-cover object-top"
               />
@@ -1032,8 +1033,8 @@ export default function LandingHome() {
             </h2>
             <div className="group overflow-hidden shadow-deep">
               <img
-                src={bandaImg?.url || slides[0]?.src || guitarImg}
-                alt={bandaImg?.alt || 'Tren de Medianoche'}
+                src={sectionImg.banda?.url || harmonicaImg}
+                alt={sectionImg.banda?.alt || 'Tren de Medianoche'}
                 loading="lazy"
                 className="photo-warm w-full aspect-[4/3] object-cover"
               />

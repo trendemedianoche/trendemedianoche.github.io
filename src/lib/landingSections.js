@@ -5,6 +5,8 @@
 // En los títulos, lo que va entre *asteriscos* sale en cursiva ámbar
 // y un salto de línea (Enter) parte el título en dos líneas.
 
+// image: true → la sección muestra una foto de la galería, elegible en
+// Admin → Secciones (se guarda en extra.image_id).
 export const LANDING_SECTIONS = [
   {
     key: 'hero',
@@ -31,6 +33,7 @@ export const LANDING_SECTIONS = [
     title: 'Blues que viaja\n*en español.*',
     intro: '',
     hint: 'El relato se edita en el módulo Historia.',
+    image: true,
     extra: {
       stats: [
         { n: '2017', l: 'Fundación' },
@@ -45,13 +48,14 @@ export const LANDING_SECTIONS = [
     numbered: true,
     eyebrow: 'Discografía',
     title: 'Nuestro *recorrido.*',
-    intro: ''
+    intro: '',
+    image: true
   },
   {
     key: 'banda',
     label: 'Banda',
     numbered: true,
-    image: true, // foto elegible desde la galería (extra.image_id)
+    image: true,
     eyebrow: 'La banda',
     title: 'Tres músicos,\n*un mismo tren.*',
     intro:
@@ -149,4 +153,33 @@ export function resolveSections(rows = []) {
   }
 
   return { order, text };
+}
+
+// Secciones que muestran una foto de la galería
+export const IMAGE_SECTIONS = LANDING_SECTIONS.filter((s) => s.image).map(
+  (s) => s.key
+);
+
+// Reparte las fotos de la galería entre las secciones sin repetir:
+// primero las elegidas en el admin, luego las secciones en "Automática"
+// toman, en orden, las fotos que nadie está usando.
+// Devuelve { clave: foto | null } (null si no quedan fotos libres).
+export function pickSectionImages(gallery = [], text = {}) {
+  const used = new Set();
+  const result = {};
+  for (const key of IMAGE_SECTIONS) {
+    const id = text[key]?.extra?.image_id;
+    const img = gallery.find((g) => g.id === id);
+    if (img && !used.has(img.id)) {
+      result[key] = img;
+      used.add(img.id);
+    }
+  }
+  for (const key of IMAGE_SECTIONS) {
+    if (result[key]) continue;
+    const img = gallery.find((g) => !used.has(g.id)) || null;
+    result[key] = img;
+    if (img) used.add(img.id);
+  }
+  return result;
 }

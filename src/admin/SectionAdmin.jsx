@@ -385,25 +385,38 @@ export default function SectionAdmin() {
                       >
                         {[{ id: null }, ...galleryImgs].map((img) => {
                           const selected = form.imageId === img.id;
+                          // Ya elegida en otra sección: no se puede repetir
+                          const takenBy = img.id
+                            ? sections.find(
+                                (o) =>
+                                  o.image &&
+                                  o.key !== section.key &&
+                                  o.extra?.image_id === img.id
+                              )
+                            : null;
                           return (
                             <button
                               key={img.id ?? 'auto'}
                               type="button"
                               role="radio"
                               aria-checked={selected}
+                              disabled={Boolean(takenBy)}
                               onClick={() =>
                                 setForm({ ...form, imageId: img.id })
                               }
                               title={
-                                img.id
-                                  ? img.alt || `Foto ${img.id}`
-                                  : 'Automática: la primera de la galería'
+                                takenBy
+                                  ? `Ya se usa en ${takenBy.label}`
+                                  : img.id
+                                    ? img.alt || `Foto ${img.id}`
+                                    : 'Automática: una foto que no use otra sección'
                               }
                               style={{
+                                position: 'relative',
                                 aspectRatio: '4 / 3',
                                 padding: 0,
                                 overflow: 'hidden',
-                                cursor: 'pointer',
+                                cursor: takenBy ? 'not-allowed' : 'pointer',
                                 borderRadius: '4px',
                                 border: selected
                                   ? '3px solid var(--primary)'
@@ -422,19 +435,36 @@ export default function SectionAdmin() {
                                     width: '100%',
                                     height: '100%',
                                     objectFit: 'cover',
-                                    display: 'block'
+                                    display: 'block',
+                                    opacity: takenBy ? 0.35 : 1
                                   }}
                                 />
                               ) : (
                                 'Automática'
+                              )}
+                              {takenBy && (
+                                <span
+                                  style={{
+                                    position: 'absolute',
+                                    inset: 'auto 0 0 0',
+                                    padding: '0.2rem 0.3rem',
+                                    background: 'rgba(0, 0, 0, 0.7)',
+                                    color: '#fff',
+                                    fontSize: '0.7rem',
+                                    lineHeight: 1.2
+                                  }}
+                                >
+                                  En {takenBy.label}
+                                </span>
                               )}
                             </button>
                           );
                         })}
                       </div>
                       <span className="form-hint">
-                        Elige una de las fotos activas de la Galería. Para
-                        sumar otra, súbela primero en Galería.
+                        Elige una de las fotos activas de la Galería. Las que ya
+                        usa otra sección no se pueden repetir. Para sumar otra,
+                        súbela primero en Galería.
                       </span>
                     </div>
                   )}
