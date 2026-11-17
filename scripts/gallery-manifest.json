@@ -1,0 +1,85 @@
+{
+  "version": 1,
+  "entries": {
+    "1": {
+      "originalBucket": "trendemedianoche_assets",
+      "originalPath": "images/323288311_553218996680854_8275761172948079720_n.jpg",
+      "newBucket": "trendemedianoche_public",
+      "newPath": "gallery/1-56a67fbb2d99-lg.webp",
+      "smPath": "gallery/1-56a67fbb2d99-sm.webp",
+      "sourceBytes": 297091,
+      "hash": "56a67fbb2d99",
+      "generatedAt": "2026-07-27T18:35:08.160Z"
+    },
+    "2": {
+      "originalBucket": "trendemedianoche_assets",
+      "originalPath": "images/277157904_944018592979258_5253242053734153907_n.jpeg",
+      "newBucket": "trendemedianoche_public",
+      "newPath": "gallery/2-9c7473ba17dc-lg.webp",
+      "smPath": "gallery/2-9c7473ba17dc-sm.webp",
+      "sourceBytes": 112784,
+      "hash": "9c7473ba17dc",
+      "generatedAt": "2026-07-27T18:35:09.488Z"
+    },
+    "3": {
+      "originalBucket": "trendemedianoche_assets",
+      "originalPath": "images/348441768_550723740593684_8018548674131979303_n.jpg",
+      "newBucket": "trendemedianoche_public",
+      "newPath": "gallery/3-d1116c1764a4-lg.webp",
+      "smPath": "gallery/3-d1116c1764a4-sm.webp",
+      "sourceBytes": 94002,
+      "hash": "d1116c1764a4",
+      "generatedAt": "2026-07-27T18:35:10.681Z"
+    },
+    "4": {
+      "originalBucket": "trendemedianoche_assets",
+      "originalPath": "images/469315191_1594349671198843_2030748612920409032_n.jpg",
+      "newBucket": "trendemedianoche_public",
+      "newPath": "gallery/4-592def1aed9b-lg.webp",
+      "smPath": "gallery/4-592def1aed9b-sm.webp",
+      "sourceBytes": 141318,
+      "hash": "592def1aed9b",
+      "generatedAt": "2026-07-27T18:35:12.489Z"
+    },
+    "10": {
+      "originalBucket": "trendemedianoche_assets",
+      "originalPath": "images/1767311168740-_D9A3492.JPG",
+      "newBucket": "trendemedianoche_public",
+      "newPath": "gallery/10-f910b874eb53-lg.webp",
+      "smPath": "gallery/10-f910b874eb53-sm.webp",
+      "sourceBytes": 7459819,
+      "hash": "f910b874eb53",
+      "generatedAt": "2026-07-27T18:35:14.946Z"
+    },
+    "12": {
+      "originalBucket": "trendemedianoche_assets",
+      "originalPath": "images/1767311372416-_D9A3506.JPG",
+      "newBucket": "trendemedianoche_public",
+      "newPath": "gallery/12-f6467f51dbc5-lg.webp",
+      "smPath": "gallery/12-f6467f51dbc5-sm.webp",
+      "sourceBytes": 7004396,
+      "hash": "f6467f51dbc5",
+      "generatedAt": "2026-07-27T18:35:17.756Z"
+    },
+    "13": {
+      "originalBucket": "trendemedianoche_assets",
+      "originalPath": "images/1769624221452-1000125344.jpg",
+      "newBucket": "trendemedianoche_public",
+      "newPath": "gallery/13-d9eae0c8e012-lg.webp",
+      "smPath": "gallery/13-d9eae0c8e012-sm.webp",
+      "sourceBytes": 137804,
+      "hash": "d9eae0c8e012",
+      "generatedAt": "2026-07-27T18:35:19.951Z"
+    },
+    "14": {
+      "originalBucket": "trendemedianoche_assets",
+      "originalPath": "images/1769624286024-1000125338.jpg",
+      "newBucket": "trendemedianoche_public",
+      "newPath": "gallery/14-7594d40d79ba-lg.webp",
+      "smPath": "gallery/14-7594d40d79ba-sm.webp",
+      "sourceBytes": 193315,
+      "hash": "7594d40d79ba",
+      "generatedAt": "2026-07-27T18:35:21.518Z"
+    }
+  }
+}
