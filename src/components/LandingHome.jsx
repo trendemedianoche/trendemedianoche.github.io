@@ -17,6 +17,7 @@ import SiteFooter from './SiteFooter.jsx';
 import NewsTicker from './NewsTicker.jsx';
 
 import { getGalleryImages } from '../services/galleryService';
+import Lightbox from './Lightbox';
 import { getAbout } from '../services/aboutService';
 import { getLatestSong } from '../services/musicService';
 import { getExtraNewsItems } from '../services/extraNewsService';
@@ -542,6 +543,8 @@ export default function LandingHome() {
 
   // Datos dinámicos desde Supabase
   const [gallery, setGallery] = useState([]);
+  // Foto abierta en el visor de la galería (índice en slides) o null
+  const [zoom, setZoom] = useState(null);
   const [aboutHtml, setAboutHtml] = useState('');
   const [song, setSong] = useState(null);
   const [extraNews, setExtraNews] = useState([]);
@@ -1327,28 +1330,41 @@ export default function LandingHome() {
           </div>
           <div className="hover-pause relative overflow-hidden border-y border-border/60 py-6">
             <div className="flex gap-6 w-max animate-marquee">
-              {[...slides, ...slides, ...slides, ...slides].map((s, i) => (
-                <div
-                  key={(s.src || '') + 'm' + i}
-                  className="group relative w-[280px] md:w-[360px] aspect-[4/5] shrink-0 shadow-deep overflow-hidden"
-                >
-                  <img
-                    src={s.src}
-                    alt={s.alt}
-                    className="photo-warm w-full h-full object-cover object-top"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background/70 to-transparent" />
-                  <div className="absolute bottom-3 left-3 font-mono text-[10px] text-primary uppercase tracking-[0.25em]">
-                    {s.caption}
-                  </div>
-                </div>
-              ))}
+              {[...slides, ...slides, ...slides, ...slides].map((s, i) => {
+                // Las copias del carrusel infinito no se repiten al tabular
+                const copy = i >= slides.length;
+                return (
+                  <button
+                    key={(s.src || '') + 'm' + i}
+                    type="button"
+                    onClick={() => setZoom(i % slides.length)}
+                    tabIndex={copy ? -1 : 0}
+                    aria-hidden={copy || undefined}
+                    aria-label={`Ampliar foto: ${s.alt}`}
+                    className="group relative w-[280px] md:w-[360px] aspect-[4/5] shrink-0 shadow-deep overflow-hidden cursor-zoom-in focus-visible:outline-2 focus-visible:outline-primary"
+                  >
+                    <img
+                      src={s.src}
+                      alt=""
+                      className="photo-warm w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]"
+                      loading="lazy"
+                    />
+                  </button>
+                );
+              })}
             </div>
             <div className="pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-background to-transparent" />
             <div className="pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-background to-transparent" />
           </div>
         </div>
+        {zoom !== null && (
+          <Lightbox
+            images={slides}
+            index={zoom}
+            onChange={setZoom}
+            onClose={() => setZoom(null)}
+          />
+        )}
       </section>
     ),
 
