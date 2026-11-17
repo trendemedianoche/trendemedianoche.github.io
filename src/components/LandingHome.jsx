@@ -37,7 +37,6 @@ import {
 
 // Imágenes locales de respaldo (si Supabase aún no tiene contenido)
 import guitarImg from '../assets/guitar.jpeg';
-import harmonicaImg from '../assets/harmonica.jpeg';
 import trainNight from '../assets/train-night.jpeg';
 import bandBar1 from '../assets/band-bar-1.png';
 import bandBar2 from '../assets/band-bar-2.png';
@@ -625,6 +624,9 @@ export default function LandingHome() {
         }))
       : FALLBACK_SLIDES;
 
+  // Foto de la sección Banda elegida en el admin (si sigue activa en la galería)
+  const bandaImg = gallery.find((g) => g.id === T.banda.extra?.image_id);
+
   useEffect(() => {
     const id = setInterval(
       () => setSlide((s) => (s + 1) % slides.length),
@@ -1028,23 +1030,13 @@ export default function LandingHome() {
             <h2 className="text-display text-5xl md:text-6xl mb-8">
               <RichTitle text={T.banda.title} />
             </h2>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="group overflow-hidden shadow-deep">
-                <img
-                  src={slides[0]?.src || guitarImg}
-                  alt="Tren de Medianoche"
-                  loading="lazy"
-                  className="photo-warm w-full aspect-square object-cover object-top"
-                />
-              </div>
-              <div className="group overflow-hidden shadow-deep translate-y-8">
-                <img
-                  src={slides[2]?.src || harmonicaImg}
-                  alt="Tren de Medianoche"
-                  loading="lazy"
-                  className="photo-warm w-full aspect-square object-cover object-top"
-                />
-              </div>
+            <div className="group overflow-hidden shadow-deep">
+              <img
+                src={bandaImg?.url || slides[0]?.src || guitarImg}
+                alt={bandaImg?.alt || 'Tren de Medianoche'}
+                loading="lazy"
+                className="photo-warm w-full aspect-[4/3] object-cover"
+              />
             </div>
           </div>
 

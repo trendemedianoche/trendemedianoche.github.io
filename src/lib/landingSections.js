@@ -51,6 +51,7 @@ export const LANDING_SECTIONS = [
     key: 'banda',
     label: 'Banda',
     numbered: true,
+    image: true, // foto elegible desde la galería (extra.image_id)
     eyebrow: 'La banda',
     title: 'Tres músicos,\n*un mismo tren.*',
     intro:

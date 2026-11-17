@@ -11,6 +11,10 @@ import {
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { LANDING_SECTIONS } from '../lib/landingSections';
+import { getGalleryImages } from '../services/galleryService';
+
+// Miniatura liviana: las fotos del bucket público tienen variante -sm
+const thumbUrl = (img) => img.url.replace(/-lg\.webp$/, '-sm.webp');
 
 const MIGRATION_FILE = 'scripts/site-sections-texts.sql';
 
@@ -38,6 +42,7 @@ export default function SectionAdmin() {
   const [editingKey, setEditingKey] = useState(null);
   const [form, setForm] = useState(null);
   const [message, setMessage] = useState(null);
+  const [galleryImgs, setGalleryImgs] = useState([]);
 
   const loadSections = async () => {
     setLoading(true);
@@ -67,6 +72,9 @@ export default function SectionAdmin() {
 
   useEffect(() => {
     loadSections();
+    getGalleryImages()
+      .then(setGalleryImgs)
+      .catch(() => {});
   }, []);
 
   // Guarda una sección: actualiza su fila o la crea si aún no existe
@@ -131,7 +139,8 @@ export default function SectionAdmin() {
       intro: section.intro || '',
       stats: section.extra?.stats
         ? section.extra.stats.map((s) => ({ ...s }))
-        : null
+        : null,
+      imageId: section.extra?.image_id ?? null
     });
   };
 
@@ -142,12 +151,10 @@ export default function SectionAdmin() {
 
   const saveTexts = (section) =>
     run(async () => {
-      const extra = form.stats
-        ? {
-            ...section.extra,
-            stats: form.stats.filter((s) => s.n.trim() || s.l.trim())
-          }
-        : section.extra;
+      const extra = { ...section.extra };
+      if (form.stats)
+        extra.stats = form.stats.filter((s) => s.n.trim() || s.l.trim());
+      if (section.image) extra.image_id = form.imageId;
       await saveRow(section, {
         eyebrow: form.eyebrow.trim(),
         title: form.title.trim(),
@@ -162,7 +169,7 @@ export default function SectionAdmin() {
               : 99
       });
       cancelEdit();
-    }, 'Textos guardados. Ya se ven en la portada.');
+    }, 'Cambios guardados. Ya se ven en la portada.');
 
   const setStat = (i, field, value) =>
     setForm((f) => ({
@@ -363,6 +370,75 @@ export default function SectionAdmin() {
                     </div>
                   )}
 
+                  {section.image && (
+                    <div className="form-group">
+                      <label>Foto</label>
+                      <div
+                        role="radiogroup"
+                        aria-label="Foto de la sección"
+                        style={{
+                          display: 'grid',
+                          gridTemplateColumns:
+                            'repeat(auto-fill, minmax(96px, 1fr))',
+                          gap: '0.5rem'
+                        }}
+                      >
+                        {[{ id: null }, ...galleryImgs].map((img) => {
+                          const selected = form.imageId === img.id;
+                          return (
+                            <button
+                              key={img.id ?? 'auto'}
+                              type="button"
+                              role="radio"
+                              aria-checked={selected}
+                              onClick={() =>
+                                setForm({ ...form, imageId: img.id })
+                              }
+                              title={
+                                img.id
+                                  ? img.alt || `Foto ${img.id}`
+                                  : 'Automática: la primera de la galería'
+                              }
+                              style={{
+                                aspectRatio: '4 / 3',
+                                padding: 0,
+                                overflow: 'hidden',
+                                cursor: 'pointer',
+                                borderRadius: '4px',
+                                border: selected
+                                  ? '3px solid var(--primary)'
+                                  : '1px solid var(--border)',
+                                background: 'var(--muted)',
+                                color: 'var(--muted-foreground)',
+                                fontSize: '0.75rem'
+                              }}
+                            >
+                              {img.id ? (
+                                <img
+                                  src={thumbUrl(img)}
+                                  alt={img.alt || `Foto ${img.id}`}
+                                  loading="lazy"
+                                  style={{
+                                    width: '100%',
+                                    height: '100%',
+                                    objectFit: 'cover',
+                                    display: 'block'
+                                  }}
+                                />
+                              ) : (
+                                'Automática'
+                              )}
+                            </button>
+                          );
+                        })}
+                      </div>
+                      <span className="form-hint">
+                        Elige una de las fotos activas de la Galería. Para
+                        sumar otra, súbela primero en Galería.
+                      </span>
+                    </div>
+                  )}
+
                   {form.stats && (
                     <div className="form-group">
                       <label>Cifras</label>
@@ -429,7 +505,7 @@ export default function SectionAdmin() {
                       onClick={() => saveTexts(section)}
                       disabled={loading}
                     >
-                      {loading ? 'Guardando…' : 'Guardar textos'}
+                      {loading ? 'Guardando…' : 'Guardar'}
                     </button>
                     <button
                       type="button"
