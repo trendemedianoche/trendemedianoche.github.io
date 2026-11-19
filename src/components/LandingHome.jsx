@@ -1055,9 +1055,9 @@ export default function LandingHome() {
 
           {/* Foto e integrantes con la misma altura: la lista empieza y termina con la foto */}
           <div className="reveal grid md:grid-cols-12 gap-8 md:gap-12 md:items-stretch">
-            <div className="md:col-span-5">
+            <div className="md:col-span-4">
               {/* Foto grupal; al pasar por un integrante se funde con su retrato */}
-              <div className="relative overflow-hidden shadow-deep aspect-square">
+              <div className="relative overflow-hidden shadow-deep aspect-square md:aspect-[2/3]">
                 <img
                   src={sectionImg.banda?.url || harmonicaImg}
                   alt={sectionImg.banda?.alt || 'Tren de Medianoche'}
@@ -1073,7 +1073,7 @@ export default function LandingHome() {
                       src={url}
                       alt={m.name}
                       loading="lazy"
-                      className={`photo-warm absolute inset-0 w-full h-full object-cover object-[center_30%] transition-opacity duration-700 ${
+                      className={`photo-warm absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${
                         activeMember === i && photoStep % m.photos.length === k
                           ? 'opacity-100'
                           : 'opacity-0'
@@ -1096,7 +1096,7 @@ export default function LandingHome() {
               </div>
             </div>
 
-            <div className="md:col-span-7 flex flex-col gap-2">
+            <div className="md:col-span-8 flex flex-col gap-2">
               {memberList.map((m, i) => (
                 <div
                   key={m.id ?? m.name}
@@ -1155,7 +1155,7 @@ export default function LandingHome() {
 
           {T.banda.intro && (
             <div className="grid md:grid-cols-12 gap-8 md:gap-12 mt-8">
-              <p className="md:col-start-6 md:col-span-7 text-muted-foreground text-sm leading-relaxed border-l-2 border-primary/40 pl-6">
+              <p className="md:col-start-5 md:col-span-8 text-muted-foreground text-sm leading-relaxed border-l-2 border-primary/40 pl-6">
                 <RichTitle text={T.banda.intro} />
               </p>
             </div>
