@@ -36,6 +36,8 @@ import ReleasesAdmin from './ReleasesAdmin';
 import TopTracksAdmin from './TopTracksAdmin';
 import BandMembersAdmin from './BandMembersAdmin';
 import UsersAdmin from './UsersAdmin';
+import { useAuth } from '../context/AuthContext';
+import { getMyRole } from '../services/usersService';
 
 import '../styles/admin.css';
 
@@ -176,6 +178,7 @@ const NAV_GROUPS = [
     tabs: [
       {
         id: 'users',
+        adminOnly: true,
         label: 'Usuarios',
         icon: UserCog,
         title: 'Usuarios',
@@ -217,10 +220,19 @@ function readStoredTab() {
 }
 
 export default function AdminPanel() {
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState(readStoredTab);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [role, setRole] = useState(null);
 
-  const current = ALL_TABS.find((t) => t.id === activeTab) || ALL_TABS[0];
+  useEffect(() => {
+    if (user) getMyRole(user.id).then(setRole);
+  }, [user]);
+
+  // Las secciones adminOnly (Usuarios) solo se muestran a administradores
+  const canSee = (tab) => !tab.adminOnly || role === 'admin';
+  const current =
+    ALL_TABS.find((t) => t.id === activeTab && canSee(t)) || ALL_TABS[0];
   const Content = current.component;
 
   useEffect(() => {
@@ -265,29 +277,31 @@ export default function AdminPanel() {
                   {group.label}
                 </div>
                 <ul className="space-y-0.5">
-                  {group.tabs.map(({ id, label, icon: Icon }) => {
-                    const active = id === activeTab;
-                    return (
-                      <li key={id}>
-                        <button
-                          type="button"
-                          onClick={() => handleTabChange(id)}
-                          className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm border-l-2 transition ${
-                            active
-                              ? 'border-primary bg-primary/10 text-foreground'
-                              : 'border-transparent text-muted-foreground hover:text-foreground hover:bg-secondary/50'
-                          }`}
-                        >
-                          <Icon
-                            size={16}
-                            strokeWidth={1.6}
-                            className={active ? 'text-primary' : ''}
-                          />
-                          {label}
-                        </button>
-                      </li>
-                    );
-                  })}
+                  {group.tabs
+                    .filter(canSee)
+                    .map(({ id, label, icon: Icon }) => {
+                      const active = id === activeTab;
+                      return (
+                        <li key={id}>
+                          <button
+                            type="button"
+                            onClick={() => handleTabChange(id)}
+                            className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm border-l-2 transition ${
+                              active
+                                ? 'border-primary bg-primary/10 text-foreground'
+                                : 'border-transparent text-muted-foreground hover:text-foreground hover:bg-secondary/50'
+                            }`}
+                          >
+                            <Icon
+                              size={16}
+                              strokeWidth={1.6}
+                              className={active ? 'text-primary' : ''}
+                            />
+                            {label}
+                          </button>
+                        </li>
+                      );
+                    })}
                 </ul>
               </div>
             ))}

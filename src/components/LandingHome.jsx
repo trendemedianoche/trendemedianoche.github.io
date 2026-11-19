@@ -1062,8 +1062,10 @@ export default function LandingHome() {
                   src={sectionImg.banda?.url || harmonicaImg}
                   alt={sectionImg.banda?.alt || 'Tren de Medianoche'}
                   loading="lazy"
-                  className={`photo-warm absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${
-                    activePhotos.length === 0 ? 'opacity-100' : 'opacity-0'
+                  className={`photo-warm absolute inset-0 w-full h-full object-cover transition-[opacity,transform,filter] duration-[1100ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-opacity motion-reduce:duration-300 motion-reduce:scale-100 motion-reduce:blur-0 ${
+                    activePhotos.length === 0
+                      ? 'opacity-100 scale-100 blur-0'
+                      : 'opacity-0 scale-[1.03] blur-[2px]'
                   }`}
                 />
                 {memberList.map((m, i) =>
@@ -1072,11 +1074,11 @@ export default function LandingHome() {
                       key={`${m.id ?? m.name}-${k}`}
                       src={url}
                       alt={m.name}
-                      loading="lazy"
-                      className={`photo-warm absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${
+                      decoding="async"
+                      className={`photo-warm absolute inset-0 w-full h-full object-cover transition-[opacity,transform,filter] duration-[1100ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-opacity motion-reduce:duration-300 motion-reduce:scale-100 motion-reduce:blur-0 ${
                         activeMember === i && photoStep % m.photos.length === k
-                          ? 'opacity-100'
-                          : 'opacity-0'
+                          ? 'opacity-100 scale-100 blur-0'
+                          : 'opacity-0 scale-[1.06] blur-[3px]'
                       }`}
                     />
                   ))
@@ -1086,17 +1088,32 @@ export default function LandingHome() {
                     activePhotos.length > 0 ? 'opacity-100' : 'opacity-0'
                   }`}
                 >
-                  <div className="text-display text-2xl">
-                    {memberList[activeMember]?.name}
-                  </div>
-                  <div className="text-eyebrow mt-1">
-                    {memberList[activeMember]?.role}
+                  <div
+                    key={activeMember ?? 'grupo'}
+                    style={{
+                      animation:
+                        'rise-in 700ms cubic-bezier(0.22, 1, 0.36, 1) both'
+                    }}
+                  >
+                    <div className="text-display text-2xl">
+                      {memberList[activeMember]?.name}
+                    </div>
+                    <div className="text-eyebrow mt-1">
+                      {memberList[activeMember]?.role}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="md:col-span-8 flex flex-col gap-2">
+            <div
+              className="md:col-span-8 flex flex-col gap-2"
+              onMouseLeave={() => setActiveMember(null)}
+              onBlur={(e) => {
+                if (!e.currentTarget.contains(e.relatedTarget))
+                  setActiveMember(null);
+              }}
+            >
               {memberList.map((m, i) => (
                 <div
                   key={m.id ?? m.name}
@@ -1107,9 +1124,7 @@ export default function LandingHome() {
                   }`}
                   tabIndex={m.photos.length ? 0 : undefined}
                   onMouseEnter={() => setActiveMember(i)}
-                  onMouseLeave={() => setActiveMember(null)}
                   onFocus={() => setActiveMember(i)}
-                  onBlur={() => setActiveMember(null)}
                   onClick={() => setActiveMember(activeMember === i ? null : i)}
                 >
                   {/* Iniciales grandes de fondo */}
