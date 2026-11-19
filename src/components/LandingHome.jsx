@@ -1028,108 +1028,127 @@ export default function LandingHome() {
         className="relative py-20 md:py-28 border-t border-border/40"
       >
         <SectionNum n={num.banda} />
-        <div className="max-w-7xl mx-auto px-6 md:px-10 grid md:grid-cols-12 gap-12">
-          <div className="reveal md:col-span-5">
+        <div className="max-w-7xl mx-auto px-6 md:px-10">
+          <div className="reveal mb-10 md:mb-12">
             <Eyebrow n={num.banda} className="mb-4">
               {T.banda.eyebrow}
             </Eyebrow>
-            <h2 className="text-display text-5xl md:text-6xl mb-8">
+            <h2 className="text-display text-5xl md:text-6xl">
               <RichTitle text={T.banda.title} />
             </h2>
-            {/* Foto grupal; al pasar por un integrante se funde con su retrato */}
-            <div className="relative overflow-hidden shadow-deep aspect-square md:aspect-[4/5]">
-              <img
-                src={sectionImg.banda?.url || harmonicaImg}
-                alt={sectionImg.banda?.alt || 'Tren de Medianoche'}
-                loading="lazy"
-                className={`photo-warm absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${
-                  activeMember === null || !memberList[activeMember]?.photo_url ? 'opacity-100' : 'opacity-0'
-                }`}
-              />
-              {memberList.map((m, i) =>
-                m.photo_url ? (
-                  <img
-                    key={m.id ?? m.name}
-                    src={m.photo_url}
-                    alt={m.name}
-                    loading="lazy"
-                    className={`photo-warm absolute inset-0 w-full h-full object-cover object-[center_30%] transition-opacity duration-700 ${
-                      activeMember === i ? 'opacity-100' : 'opacity-0'
-                    }`}
-                  />
-                ) : null
-              )}
-              <div
-                className={`absolute inset-x-0 bottom-0 p-5 bg-gradient-to-t from-background/90 to-transparent transition-opacity duration-500 ${
-                  activeMember !== null && memberList[activeMember]?.photo_url ? 'opacity-100' : 'opacity-0'
-                }`}
-              >
-                <div className="text-display text-2xl">{memberList[activeMember]?.name}</div>
-                <div className="text-eyebrow mt-1">{memberList[activeMember]?.role}</div>
+          </div>
+
+          {/* Foto e integrantes con la misma altura: la lista empieza y termina con la foto */}
+          <div className="grid md:grid-cols-12 gap-8 md:gap-12 md:items-stretch">
+            <div className="reveal md:col-span-5">
+              {/* Foto grupal; al pasar por un integrante se funde con su retrato */}
+              <div className="relative overflow-hidden shadow-deep aspect-square md:aspect-[4/5]">
+                <img
+                  src={sectionImg.banda?.url || harmonicaImg}
+                  alt={sectionImg.banda?.alt || 'Tren de Medianoche'}
+                  loading="lazy"
+                  className={`photo-warm absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${
+                    activeMember === null ||
+                    !memberList[activeMember]?.photo_url
+                      ? 'opacity-100'
+                      : 'opacity-0'
+                  }`}
+                />
+                {memberList.map((m, i) =>
+                  m.photo_url ? (
+                    <img
+                      key={m.id ?? m.name}
+                      src={m.photo_url}
+                      alt={m.name}
+                      loading="lazy"
+                      className={`photo-warm absolute inset-0 w-full h-full object-cover object-[center_30%] transition-opacity duration-700 ${
+                        activeMember === i ? 'opacity-100' : 'opacity-0'
+                      }`}
+                    />
+                  ) : null
+                )}
+                <div
+                  className={`absolute inset-x-0 bottom-0 p-5 bg-gradient-to-t from-background/90 to-transparent transition-opacity duration-500 ${
+                    activeMember !== null && memberList[activeMember]?.photo_url
+                      ? 'opacity-100'
+                      : 'opacity-0'
+                  }`}
+                >
+                  <div className="text-display text-2xl">
+                    {memberList[activeMember]?.name}
+                  </div>
+                  <div className="text-eyebrow mt-1">
+                    {memberList[activeMember]?.role}
+                  </div>
+                </div>
               </div>
+            </div>
+
+            <div className="md:col-span-7 flex flex-col gap-2">
+              {memberList.map((m, i) => (
+                <div
+                  key={m.id ?? m.name}
+                  className={`reveal spotlight group overflow-hidden border px-6 py-5 md:px-8 md:flex-1 md:flex md:flex-col md:justify-center hover:border-primary/40 transition-colors cursor-default ${
+                    activeMember === i
+                      ? 'border-primary/50'
+                      : 'border-border/60'
+                  }`}
+                  style={{ '--d': `${i * 120}ms` }}
+                  tabIndex={m.photo_url ? 0 : undefined}
+                  onMouseEnter={() => setActiveMember(i)}
+                  onMouseLeave={() => setActiveMember(null)}
+                  onFocus={() => setActiveMember(i)}
+                  onBlur={() => setActiveMember(null)}
+                  onClick={() => setActiveMember(activeMember === i ? null : i)}
+                >
+                  {/* Iniciales grandes de fondo */}
+                  <span
+                    aria-hidden="true"
+                    className="text-outline absolute -right-2 -bottom-6 text-display text-[7rem] md:text-[8.5rem] leading-none select-none pointer-events-none transition-transform duration-700 group-hover:-translate-x-3"
+                  >
+                    {m.name
+                      .split(' ')
+                      .map((w) => w[0])
+                      .join('')
+                      .slice(0, 2)}
+                  </span>
+                  <div className="relative flex items-baseline justify-between gap-4 flex-wrap">
+                    <div className="flex items-center gap-4">
+                      {m.photo_url ? (
+                        <img
+                          src={smallVariant(m.photo_url)}
+                          alt=""
+                          loading="lazy"
+                          className="photo-warm w-12 h-16 md:w-14 md:h-[4.5rem] object-cover object-[center_25%] border border-border/60 shrink-0"
+                        />
+                      ) : (
+                        <span className="font-mono text-xs text-primary">
+                          {String(i + 1).padStart(2, '0')}
+                        </span>
+                      )}
+                      <h3 className="text-display text-3xl md:text-4xl group-hover:italic group-hover:text-primary transition-colors">
+                        {m.name}
+                      </h3>
+                    </div>
+                    <span className="text-eyebrow">{m.role}</span>
+                  </div>
+                  {m.note && (
+                    <p className="relative font-mono text-xs text-muted-foreground mt-3 pl-8">
+                      {m.note}
+                    </p>
+                  )}
+                </div>
+              ))}
             </div>
           </div>
 
-          <div className="md:col-span-7 space-y-2 self-center">
-            {memberList.map((m, i) => (
-              <div
-                key={m.id ?? m.name}
-                className={`reveal spotlight group overflow-hidden border p-6 md:p-8 hover:border-primary/40 transition-colors cursor-default ${
-                  activeMember === i ? 'border-primary/50' : 'border-border/60'
-                }`}
-                style={{ '--d': `${i * 120}ms` }}
-                tabIndex={m.photo_url ? 0 : undefined}
-                onMouseEnter={() => setActiveMember(i)}
-                onMouseLeave={() => setActiveMember(null)}
-                onFocus={() => setActiveMember(i)}
-                onBlur={() => setActiveMember(null)}
-                onClick={() => setActiveMember(activeMember === i ? null : i)}
-              >
-                {/* Iniciales grandes de fondo */}
-                <span
-                  aria-hidden="true"
-                  className="text-outline absolute -right-2 -bottom-6 text-display text-[7rem] md:text-[8.5rem] leading-none select-none pointer-events-none transition-transform duration-700 group-hover:-translate-x-3"
-                >
-                  {m.name
-                    .split(' ')
-                    .map((w) => w[0])
-                    .join('')
-                    .slice(0, 2)}
-                </span>
-                <div className="relative flex items-baseline justify-between gap-4 flex-wrap">
-                  <div className="flex items-center gap-4">
-                    {m.photo_url ? (
-                      <img
-                        src={smallVariant(m.photo_url)}
-                        alt=""
-                        loading="lazy"
-                        className="photo-warm w-12 h-16 md:w-14 md:h-[4.5rem] object-cover object-[center_25%] border border-border/60 shrink-0"
-                      />
-                    ) : (
-                      <span className="font-mono text-xs text-primary">
-                        {String(i + 1).padStart(2, '0')}
-                      </span>
-                    )}
-                    <h3 className="text-display text-3xl md:text-4xl group-hover:italic group-hover:text-primary transition-colors">
-                      {m.name}
-                    </h3>
-                  </div>
-                  <span className="text-eyebrow">{m.role}</span>
-                </div>
-                {m.note && (
-                  <p className="relative font-mono text-xs text-muted-foreground mt-3 pl-8">
-                    {m.note}
-                  </p>
-                )}
-              </div>
-            ))}
-
-            {T.banda.intro && (
-              <p className="text-muted-foreground text-sm leading-relaxed mt-8 border-l-2 border-primary/40 pl-6">
+          {T.banda.intro && (
+            <div className="grid md:grid-cols-12 gap-8 md:gap-12 mt-8">
+              <p className="md:col-start-6 md:col-span-7 text-muted-foreground text-sm leading-relaxed border-l-2 border-primary/40 pl-6">
                 <RichTitle text={T.banda.intro} />
               </p>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </section>
     ),
