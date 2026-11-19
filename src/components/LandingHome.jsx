@@ -1039,10 +1039,10 @@ export default function LandingHome() {
           </div>
 
           {/* Foto e integrantes con la misma altura: la lista empieza y termina con la foto */}
-          <div className="grid md:grid-cols-12 gap-8 md:gap-12 md:items-stretch">
-            <div className="reveal md:col-span-5">
+          <div className="reveal grid md:grid-cols-12 gap-8 md:gap-12 md:items-stretch">
+            <div className="md:col-span-5">
               {/* Foto grupal; al pasar por un integrante se funde con su retrato */}
-              <div className="relative overflow-hidden shadow-deep aspect-square md:aspect-[4/5]">
+              <div className="relative overflow-hidden shadow-deep aspect-square">
                 <img
                   src={sectionImg.banda?.url || harmonicaImg}
                   alt={sectionImg.banda?.alt || 'Tren de Medianoche'}
@@ -1088,12 +1088,11 @@ export default function LandingHome() {
               {memberList.map((m, i) => (
                 <div
                   key={m.id ?? m.name}
-                  className={`reveal spotlight group overflow-hidden border px-6 py-5 md:px-8 md:flex-1 md:flex md:flex-col md:justify-center hover:border-primary/40 transition-colors cursor-default ${
+                  className={`spotlight group overflow-hidden border px-6 py-5 md:px-8 md:flex-1 md:flex md:flex-col md:justify-center hover:border-primary/40 transition-colors cursor-default ${
                     activeMember === i
                       ? 'border-primary/50'
                       : 'border-border/60'
                   }`}
-                  style={{ '--d': `${i * 120}ms` }}
                   tabIndex={m.photo_url ? 0 : undefined}
                   onMouseEnter={() => setActiveMember(i)}
                   onMouseLeave={() => setActiveMember(null)}
@@ -1104,7 +1103,7 @@ export default function LandingHome() {
                   {/* Iniciales grandes de fondo */}
                   <span
                     aria-hidden="true"
-                    className="text-outline absolute -right-2 -bottom-6 text-display text-[7rem] md:text-[8.5rem] leading-none select-none pointer-events-none transition-transform duration-700 group-hover:-translate-x-3"
+                    className="text-outline absolute -right-2 -bottom-6 text-display text-[5rem] md:text-[6rem] leading-none select-none pointer-events-none transition-transform duration-700 group-hover:-translate-x-3"
                   >
                     {m.name
                       .split(' ')

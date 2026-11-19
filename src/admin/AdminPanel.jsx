@@ -15,6 +15,7 @@ import {
   Music,
   Newspaper,
   PanelBottom,
+  UserCog,
   Users
 } from 'lucide-react';
 import PhotoAdmin from './PhotoAdmin';
@@ -34,6 +35,7 @@ import MusicAdmin from './MusicAdmin';
 import ReleasesAdmin from './ReleasesAdmin';
 import TopTracksAdmin from './TopTracksAdmin';
 import BandMembersAdmin from './BandMembersAdmin';
+import UsersAdmin from './UsersAdmin';
 
 import '../styles/admin.css';
 
@@ -172,6 +174,14 @@ const NAV_GROUPS = [
   {
     label: 'Sitio',
     tabs: [
+      {
+        id: 'users',
+        label: 'Usuarios',
+        icon: UserCog,
+        title: 'Usuarios',
+        description: 'Cuentas con acceso al admin y su rol.',
+        component: UsersAdmin
+      },
       {
         id: 'footer',
         label: 'Contacto y redes',
