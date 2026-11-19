@@ -210,7 +210,15 @@ const ALL_TABS = NAV_GROUPS.flatMap((g) =>
 );
 const STORAGE_KEY = 'admin-active-tab';
 
+// Sección pedida en la URL: #/admin?seccion=users
+function readUrlTab() {
+  const id = new URLSearchParams(window.location.hash.split('?')[1] || '').get('seccion');
+  return ALL_TABS.some((t) => t.id === id) ? id : null;
+}
+
 function readStoredTab() {
+  const fromUrl = readUrlTab();
+  if (fromUrl) return fromUrl;
   try {
     const saved = sessionStorage.getItem(STORAGE_KEY);
     return ALL_TABS.some((t) => t.id === saved) ? saved : 'blog';
@@ -241,6 +249,8 @@ export default function AdminPanel() {
     } catch {
       // sin almacenamiento: no pasa nada
     }
+    // La URL refleja la sección abierta, para poder compartirla o guardarla
+    window.history.replaceState(null, '', `#/admin?seccion=${activeTab}`);
   }, [activeTab]);
 
   const handleTabChange = (tabId) => {
