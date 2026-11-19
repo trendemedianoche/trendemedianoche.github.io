@@ -558,6 +558,9 @@ export default function LandingHome() {
   const [activeMember, setActiveMember] = useState(null);
   // Con varias fotos, el retrato del integrante activo va alternando
   const [photoStep, setPhotoStep] = useState(0);
+  const bandPhotoRef = useRef(null);
+  const memberRowRefs = useRef([]);
+  const memberListRef = useRef([]);
   const [newsItems, setNewsItems] = useState([]);
   const [donationFields, setDonationFields] = useState([]);
   const [sectionRows, setSectionRows] = useState([]);
@@ -625,8 +628,37 @@ export default function LandingHome() {
     // photos (varias, en orden) o, si no hay, la foto única photo_url
     photos: m.photos?.length ? m.photos : m.photo_url ? [m.photo_url] : []
   }));
+  memberListRef.current = memberList;
   const activePhotos =
     activeMember !== null ? memberList[activeMember]?.photos || [] : [];
+
+  // Celular: no hay hover, así que el integrante activo es el que pasa justo
+  // bajo la foto fija al hacer scroll (fuera de la lista vuelve la foto grupal)
+  useEffect(() => {
+    const mobile = window.matchMedia('(max-width: 767px)');
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      if (!mobile.matches || !bandPhotoRef.current) return;
+      const line = bandPhotoRef.current.getBoundingClientRect().bottom + 32;
+      const list = memberListRef.current;
+      const rows = memberRowRefs.current.slice(0, list.length);
+      const idx = rows.findIndex((row) => {
+        if (!row) return false;
+        const r = row.getBoundingClientRect();
+        return r.top <= line && r.bottom > line;
+      });
+      setActiveMember(idx >= 0 && list[idx]?.photos.length ? idx : null);
+    };
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, []);
 
   useEffect(() => {
     setPhotoStep(0);
@@ -1066,9 +1098,13 @@ export default function LandingHome() {
 
           {/* Foto e integrantes con la misma altura: la lista empieza y termina con la foto */}
           <div className="reveal grid md:grid-cols-12 gap-8 md:gap-12 md:items-stretch">
-            <div className="md:col-span-4">
+            {/* En celular la foto queda fija bajo el menú mientras se recorre la lista */}
+            <div
+              ref={bandPhotoRef}
+              className="sticky top-[5.25rem] z-10 md:static md:col-span-4"
+            >
               {/* Foto grupal; al pasar por un integrante se funde con su retrato */}
-              <div className="relative overflow-hidden shadow-deep aspect-square md:aspect-[2/3]">
+              <div className="relative overflow-hidden shadow-deep aspect-[4/3] md:aspect-[2/3]">
                 <img
                   src={sectionImg.banda?.url || harmonicaImg}
                   alt={sectionImg.banda?.alt || 'Tren de Medianoche'}
@@ -1117,55 +1153,8 @@ export default function LandingHome() {
               </div>
             </div>
 
-            {/* Celular: tarjetas con el retrato de cada integrante, se deslizan de lado
-                (no hay hover y la foto grupal queda arriba, fuera de la vista) */}
-            <div className="md:hidden -mx-6">
-              <div className="flex gap-3 overflow-x-auto snap-x snap-mandatory px-6 pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                {memberList.map((m) => (
-                  <article
-                    key={m.id ?? m.name}
-                    className="snap-start shrink-0 w-[72%] border border-border/60 overflow-hidden"
-                  >
-                    <div className="relative aspect-[3/4] bg-muted/20">
-                      {m.photos[0] ? (
-                        <img
-                          src={m.photos[0]}
-                          alt={m.name}
-                          loading="lazy"
-                          decoding="async"
-                          className="photo-warm absolute inset-0 w-full h-full object-cover object-[center_25%]"
-                        />
-                      ) : (
-                        <span className="absolute inset-0 flex items-center justify-center text-outline text-display text-[5rem]">
-                          {m.name
-                            .split(' ')
-                            .map((w) => w[0])
-                            .join('')
-                            .slice(0, 2)}
-                        </span>
-                      )}
-                      <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-background/95 via-background/60 to-transparent">
-                        <h3 className="text-display text-2xl">{m.name}</h3>
-                        <div className="text-eyebrow mt-1">{m.role}</div>
-                      </div>
-                    </div>
-                    {m.note && (
-                      <p className="font-mono text-xs text-muted-foreground p-4">
-                        {m.note}
-                      </p>
-                    )}
-                  </article>
-                ))}
-              </div>
-              {memberList.length > 1 && (
-                <p className="px-6 mt-2 font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
-                  Desliza para ver a cada integrante →
-                </p>
-              )}
-            </div>
-
             <div
-              className="hidden md:col-span-8 md:flex flex-col gap-2"
+              className="md:col-span-8 flex flex-col gap-2"
               onMouseLeave={() => setActiveMember(null)}
               onBlur={(e) => {
                 if (!e.currentTarget.contains(e.relatedTarget))
@@ -1180,10 +1169,11 @@ export default function LandingHome() {
                       ? 'border-primary/50'
                       : 'border-border/60'
                   }`}
+                  ref={(el) => (memberRowRefs.current[i] = el)}
                   tabIndex={m.photos.length ? 0 : undefined}
                   onMouseEnter={() => setActiveMember(i)}
                   onFocus={() => setActiveMember(i)}
-                  onClick={() => setActiveMember(activeMember === i ? null : i)}
+                  onClick={() => setActiveMember(i)}
                 >
                   {/* Iniciales grandes de fondo */}
                   <span
@@ -1692,7 +1682,7 @@ export default function LandingHome() {
   return (
     <main
       ref={rootRef}
-      className="lovable-root relative overflow-hidden"
+      className="lovable-root relative overflow-x-clip"
       onClick={handleAnchorClick}
       onPointerMove={handleSpotlight}
     >
