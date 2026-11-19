@@ -16,7 +16,7 @@ import SiteNav from './SiteNav.jsx';
 import SiteFooter from './SiteFooter.jsx';
 import NewsTicker from './NewsTicker.jsx';
 
-import { getGalleryImages } from '../services/galleryService';
+import { getGalleryImages, smallVariant } from '../services/galleryService';
 import Lightbox from './Lightbox';
 import { getAbout } from '../services/aboutService';
 import { getLatestSong } from '../services/musicService';
@@ -554,6 +554,8 @@ export default function LandingHome() {
   const [releasesData, setReleasesData] = useState([]);
   const [tracksData, setTracksData] = useState([]);
   const [membersData, setMembersData] = useState([]);
+  // Integrante cuyo retrato se muestra en el panel de La banda (null = foto grupal)
+  const [activeMember, setActiveMember] = useState(null);
   const [newsItems, setNewsItems] = useState([]);
   const [donationFields, setDonationFields] = useState([]);
   const [sectionRows, setSectionRows] = useState([]);
@@ -1034,13 +1036,37 @@ export default function LandingHome() {
             <h2 className="text-display text-5xl md:text-6xl mb-8">
               <RichTitle text={T.banda.title} />
             </h2>
-            <div className="group overflow-hidden shadow-deep">
+            {/* Foto grupal; al pasar por un integrante se funde con su retrato */}
+            <div className="relative overflow-hidden shadow-deep aspect-square md:aspect-[4/5]">
               <img
                 src={sectionImg.banda?.url || harmonicaImg}
                 alt={sectionImg.banda?.alt || 'Tren de Medianoche'}
                 loading="lazy"
-                className="photo-warm w-full aspect-[4/3] object-cover"
+                className={`photo-warm absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${
+                  activeMember === null || !memberList[activeMember]?.photo_url ? 'opacity-100' : 'opacity-0'
+                }`}
               />
+              {memberList.map((m, i) =>
+                m.photo_url ? (
+                  <img
+                    key={m.id ?? m.name}
+                    src={m.photo_url}
+                    alt={m.name}
+                    loading="lazy"
+                    className={`photo-warm absolute inset-0 w-full h-full object-cover object-[center_30%] transition-opacity duration-700 ${
+                      activeMember === i ? 'opacity-100' : 'opacity-0'
+                    }`}
+                  />
+                ) : null
+              )}
+              <div
+                className={`absolute inset-x-0 bottom-0 p-5 bg-gradient-to-t from-background/90 to-transparent transition-opacity duration-500 ${
+                  activeMember !== null && memberList[activeMember]?.photo_url ? 'opacity-100' : 'opacity-0'
+                }`}
+              >
+                <div className="text-display text-2xl">{memberList[activeMember]?.name}</div>
+                <div className="text-eyebrow mt-1">{memberList[activeMember]?.role}</div>
+              </div>
             </div>
           </div>
 
@@ -1048,8 +1074,16 @@ export default function LandingHome() {
             {memberList.map((m, i) => (
               <div
                 key={m.id ?? m.name}
-                className="reveal spotlight group overflow-hidden border border-border/60 p-6 md:p-8 hover:border-primary/40 transition-colors"
+                className={`reveal spotlight group overflow-hidden border p-6 md:p-8 hover:border-primary/40 transition-colors cursor-default ${
+                  activeMember === i ? 'border-primary/50' : 'border-border/60'
+                }`}
                 style={{ '--d': `${i * 120}ms` }}
+                tabIndex={m.photo_url ? 0 : undefined}
+                onMouseEnter={() => setActiveMember(i)}
+                onMouseLeave={() => setActiveMember(null)}
+                onFocus={() => setActiveMember(i)}
+                onBlur={() => setActiveMember(null)}
+                onClick={() => setActiveMember(activeMember === i ? null : i)}
               >
                 {/* Iniciales grandes de fondo */}
                 <span
@@ -1063,10 +1097,19 @@ export default function LandingHome() {
                     .slice(0, 2)}
                 </span>
                 <div className="relative flex items-baseline justify-between gap-4 flex-wrap">
-                  <div className="flex items-baseline gap-4">
-                    <span className="font-mono text-xs text-primary">
-                      {String(i + 1).padStart(2, '0')}
-                    </span>
+                  <div className="flex items-center gap-4">
+                    {m.photo_url ? (
+                      <img
+                        src={smallVariant(m.photo_url)}
+                        alt=""
+                        loading="lazy"
+                        className="photo-warm w-12 h-16 md:w-14 md:h-[4.5rem] object-cover object-[center_25%] border border-border/60 shrink-0"
+                      />
+                    ) : (
+                      <span className="font-mono text-xs text-primary">
+                        {String(i + 1).padStart(2, '0')}
+                      </span>
+                    )}
                     <h3 className="text-display text-3xl md:text-4xl group-hover:italic group-hover:text-primary transition-colors">
                       {m.name}
                     </h3>

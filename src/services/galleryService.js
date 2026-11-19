@@ -41,3 +41,29 @@ export async function getGalleryImages() {
 
   return imagesWithUrls.filter(Boolean);
 }
+
+// Variante chica (-sm, 800 px) de una foto subida por el admin, para miniaturas
+export function smallVariant(url) {
+  return url ? url.replace(/-lg\.webp$/, '-sm.webp') : url;
+}
+
+/**
+ * Fotos del bucket público (admin): tienen URL permanente, así que sirven para
+ * asociarlas a otras secciones (p. ej. la foto de cada integrante)
+ */
+export async function getPublicPhotos() {
+  const { data, error } = await supabase
+    .from('gallery_images')
+    .select('id, path, bucket, created_at')
+    .eq('bucket', PUBLIC_BUCKET)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error(error);
+    return [];
+  }
+  return data.map((img) => ({
+    ...img,
+    url: supabase.storage.from(PUBLIC_BUCKET).getPublicUrl(img.path).data.publicUrl
+  }));
+}
