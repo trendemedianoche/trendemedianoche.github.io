@@ -8,7 +8,8 @@ import {
   sendPasswordReset,
   setUserAccess,
   confirmUserEmail,
-  deleteUser
+  deleteUser,
+  describeEmailLimit
 } from '../services/usersService';
 
 const ROLE_LABEL = { admin: 'Administrador', editor: 'Editor' };
@@ -44,7 +45,8 @@ function describeError(err) {
   if (/signups? not allowed|signup is disabled/i.test(msg)) {
     return 'Supabase tiene desactivado el registro: actívalo en Authentication → Sign In / Providers → "Allow new users to sign up".';
   }
-  if (/rate limit/i.test(msg)) return 'Se enviaron demasiados correos seguidos. Espera unos minutos y vuelve a intentarlo.';
+  const emailLimit = describeEmailLimit(msg);
+  if (emailLimit) return emailLimit;
   if (/password/i.test(msg) && /characters|weak|short/i.test(msg)) return 'La contraseña es muy corta o débil (mínimo 6 caracteres).';
   return msg || 'No se pudo completar la acción.';
 }

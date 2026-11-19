@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { sendPasswordReset } from '../services/usersService';
+import { sendPasswordReset, describeEmailLimit } from '../services/usersService';
 
 import logoIcon from '../assets/logo-admin.webp';
 import logoText from '../assets/letters.webp';
@@ -39,7 +39,7 @@ export default function Login() {
       await sendPasswordReset(email);
       setNotice(`Si ${email} tiene acceso, le llegará un correo para elegir una contraseña nueva.`);
     } catch (err) {
-      setError(/rate limit/i.test(err.message) ? 'Espera unos minutos antes de pedir otro correo.' : err.message);
+      setError(describeEmailLimit(err.message) || err.message);
     }
   };
 

@@ -78,3 +78,17 @@ export async function getMyRole(userId) {
   const { data } = await supabase.from('profiles').select('role').eq('id', userId).maybeSingle();
   return data?.role || null;
 }
+
+/**
+ * Explica los límites de envío de correos de Supabase:
+ * - "only request this after N seconds": espera mínima entre correos al mismo usuario
+ * - "email rate limit exceeded": cupo por hora del proyecto (2/h con el correo integrado)
+ */
+export function describeEmailLimit(message = '') {
+  const seconds = message.match(/after (\d+) seconds?/i);
+  if (seconds) return `Espera ${seconds[1]} segundos antes de pedir otro correo.`;
+  if (/rate limit/i.test(message)) {
+    return 'Se acabó el cupo de correos por hora de Supabase (2 por hora con el correo integrado). Intenta en una hora o configura el remitente propio (SMTP).';
+  }
+  return null;
+}
