@@ -556,6 +556,8 @@ export default function LandingHome() {
   const [membersData, setMembersData] = useState([]);
   // Integrante cuyo retrato se muestra en el panel de La banda (null = foto grupal)
   const [activeMember, setActiveMember] = useState(null);
+  // Con varias fotos, el retrato del integrante activo va alternando
+  const [photoStep, setPhotoStep] = useState(0);
   const [newsItems, setNewsItems] = useState([]);
   const [donationFields, setDonationFields] = useState([]);
   const [sectionRows, setSectionRows] = useState([]);
@@ -618,7 +620,20 @@ export default function LandingHome() {
   // Datos con respaldo local si la tabla viene vacía
   const releaseList = releasesData.length > 0 ? releasesData : releases;
   const trackList = tracksData.length > 0 ? tracksData : topTracks;
-  const memberList = membersData.length > 0 ? membersData : band;
+  const memberList = (membersData.length > 0 ? membersData : band).map((m) => ({
+    ...m,
+    // photos (varias, en orden) o, si no hay, la foto única photo_url
+    photos: m.photos?.length ? m.photos : m.photo_url ? [m.photo_url] : []
+  }));
+  const activePhotos =
+    activeMember !== null ? memberList[activeMember]?.photos || [] : [];
+
+  useEffect(() => {
+    setPhotoStep(0);
+    if (activePhotos.length < 2) return;
+    const id = setInterval(() => setPhotoStep((n) => n + 1), 2500);
+    return () => clearInterval(id);
+  }, [activeMember, activePhotos.length]);
 
   // Slides del hero: galería real o respaldo local
   const slides =
@@ -1048,30 +1063,27 @@ export default function LandingHome() {
                   alt={sectionImg.banda?.alt || 'Tren de Medianoche'}
                   loading="lazy"
                   className={`photo-warm absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${
-                    activeMember === null ||
-                    !memberList[activeMember]?.photo_url
-                      ? 'opacity-100'
-                      : 'opacity-0'
+                    activePhotos.length === 0 ? 'opacity-100' : 'opacity-0'
                   }`}
                 />
                 {memberList.map((m, i) =>
-                  m.photo_url ? (
+                  m.photos.map((url, k) => (
                     <img
-                      key={m.id ?? m.name}
-                      src={m.photo_url}
+                      key={`${m.id ?? m.name}-${k}`}
+                      src={url}
                       alt={m.name}
                       loading="lazy"
                       className={`photo-warm absolute inset-0 w-full h-full object-cover object-[center_30%] transition-opacity duration-700 ${
-                        activeMember === i ? 'opacity-100' : 'opacity-0'
+                        activeMember === i && photoStep % m.photos.length === k
+                          ? 'opacity-100'
+                          : 'opacity-0'
                       }`}
                     />
-                  ) : null
+                  ))
                 )}
                 <div
                   className={`absolute inset-x-0 bottom-0 p-5 bg-gradient-to-t from-background/90 to-transparent transition-opacity duration-500 ${
-                    activeMember !== null && memberList[activeMember]?.photo_url
-                      ? 'opacity-100'
-                      : 'opacity-0'
+                    activePhotos.length > 0 ? 'opacity-100' : 'opacity-0'
                   }`}
                 >
                   <div className="text-display text-2xl">
@@ -1093,7 +1105,7 @@ export default function LandingHome() {
                       ? 'border-primary/50'
                       : 'border-border/60'
                   }`}
-                  tabIndex={m.photo_url ? 0 : undefined}
+                  tabIndex={m.photos.length ? 0 : undefined}
                   onMouseEnter={() => setActiveMember(i)}
                   onMouseLeave={() => setActiveMember(null)}
                   onFocus={() => setActiveMember(i)}
@@ -1113,9 +1125,9 @@ export default function LandingHome() {
                   </span>
                   <div className="relative flex items-baseline justify-between gap-4 flex-wrap">
                     <div className="flex items-center gap-4">
-                      {m.photo_url ? (
+                      {m.photos[0] ? (
                         <img
-                          src={smallVariant(m.photo_url)}
+                          src={smallVariant(m.photos[0])}
                           alt=""
                           loading="lazy"
                           className="photo-warm w-12 h-16 md:w-14 md:h-[4.5rem] object-cover object-[center_25%] border border-border/60 shrink-0"

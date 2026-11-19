@@ -7,11 +7,16 @@ import {
 } from '../services/bandMembersService';
 import { getPublicPhotos, smallVariant } from '../services/galleryService';
 
+const MAX_PHOTOS = 3;
+
+const memberPhotos = (item) =>
+  item.photos?.length ? item.photos : item.photo_url ? [item.photo_url] : [];
+
 const EMPTY = {
   name: '',
   role: '',
   note: '',
-  photo_url: '',
+  photos: [], // URLs en orden; la primera es la principal
   position: 0,
   active: true
 };
@@ -47,7 +52,20 @@ export default function BandMembersAdmin() {
     e.preventDefault();
     setLoading(true);
     try {
-      const payload = { ...form, position: Number(form.position) || 0 };
+      const { photos: list, ...rest } = form;
+      const payload = {
+        ...rest,
+        photo_url: list[0] || null,
+        position: Number(form.position) || 0
+      };
+      // La columna photos existe solo si se ejecutó scripts/band-member-photos.sql
+      const hasPhotosColumn = items.some((i) => 'photos' in i);
+      if (hasPhotosColumn) payload.photos = list;
+      else if (list.length > 1) {
+        alert(
+          'Se guardará solo la primera foto. Para guardar varias, ejecuta scripts/band-member-photos.sql en Supabase.'
+        );
+      }
       if (editing) await updateBandMember(editing.id, payload);
       else await createBandMember(payload);
       reset();
@@ -63,7 +81,7 @@ export default function BandMembersAdmin() {
       name: item.name || '',
       role: item.role || '',
       note: item.note || '',
-      photo_url: item.photo_url || '',
+      photos: memberPhotos(item),
       position: item.position ?? 0,
       active: item.active ?? true
     });
@@ -113,25 +131,39 @@ export default function BandMembersAdmin() {
             {photos.length > 0 ? (
               <>
                 <p className="form-hint">
-                  Elige una foto de la galería (súbela primero en Galería si no
-                  está).
+                  Elige hasta {MAX_PHOTOS} fotos de la galería, en orden: la 1
+                  es la principal y en la portada se alternan.
                 </p>
                 <div className="grid grid-cols-4 sm:grid-cols-5 gap-2">
                   {photos.map((p) => {
-                    const selected = form.photo_url === p.url;
+                    const order = form.photos.indexOf(p.url);
+                    const selected = order !== -1;
+                    const full = !selected && form.photos.length >= MAX_PHOTOS;
                     return (
                       <button
                         key={p.id}
                         type="button"
+                        disabled={full}
                         onClick={() =>
-                          setForm({ ...form, photo_url: selected ? '' : p.url })
+                          setForm({
+                            ...form,
+                            photos: selected
+                              ? form.photos.filter((u) => u !== p.url)
+                              : [...form.photos, p.url]
+                          })
                         }
                         className={`relative aspect-[2/3] overflow-hidden border-2 transition ${
                           selected
                             ? 'border-primary'
                             : 'border-transparent opacity-70 hover:opacity-100'
                         }`}
-                        title={selected ? 'Quitar esta foto' : 'Usar esta foto'}
+                        title={
+                          selected
+                            ? 'Quitar esta foto'
+                            : full
+                              ? `Máximo ${MAX_PHOTOS} fotos`
+                              : 'Agregar esta foto'
+                        }
                       >
                         <img
                           src={smallVariant(p.url)}
@@ -139,6 +171,11 @@ export default function BandMembersAdmin() {
                           loading="lazy"
                           className="w-full h-full object-cover"
                         />
+                        {selected && (
+                          <span className="absolute top-1 left-1 w-5 h-5 flex items-center justify-center bg-primary text-primary-foreground font-mono text-[0.65rem]">
+                            {order + 1}
+                          </span>
+                        )}
                       </button>
                     );
                   })}
@@ -155,9 +192,14 @@ export default function BandMembersAdmin() {
               </summary>
               <input
                 className="mt-2"
-                value={form.photo_url}
+                value={form.photos[0] || ''}
                 onChange={(e) =>
-                  setForm({ ...form, photo_url: e.target.value })
+                  setForm({
+                    ...form,
+                    photos: [e.target.value, ...form.photos.slice(1)].filter(
+                      Boolean
+                    )
+                  })
                 }
                 placeholder="https://…"
               />
@@ -211,9 +253,9 @@ export default function BandMembersAdmin() {
             <div key={item.id} className="item-card">
               <div className="item-header">
                 <div className="flex items-center gap-4">
-                  {item.photo_url ? (
+                  {memberPhotos(item)[0] ? (
                     <img
-                      src={smallVariant(item.photo_url)}
+                      src={smallVariant(memberPhotos(item)[0])}
                       alt=""
                       className="w-12 h-16 object-cover border border-border"
                     />
