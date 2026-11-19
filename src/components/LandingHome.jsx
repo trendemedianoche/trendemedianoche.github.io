@@ -635,10 +635,21 @@ export default function LandingHome() {
     return () => clearInterval(id);
   }, [activeMember, activePhotos.length]);
 
-  // Slides del hero: galería real o respaldo local
+  // Las fotos que ya aparecen en La banda (retratos de integrantes) no se repiten
+  // en el carrusel. Se compara por ruta, ignorando la query y la variante -sm/-lg.
+  const photoKey = (url) =>
+    (url || '').split('?')[0].replace(/-(sm|lg)\.webp$/, '.webp');
+  const memberPhotoKeys = new Set(
+    memberList.flatMap((m) => m.photos).map(photoKey)
+  );
+  const carouselPhotos = gallery.filter(
+    (g) => !memberPhotoKeys.has(photoKey(g.url))
+  );
+
+  // Slides del hero y la galería: fotos reales o respaldo local
   const slides =
-    gallery.length > 0
-      ? gallery.map((g) => ({
+    carouselPhotos.length > 0
+      ? carouselPhotos.map((g) => ({
           src: g.url,
           alt: g.alt || 'Tren de Medianoche',
           caption: g.caption || g.alt || 'Tren de Medianoche'
