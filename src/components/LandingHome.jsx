@@ -1117,8 +1117,55 @@ export default function LandingHome() {
               </div>
             </div>
 
+            {/* Celular: tarjetas con el retrato de cada integrante, se deslizan de lado
+                (no hay hover y la foto grupal queda arriba, fuera de la vista) */}
+            <div className="md:hidden -mx-6">
+              <div className="flex gap-3 overflow-x-auto snap-x snap-mandatory px-6 pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                {memberList.map((m) => (
+                  <article
+                    key={m.id ?? m.name}
+                    className="snap-start shrink-0 w-[72%] border border-border/60 overflow-hidden"
+                  >
+                    <div className="relative aspect-[3/4] bg-muted/20">
+                      {m.photos[0] ? (
+                        <img
+                          src={m.photos[0]}
+                          alt={m.name}
+                          loading="lazy"
+                          decoding="async"
+                          className="photo-warm absolute inset-0 w-full h-full object-cover object-[center_25%]"
+                        />
+                      ) : (
+                        <span className="absolute inset-0 flex items-center justify-center text-outline text-display text-[5rem]">
+                          {m.name
+                            .split(' ')
+                            .map((w) => w[0])
+                            .join('')
+                            .slice(0, 2)}
+                        </span>
+                      )}
+                      <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-background/95 via-background/60 to-transparent">
+                        <h3 className="text-display text-2xl">{m.name}</h3>
+                        <div className="text-eyebrow mt-1">{m.role}</div>
+                      </div>
+                    </div>
+                    {m.note && (
+                      <p className="font-mono text-xs text-muted-foreground p-4">
+                        {m.note}
+                      </p>
+                    )}
+                  </article>
+                ))}
+              </div>
+              {memberList.length > 1 && (
+                <p className="px-6 mt-2 font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
+                  Desliza para ver a cada integrante →
+                </p>
+              )}
+            </div>
+
             <div
-              className="md:col-span-8 flex flex-col gap-2"
+              className="hidden md:col-span-8 md:flex flex-col gap-2"
               onMouseLeave={() => setActiveMember(null)}
               onBlur={(e) => {
                 if (!e.currentTarget.contains(e.relatedTarget))
