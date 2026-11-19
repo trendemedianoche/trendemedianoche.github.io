@@ -558,9 +558,37 @@ export default function LandingHome() {
   const [activeMember, setActiveMember] = useState(null);
   // Con varias fotos, el retrato del integrante activo va alternando
   const [photoStep, setPhotoStep] = useState(0);
-  const bandPhotoRef = useRef(null);
+  // Celular: integrante cuya fila está abierta mostrando su retrato (null = ninguna)
+  const [openMember, setOpenMember] = useState(null);
+  const [isMobile, setIsMobile] = useState(
+    () => window.matchMedia('(max-width: 767px)').matches
+  );
   const memberRowRefs = useRef([]);
-  const memberListRef = useRef([]);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 767px)');
+    const onChange = () => setIsMobile(mq.matches);
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, []);
+
+  // Al tocar un integrante en celular se abre su fila (y se cierra la anterior);
+  // si quedó fuera de pantalla, se acomoda para verla completa
+  const toggleMember = (i) => {
+    const next = openMember === i ? null : i;
+    setOpenMember(next);
+    if (next !== null) {
+      setTimeout(() => {
+        const row = memberRowRefs.current[next];
+        if (!row) return;
+        const r = row.getBoundingClientRect();
+        // 96 px ≈ alto del menú fijo; la fila tiene scroll-mt-24 para quedar bajo él
+        if (r.top < 96 || r.bottom > window.innerHeight) {
+          row.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 520);
+    }
+  };
   const [newsItems, setNewsItems] = useState([]);
   const [donationFields, setDonationFields] = useState([]);
   const [sectionRows, setSectionRows] = useState([]);
@@ -628,37 +656,8 @@ export default function LandingHome() {
     // photos (varias, en orden) o, si no hay, la foto única photo_url
     photos: m.photos?.length ? m.photos : m.photo_url ? [m.photo_url] : []
   }));
-  memberListRef.current = memberList;
   const activePhotos =
     activeMember !== null ? memberList[activeMember]?.photos || [] : [];
-
-  // Celular: no hay hover, así que el integrante activo es el que pasa justo
-  // bajo la foto fija al hacer scroll (fuera de la lista vuelve la foto grupal)
-  useEffect(() => {
-    const mobile = window.matchMedia('(max-width: 767px)');
-    let frame = 0;
-    const update = () => {
-      frame = 0;
-      if (!mobile.matches || !bandPhotoRef.current) return;
-      const line = bandPhotoRef.current.getBoundingClientRect().bottom + 32;
-      const list = memberListRef.current;
-      const rows = memberRowRefs.current.slice(0, list.length);
-      const idx = rows.findIndex((row) => {
-        if (!row) return false;
-        const r = row.getBoundingClientRect();
-        return r.top <= line && r.bottom > line;
-      });
-      setActiveMember(idx >= 0 && list[idx]?.photos.length ? idx : null);
-    };
-    const onScroll = () => {
-      if (!frame) frame = requestAnimationFrame(update);
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => {
-      window.removeEventListener('scroll', onScroll);
-      if (frame) cancelAnimationFrame(frame);
-    };
-  }, []);
 
   useEffect(() => {
     setPhotoStep(0);
@@ -1098,13 +1097,9 @@ export default function LandingHome() {
 
           {/* Foto e integrantes con la misma altura: la lista empieza y termina con la foto */}
           <div className="reveal grid md:grid-cols-12 gap-8 md:gap-12 md:items-stretch">
-            {/* En celular la foto queda fija bajo el menú mientras se recorre la lista */}
-            <div
-              ref={bandPhotoRef}
-              className="sticky top-[5.25rem] z-10 md:static md:col-span-4"
-            >
+            <div className="md:col-span-4">
               {/* Foto grupal; al pasar por un integrante se funde con su retrato */}
-              <div className="relative overflow-hidden shadow-deep aspect-[4/3] md:aspect-[2/3]">
+              <div className="relative overflow-hidden shadow-deep aspect-square md:aspect-[2/3]">
                 <img
                   src={sectionImg.banda?.url || harmonicaImg}
                   alt={sectionImg.banda?.alt || 'Tren de Medianoche'}
@@ -1164,16 +1159,31 @@ export default function LandingHome() {
               {memberList.map((m, i) => (
                 <div
                   key={m.id ?? m.name}
-                  className={`spotlight group overflow-hidden border px-6 py-5 md:px-8 md:flex-1 md:flex md:flex-col md:justify-center hover:border-primary/40 transition-colors cursor-default ${
-                    activeMember === i
+                  className={`spotlight group scroll-mt-24 overflow-hidden border px-6 py-5 md:px-8 md:flex-1 md:flex md:flex-col md:justify-center hover:border-primary/40 transition-colors cursor-default ${
+                    activeMember === i || (isMobile && openMember === i)
                       ? 'border-primary/50'
                       : 'border-border/60'
                   }`}
                   ref={(el) => (memberRowRefs.current[i] = el)}
                   tabIndex={m.photos.length ? 0 : undefined}
-                  onMouseEnter={() => setActiveMember(i)}
-                  onFocus={() => setActiveMember(i)}
-                  onClick={() => setActiveMember(i)}
+                  role={isMobile && m.photos.length ? 'button' : undefined}
+                  aria-expanded={
+                    isMobile && m.photos.length ? openMember === i : undefined
+                  }
+                  onMouseEnter={() => !isMobile && setActiveMember(i)}
+                  onFocus={() => !isMobile && setActiveMember(i)}
+                  onClick={() =>
+                    isMobile
+                      ? m.photos.length && toggleMember(i)
+                      : setActiveMember(activeMember === i ? null : i)
+                  }
+                  onKeyDown={(e) => {
+                    const key = e.key === 'Enter' || e.key === ' ';
+                    if (isMobile && m.photos.length && key) {
+                      e.preventDefault();
+                      toggleMember(i);
+                    }
+                  }}
                 >
                   {/* Iniciales grandes de fondo */}
                   <span
@@ -1204,12 +1214,45 @@ export default function LandingHome() {
                         {m.name}
                       </h3>
                     </div>
-                    <span className="text-eyebrow">{m.role}</span>
+                    <span className="text-eyebrow flex items-center gap-3">
+                      {m.role}
+                      {m.photos[0] && (
+                        <span
+                          aria-hidden="true"
+                          className={`md:hidden text-base leading-none text-primary transition-transform duration-300 ${
+                            openMember === i ? 'rotate-45' : ''
+                          }`}
+                        >
+                          +
+                        </span>
+                      )}
+                    </span>
                   </div>
                   {m.note && (
                     <p className="relative font-mono text-xs text-muted-foreground mt-3 pl-8">
                       {m.note}
                     </p>
+                  )}
+                  {/* Celular: retrato grande dentro de la fila al tocarla */}
+                  {m.photos[0] && (
+                    <div
+                      aria-hidden={openMember !== i}
+                      className={`md:hidden relative grid transition-[grid-template-rows,opacity,margin] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${
+                        openMember === i
+                          ? 'grid-rows-[1fr] opacity-100 mt-4'
+                          : 'grid-rows-[0fr] opacity-0 mt-0'
+                      }`}
+                    >
+                      <div className="overflow-hidden">
+                        <img
+                          src={m.photos[0]}
+                          alt={m.name}
+                          loading="lazy"
+                          decoding="async"
+                          className="photo-warm w-full aspect-[4/5] object-cover object-[center_25%] border border-border/60"
+                        />
+                      </div>
+                    </div>
                   )}
                 </div>
               ))}
@@ -1682,7 +1725,7 @@ export default function LandingHome() {
   return (
     <main
       ref={rootRef}
-      className="lovable-root relative overflow-x-clip"
+      className="lovable-root relative overflow-hidden"
       onClick={handleAnchorClick}
       onPointerMove={handleSpotlight}
     >
